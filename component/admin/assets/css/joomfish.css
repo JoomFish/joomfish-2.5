@@ -1,0 +1,157 @@
+/**
+ * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
+ * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ *
+ * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * the content management system Joomla!. It enables Joomla!
+ * to manage multi lingual sites especially in all dynamic information
+ * which are stored in the database.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * -----------------------------------------------------------------------------
+ * $Id: joomfish.css 226 2011-05-27 07:29:41Z alex $
+ * @package joomfish
+ * @subpackage joomfish
+ *
+*/
+
+
+.icon-16-joomfish {
+	background: url(../images/icon-16-joomfish.png);
+}
+
+.icon-32-joomfish {
+	background: url(../images/icon-32-joomfish.png);
+}
+
+#joomfish ul {
+	margin: 0px 0px 0px 0px;
+	padding: 1px 0px 1px 20px;
+	list-style: url(../images/dot.png);
+	border: none;
+}
+
+table.translateparams{
+	width:100%;
+}
+td.translateparams span.editlinktip{
+/*	display:none;*/
+}
+
+#manage_results div {
+	border: 1px solid #dddddd;
+	width: 98%;
+	height: 100%;
+}
+div.icon-48-extension {
+	background: url(../images/icon-48-extension.png) no-repeat left;
+}
+div.icon-48-fish {
+	background: url(../images/icon-48-fish.png) no-repeat left;
+}
+div.icon-48-help {
+	background: url(../images/icon-48-help.png) no-repeat left;
+}
+div.icon-48-info {
+	background: url(../images/icon-48-info.png) no-repeat left;
+}
+div.icon-48-language {
+	background: url(../images/icon-48-language.png) no-repeat left;
+}
+div.icon-48-manage {
+	background: url(../images/icon-48-manage.png) no-repeat left;
+}
+div.icon-48-orphan {
+	background: url(../images/icon-48-orphan.png) no-repeat left;
+}
+div.icon-48-plugin {
+	background: url(../images/icon-48-plugin.png) no-repeat left;
+}
+div.icon-48-statistics {
+	background: url(../images/icon-48-statistics.png) no-repeat left;
+}
+div.icon-48-translation {
+	background: url(../images/icon-48-translation.png) no-repeat left;
+}
+
+.jfIconContainer {width: 20px; height: 20px;}
+
+.jfAdminContainer{margin:5px 0;width:100%;}
+table.jfAdminContainer td {vertical-align: top;}
+table.jfMaxInput td input {width: 100%;}
+table.jfMaxInput td input[type="button"]{width: 60px;background-color:#F0F0F0;}
+table.adminform a.toolbar {
+   display: block;
+	white-space: nowrap;
+	border: 1px solid #fbfbfb;
+	padding: 1px 5px;
+	cursor: pointer;
+	text-align: center;
+	width: 32px;
+}
+
+table.adminform a.toolbar:hover {
+	border-left: 1px solid #eee;
+	border-top: 1px solid #eee;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	text-decoration: none;
+	color: #0B55C4;
+}
+
+
+table.adminform a.toolbar span { 
+	float: none; 
+	width: 32px; 
+	height: 32px; 
+	margin: 0 auto; 
+	display: block;
+}
+.jfAdminContainer .jfLangList img.flag {height:12px;width:18px;top:2px;position:relative;} 
+
+#jfToggleSidebarContainer {clear:both;text-align:right;}
+#jfToggleSidebar {
+	border:1px solid #ccc;
+	padding: 2px 4px 1px 20px;
+	text-decoration:none;
+	background: url("../images/sidebar.png") no-repeat scroll 0 0 #F6F6F6;
+	-moz-border-radius: 4px 4px 4px 4px;
+}
+#adminJFSidebar {vertical-align:top; padding-left:5px;width:300px;}
+#adminJFSidebar .jfSidebarInformation {border: 1px dashed #ccc;padding:0;width:100%;margin-bottom:10px;}
+#adminJFSidebar table thead th { 
+	background:none repeat scroll 0 0 #F0F0F0;
+	border-bottom:1px solid #999999;
+	border-left:1px solid #FFFFFF;
+	color:#666666;
+	text-align:center;
+	padding: 3px 4px 3px 4px;
+}
+
+
+form.fileBrowserForm #addressPath {width: 502px;}
+form.fileBrowserForm .item a {height:50px;width:50px;vertical-align:top;padding-top:10px;}
+
+a.jfclublogo {
+	float: right;
+	display: block;
+	position: relative;
+	top: -20px;
+}
+
+div#jfcontent {}

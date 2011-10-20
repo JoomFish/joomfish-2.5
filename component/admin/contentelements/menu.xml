@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Menus</name>
+  <author>A. Kempkens</author>
+  <version>2.1.5</version>
+  <description>Definition for the core menu manager</description>
+  <copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+  <reference>
+  	<table name="menu">
+  		<field type="referenceid" name="id" translate="0">ID</field>
+  		<field type="titletext" name="title" translate="1">Name</field>
+  		<field type="text" name="alias" translate="1" posthandler="filterName">Menu Alias</field>
+  		<field type="params" name="params" translate="0">params</field>
+  		<field type="readonlytext" name="link" translate="0"  posthandler="saveUrlParams" prehandler="checkUrlType">Link</field>
+  		<field type="readonlytext" name="path" translate="0"  posthandler="saveMenuPath" >Path</field>
+  		<field type="text" name="type" translate="0">Menu Type</field>
+  		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
+  		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+  	</table>
+  	<component>
+  		<form>com_menus#menu#cid#task#!edit</form>
+  	</component>
+	<treatment>
+		<target>joomfish</target>
+		<tableclass>Menu</tableclass>
+	</treatment>
+  </reference>
+  <translationfilters>
+  	  <keyword>title</keyword>
+  	  <menutype>menutype</menutype>
+  	  <published>published</published>
+  	  <trash>published</trash>
+  </translationfilters>
+ </joomfish>

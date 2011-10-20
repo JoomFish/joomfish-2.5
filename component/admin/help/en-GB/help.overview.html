@@ -1,0 +1,46 @@
+<h2>Joom!Fish: be in control of your localization</h2>
+<div id="introduction">
+<p>
+	The Joom!Fish extensions provides you the capabilities to manage, control and maintain your different language versions of your website.<br />
+	The purpose of this extension is automatically choose the langauge version of any information of you Joomla CMS that the user choosed to use.
+	To achieve this you need to follow 4 basic steps:
+</p>
+<ol>
+	<li>Define the languages in which you like to allow your users to view your website using the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_joomfish&task=languages.show">content language manager</a>.</li>
+	<li>Configure the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_modules&client=0">language selection module</a> and the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_plugins">JoomFish specific router plugin</a> in the way you like your website to behave.</li>
+	<li>Translate your CMS information e.g. for menus or articles using either the direct translation module or the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_joomfish&task=translate.overview">translation overview</a>.<br />Don't forget to publish your translations ;-).</li>
+	<li>Add additional translation maps (content elements) to allow the translation of additional information such as your shop, calendar and many more.</li>
+</ol>
+</div>
+<div id="support">
+	<h3><?php echo JText::_('JF_SPLASH_SUPPORT');?></h3>
+	<a href="http://www.joomfish.net/forum/viewforum.php?f=12&utm_source=jf&utm_medium=ext&utm_campaign=help" target="_blank"><img id="videopreview" src="<?php echo JURI::root();?>administrator/components/com_joomfish/assets/images/splash_support.png" border="0" alt="<?php echo JText::_('JF_SPLASH_SUPPORT');?>" /></a>
+	<p>Managing website content is made really easy using Joomla! CMS. Adding an other language however can increase the complexity quite a lot.<br />
+	We highly recommend that you plan your website structure in one language first before you start translating the information. Also plan the translation as
+	sometimes you will encounter strange behavior of your site if you changed something in your original but did not updated the translation accordingly.</p>
+	<p>Our <a href="http://www.joomfish.net/forum/viewforum.php?f=12&utm_source=jf&utm_medium=ext&utm_campaign=help" target="_blank">community support forum</a> is a great source and free of charge knowledgebase
+		for you. You will find a lot of information related multilingual websites, localization and more.</p>
+	<p>Additionally we provide extended support for this extension that is based on various support and service plans. These plans are availble in our <a href="http://www.joomfish.net/en/join-the-club&utm_medium=ext&utm_campaign=help" target="_blank"Joom!Fish club area</a> and give you
+	additional support during your installation and extended service period.</p>
+</div>
+<div class="clr"></div>
+<div id="video-documentation">
+	<h3><?php echo JText::_('JF_SPLASH_VIDEO_DOCUMENTATION');?></h3>
+	<a href="http://www.joomfish.net/en/documentation?utm_source=jf&utm_medium=ext&utm_campaign=help" target="_blank"><img id="videopreview" src="<?php echo JURI::root();?>administrator/components/com_joomfish/assets/images/splash_videopreview.png" border="0" alt="<?php echo JText::_('JF_SPLASH_VIDEOPREVIEW');?>" /></a>
+	<p><?php echo JText::_('JF_SPLASH_VIDEO_DOCUMENTATION_DESC');?><br />
+	<a href="http://www.joomfish.net/en/documentation?utm_source=jf&utm_medium=ext&utm_campaign=help" target="_blank"><?php echo JText::_('JF_FIND_OUT_MORE')?></a></p>
+</div>
+<div class="clr"></div>
+<div>
+   <h3>Joom!Fish development status</h3>
+   <p>This release is a stable release for the Joomla 1.5.x code base. It is backward compatible with all Joom!Fish 2.x releases and provides an upgrade skript for the database changes.</p>
+   <p>The version is not yet compatible with Joomla 1.6.x from the code point of view. We already adapted the database structure and information so that your
+   migration will be easier. One of the next releases will support 1.6 from it's feature version and we will work hard to release it soon after the final release of Joomla.
+   </p>
+</div>
+<form action="index.php" method="post" name="adminForm">
+<input type="hidden" name="option" value="com_joomfish" />
+<input type="hidden" name="task" value="help.show" />
+<input type="hidden" name="boxchecked" value="0" />
+<?php echo JHTML::_( 'form.token' ); ?>
+</form>

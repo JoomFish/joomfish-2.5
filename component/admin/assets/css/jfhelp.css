@@ -1,0 +1,56 @@
+/**
+ * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
+ * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ *
+ * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * the content management system Joomla!. It enables Joomla!
+ * to manage multi lingual sites especially in all dynamic information
+ * which are stored in the database.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * -----------------------------------------------------------------------------
+ * $Id: jfhelp.css 226 2011-05-27 07:29:41Z alex $
+ * @package joomfish
+ * @subpackage joomfish
+ *
+*/
+#jfsplashcontainer p {color: #646464; font-size: 14px;}
+#jfhelp #infosidebar p, #jfhelp p {color: #646464; font-size: 1.2em;}
+#jfsplashcontainer h1, #jfhelp h1 {color: #818181; font-size: 30pt; font-style: bold; margin: 5px 0;}
+#jfsplashcontainer h2, #jfhelp h2 {color: #818181; font-size: 24pt; margin: 10px 0px;}
+#jfsplashcontainer h3, #jfhelp h3 {color: #818181; font-size: 14pt; margin: 5px 0px;}
+
+#jfsplashcontainer #jfsplashcontent {float: left; width: 550px; height: 100%;}
+
+#jfsplashcontainer #splashinfo, #jfhelp div#adminJFSidebar {width: 230px; height: 100%; background-color: #f5f5f5; float: left;}
+#jfsplashcontainer #splashinfo div {margin: 10px;}
+#jfsplashcontainer #splashinfo p {color: #646464; font-size: 12px;}
+#jfsplashcontainer #splashinfo p a {line-height: 20pt;}
+#jfsplashcontainer #splashinfo #videopreview, #jfhelp #videopreview {display: block; margin: 10px auto;}
+#jfhelp #videopreview {float: right;}
+#jfsplashcontainer #splashinfo #support, #jfhelp #video-documentation, #jfhelp #support {margin-top: 15px;}
+
+#jfsplashcontainer #jfsplash-logo {position: absolute; left: 190px; top: 30px;}
+#jfsplashcontainer #jfsplash-screens {position: absolute; left: 14px; top: 170px;}
+#jfsplashcontainer #jfsplash-welcometext {position: absolute; top: 400px; left: 15px; width: 535px;}
+#jfsplashcontainer #btn-startvideo {position: absolute; left: 170px; top: 500px;}
+
+#jfsplashcontainer #jfsplashvideo {width: 100%; height: 100%;}
+
+#jfhelp div#adminJFSidebar {float:right; width:300px;}
+#jfhelp ul, #jfhelp ol {color: #646464; font-size: 1.1em;}

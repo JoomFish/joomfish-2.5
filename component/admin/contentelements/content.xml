@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Contents</name>
+  <author>A. Kempkens</author>
+  <version>2.1.5</version>
+  <description>Definition for the core content component</description>
+  <copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+  <reference type="content">
+  	<table name="content">
+  		<field type="referenceid" name="id" translate="0">ID</field>
+  		<field type="titletext" name="title"  length="50" maxlength="250" translate="1">Title</field>
+  		<field type="text" name="title_alias"  length="50" maxlength="250" translate="0">Title Alias</field>
+  		<field type="text" name="alias"  length="50" maxlength="250" translate="1" posthandler="filterTitle">Alias</field>
+  		<field type="htmltext" name="introtext" translate="1" prehandleroriginal="fetchArticleText" prehandlertranslation="fetchArticleTranslation" posthandler="saveArticleText" ebuttons="ignore">Article Text</field>
+  		<field type="hiddentext" name="fulltext" translate="1" ebuttons="readmore">Fulltext</field>
+  		<field type="textarea" name="images" rows="10" columns="80" translate="1">Images</field>
+  		<field type="text" name="metakey" length="50" maxlength="250" translate="1">Metakey</field>
+  		<field type="textarea" name="metadesc"  rows="5" columns="80" translate="1">Metadesc</field>
+  		<field type="text" name="publish_up" translate="1">Start Publishing</field>
+  		<field type="text" name="publish_down" translate="1">Finish Publishing</field>
+  		<field type="created_date" name="created" translate="0">Created</field>
+  		<field type="modified_date" name="modified" translate="0">Modified</field>
+  		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
+  		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+  		<field type="params" name="attribs" translate="1">Attributes</field>
+  	</table>
+  	<component>
+  		<form>com_content#content#cid#task#!edit</form>
+  		<form>com_frontpage#content#cid#task#!edit</form>
+  	</component>
+	<treatment>
+		<target>joomfish</target>
+		<tableclass>Content</tableclass>
+	</treatment>
+  </reference>
+  <translationfilters>
+	  <frontpage>id</frontpage>
+<!--	  <section>sectionid</section>//-->
+  	  <category>catid</category>
+  	  <author>created_by</author>
+  	  <keyword>title</keyword>
+  	  <published>published</published>
+  	  <changed>created|modified</changed>
+  	  <trash>state</trash>
+  	  <archive>state</archive>
+  	  <id>id</id>
+  </translationfilters>
+</joomfish>

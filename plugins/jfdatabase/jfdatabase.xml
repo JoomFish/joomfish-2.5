@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: jfdatabase 1304 2010-10-13 16:42:20Z geraint $ -->
+<install version="1.6" type="plugin" group="system" method="upgrade">
+	<name>Joomfish - Database Abstraction Layer</name>
+	<author>Geraint Edwards</author>
+	<creationDate>January 2011</creationDate>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<author>Joom!Fish Project</author>
+	<authorEmail>support@joomfish.net</authorEmail>
+	<authorUrl>http://www.joomfish.net</authorUrl>
+	<copyright>Copyright (C) 2003 - 2010, Think Network GmbH, Munich. All rights reserved.</copyright>
+	<version>3.0.0 alpha</version>
+	<description>PLG_SYSTEM_JFDATABASE_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="jfdatabase">jfdatabase.php</filename>
+		<filename>intercept.jdatabasemysql.php</filename>
+		<filename>intercept.jdatabasemysqli.php</filename>
+		<filename>jfdatabase_inherit.php</filename>
+	</files>
+	<languages folder="languages">
+		<language tag="en-GB">en-GB.plg_system_jfdatabase.ini</language>
+	</languages>	
+	<params/>
+	<config/>
+</install>

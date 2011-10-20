@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Languages</name>
+  <author>S. Alamo (selimoff)</author>
+  <version>2.1.5</version>
+  <description>Definition for Language Name</description>
+  <copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+ <reference type="content">
+    <table name="languages">
+      <field type="referenceid" name="id" translate="0">ID</field>
+      <field type="titletext" name="name" translate="1">Title</field>
+    </table>
+  </reference>
+  <translationfilters>
+    <published>published</published>
+  </translationfilters>
+</joomfish>

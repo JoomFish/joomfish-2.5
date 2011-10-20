@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<access component="com_joomfish">
+	<section name="component" >
+		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		<action name="core.translate" title="JF_ACTION_TRANSLATE" description="JF_ACTION_TRANSLATE_DESC" />
+		<action name="core.edit.state" title="JF_ACTION_PUBLISH" description="JF_ACTION_PUBLISH_DESC" />
+		<action name="core.delete" title="JF_ACTION_DELETE" description="JF_ACTION_DELETE_DESC" />
+		<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+	</section>
+</access>

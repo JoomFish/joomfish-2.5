@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="component" version="1.7.0" method="install">
+	<name>Joom!Fish</name>
+	<license>Open Source License, GPL v2 based</license>
+	<author>Joom!Fish Project</author>
+	<authorEmail>support@joomfish.net</authorEmail>
+	<authorUrl>http://www.joomfish.net</authorUrl>
+	<creationDate>January 2011</creationDate>
+	<copyright>2003 - 2011, Think Network GmbH, Munich</copyright>
+	<version>3.0.0 alpha</version>
+	<description>
+		Multilingual extention and translation manager for Joomla! 1.7.x
+	</description>
+	<!--
+	These are now in scriptfile.php
+	<installfile>install/install.php</installfile>
+	<uninstallfile>install/uninstall.php</uninstallfile>
+	//-->
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install/install.mysql.utf8.sql</file>
+			<file driver="mysql">install/install.mysql.sql</file>
+		</sql>
+	</install>
+
+	<uninstall>
+	</uninstall>
+	
+	<upgrade version="2.0">
+		<sql>
+			<file driver="mysql" charset="utf8">install/upgrade.mysql.utf8.sql</file>
+		</sql>
+	</upgrade>
+
+    <files folder="site">
+		<folder>helpers</folder>
+		<folder>images</folder>
+		<filename>joomfish.php</filename>
+		<filename>index.html</filename>
+    </files>
+    
+    <!-- Joom!Fish Site language files -->
+	<languages folder="site/language">
+		<language tag="en-GB">en-GB.com_joomfish.ini</language>
+   	</languages>
+
+	<media folder="media" destination="com_joomfish">
+		<folder>default</folder>
+	</media>
+
+	<administration>
+		<menu img="components/com_joomfish/assets/images/icon-16-joomfish.png">com_joomfish</menu>
+	    <submenu>
+	      <menu link="option=com_joomfish" img="components/com_joomfish/assets/images/icon-16-cpanel.png">com_joomfish_control_panel</menu>
+	      <menu link="option=com_joomfish&amp;task=translate.overview" img="components/com_joomfish/assets/images/icon-16-translation.png">com_joomfish_translation</menu>
+	      <menu link="option=com_joomfish&amp;task=translate.orphans" img="components/com_joomfish/assets/images/icon-16-orphan.png">com_joomfish_orphan_translations</menu>
+	      <menu link="option=com_joomfish&amp;task=manage.overview" img="components/com_joomfish/assets/images/icon-16-manage.png">com_joomfish_manage_translations</menu>
+	      <menu link="option=com_joomfish&amp;task=statistics.overview" img="components/com_joomfish/assets/images/icon-16-statistics.png">com_joomfish_statistics</menu>
+	      <menu link="option=com_joomfish&amp;task=languages.show" img="components/com_joomfish/assets/images/icon-16-language.png">com_joomfish_languages</menu>
+	      <menu link="option=com_joomfish&amp;task=elements.show" img="components/com_joomfish/assets/images/icon-16-extension.png">com_joomfish_content_elements</menu>
+	      <menu link="option=com_joomfish&amp;task=plugin.show" img="components/com_joomfish/assets/images/icon-16-plugin.png">com_joomfish_plugins</menu>
+	      <menu link="option=com_joomfish&amp;task=help.show" img="components/com_joomfish/assets/images/icon-16-help.png">com_joomfish_help</menu>
+	    </submenu>
+
+	    <files folder="admin">
+		    <folder>assets</folder>
+		    <folder>classes</folder>
+		    <folder>contentelements</folder>
+		    <folder>controllers</folder>
+		    <folder>documentation</folder>
+		    <folder>editors</folder>
+		    <folder>help</folder>
+		    <folder>helpers</folder>
+		    <folder>install</folder>
+		    <folder>models</folder>
+		    <folder>tables</folder>
+		    <folder>views</folder>
+						
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+			<filename>joomfish.php</filename>
+			<filename>version.php</filename>
+	    </files>
+
+		<!-- Joom!Fish Admin Language Files -->
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB.com_joomfish.ini</language>
+			<language tag="en-GB">en-GB.com_joomfish.menu.ini</language>
+    	</languages>
+
+ 	</administration>
+
+	<params />
+<!--
+	<modules>
+		<module module="mod_jflanguageselection" title="Language Selection" position="user4" order="-1" client="site">
+			<files folder="mod_jflanguageselection">
+				<folder>tmpl</folder>
+
+				<file>helper.php</file>
+				<file>index.html</file>
+				<file module="mod_jflanguageselection">mod_jflanguageselection.php</file>
+				<file>mod_jflanguageselection.xml</file>
+			</files>
+
+			<languages folder="mod_jflanguageselection/language">
+				<language tag="en-GB">en-GB.mod_jflanguageselection.ini</language>
+			</languages>
+			<media />
+		</module>
+		
+		<module module="mod_translate" title="Direct Translation" position="status" client="administrator">
+			<files folder="mod_translate">
+				<file module="mod_translate">mod_translate.php</file>
+				<file>helper.php</file>
+				<file>index.html</file>
+				<file>mod_translate.xml</file>
+				<folder>assets</folder>
+				<folder>elements</folder>
+				<folder>tmpl</folder>
+			</files>
+			<languages folder="mod_translate/language">
+				<language tag="en-GB">en-GB.mod_translate.ini</language>
+			</languages>
+			<media />
+		</module>
+	</modules>
+
+	<plugins>
+		<plugin plugin="jfdatabase" order="-100" group="system">
+			<files folder="plg_jfdatabase">
+				<folder>jfdatabase</folder>
+				<file>jfdatabase.php</file>
+				<file>jfdatabase.xml</file>
+			</files>
+
+			<languages folder="plg_jfdatabase/language">
+				<language tag="en-GB">en-GB.plg_system_jfdatabase.ini</language>
+			</languages>
+
+			<media />
+		</plugin>
+
+		<plugin plugin="jfrouter" order="-101" group="system">
+			<files folder="plg_jfrouter">
+				<folder>jfrouter</folder>
+				<file>jfrouter.php</file>
+				<file>jfrouter.xml</file>
+			</files>
+
+			<languages folder="plg_jfrouter/language">
+				<language tag="en-GB">en-GB.plg_system_jfrouter.ini</language>
+			</languages>
+
+			<media />
+		</plugin>
+
+		<plugin plugin="jfalternative" group="content">
+			<files folder="plg_jfalternative">
+				<file>jfalternative.php</file>
+				<file>jfalternative.xml</file>
+			</files>
+
+			<languages folder="plg_jfalternative/language">
+				<language tag="en-GB">en-GB.plg_content_jfalternative.ini</language>
+			</languages>
+
+			<media />
+		</plugin>
+
+		<plugin plugin="jfcategories" group="search">
+			<files folder="plg_jfcategories">
+				<file>jfcategories.php</file>
+				<file>jfcategories.xml</file>
+			</files>
+
+			<languages folder="plg_jfcategories/language">
+				<language tag="en-GB">en-GB.plg_search_jfcategories.ini</language>
+			</languages>
+
+			
+			<media />
+		</plugin>
+		<plugin plugin="jfcontacts" group="search">
+			<files folder="plg_jfcontacts">
+				<file>jfcontacts.php</file>
+				<file>jfcontacts.xml</file>
+			</files>
+
+			<languages folder="plg_jfcontacts/language">
+				<language tag="en-GB">en-GB.plg_search_jfcontacts.ini</language>
+			</languages>
+
+						
+			<media />
+		</plugin>
+		<plugin plugin="jfcontent" group="search">
+			<files folder="plg_jfcontent">
+				<file>jfcontent.php</file>
+				<file>jfcontent.xml</file>
+			</files>
+
+			<languages folder="plg_jfcontent/language">
+				<language tag="en-GB">en-GB.plg_search_jfcontent.ini</language>
+			</languages>
+
+						
+			<media />
+		</plugin>
+		<plugin plugin="jfnewsfeeds" group="search">
+			<files folder="plg_jfnewsfeeds">
+				<file>jfnewsfeeds.php</file>
+				<file>jfnewsfeeds.xml</file>
+			</files>
+
+			<languages folder="plg_jfnewsfeeds/language">
+				<language tag="en-GB">en-GB.plg_search_jfnewsfeeds.ini</language>
+			</languages>
+
+						
+			<media />
+		</plugin>
+		<plugin plugin="jfsections" group="search">
+			<files folder="plg_jfsections">
+				<file>jfsections.php</file>
+				<file>jfsections.xml</file>
+			</files>
+
+			<languages folder="plg_jfsections/language">
+				<language tag="en-GB">en-GB.plg_search_jfsections.ini</language>
+			</languages>
+
+						
+			<media />
+		</plugin>
+		<plugin plugin="jfweblinks" group="search">
+			<files folder="plg_jfweblinks">
+				<file>jfweblinks.php</file>
+				<file>jfweblinks.xml</file>
+			</files>
+
+			<languages folder="plg_jfweblinks/language">
+				<language tag="en-GB">en-GB.plg_search_jfweblinks.ini</language>
+			</languages>
+
+						
+			<media />
+		</plugin>
+
+		<plugin plugin="missing_translation" group="joomfish">
+			<files folder="plg_missing_translation">
+				<file>missing_translation.php</file>
+				<file>missing_translation.xml</file>
+			</files>
+			<languages folder="plg_missing_translation/language">
+				<language tag="en-GB">en-GB.plg_joomfish_missing_translation.ini</language>
+			</languages>
+			
+			<media />
+		</plugin>
+	</plugins>
+	//-->
+	
+	<check>
+		<directory>/modules</directory>
+		<directory>/plugins/content</directory>
+		<directory>/plugins/search</directory>
+		<directory>/plugins/system</directory>
+		<directory>/administrator/modules</directory>
+		<!--
+		<extension name="jfcategories" type="plugins" field="published" value="1">element='jfcategories'</extension>
+		<extension name="jfcontacts"  type="plugins" field="published" value="1">element='jfcontacts'</extension>
+		<extension name="jfcontent"  type="plugins" field="published" value="1">element='jfcontent'</extension>
+		<extension name="jfnewsfeeds"  type="plugins" field="published" value="1">element='jfnewsfeeds'</extension>
+		<extension name="jfsections"  type="plugins" field="published" value="1">element='jfsections'</extension>
+		<extension name="jfweblinks"  type="plugins" field="published" value="1">element='jfweblinks'</extension>
+		<extension name="jfrouter"  type="plugins" field="published" value="1">element='jfrouter'</extension>
+		<extension name="jfrouter"  type="plugins" field="ordering" value="0">folder='system'</extension>
+		<extension name="jfdatabase"  type="plugins" field="published" value="1">element='jfdatabase'</extension>
+		<extension name="jfdatabase"  type="plugins" field="ordering" value="1">folder='system'</extension>
+		<extension name="jfalternative"  type="plugins" field="published" value="1">element='jfalternative'</extension>
+		//-->
+		<extension name="mod_jflanguageselection"  type="modules" field="published" value="1">module='mod_jflanguageselection'</extension>
+	 	<extension name="mod_translate"  type="modules" field="published" value="1">module='mod_translate'</extension>
+	 	<performance name="mySQL Driver" type="database" check_function="mysqli_connect" check_true="mysqli" check_false="mysql" optimal_value="mysqli" link="index.php?option=com_config" />
+	 	<performance name="PHP Version" type="php" required="5.0.0" optimal_value="5.3.0" link="index.php?option=com_admin&amp;task=sysinfo" />
+	 	<performance name="Cache" type="config" value="transcaching" optimal_value="1" link="index.php?option=com_joomfish" />
+	</check>
+</extension>

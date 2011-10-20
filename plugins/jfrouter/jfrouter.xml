@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install version="1.5" type="plugin" group="system">
+	<name>Joomfish - Basic Router</name>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<author>Joom!Fish Project</author>
+	<authorEmail>support@joomfish.net</authorEmail>
+	<authorUrl>http://www.joomfish.net</authorUrl>
+	<creationDate>2010-10-05</creationDate>
+	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+	<version>2.1.0</version>
+	<description>When activated this bot provides language determination and basic routing. Must be enabled unless you are using a SEF plugin that performs the same tasks.</description>
+	<files>
+		<filename plugin="jfrouter">jfrouter.php</filename>
+		<filename>jfrouter/index.html</filename>
+		<filename>jfrouter/contact.php</filename>
+		<filename>jfrouter/elements/index.html</filename>
+		<filename>jfrouter/elements/sefprefix.php</filename>
+		<filename>jfrouter/elements/sefsubdomain.php</filename>
+	</files>
+	<languages folder="language">
+		<language tag="en-GB">en-GB.plg_system_jfrouter.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic"   addfieldpath="/plugins/system/jfrouter/jfrouter/fields" >
+				<field name="determitLanguage" type="radio" default="1" label='ENABLE_LANGUAGE_DETERMINATION'  description="If an unkown user comes to your site - try to determinate the language based on the browser settings.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="newVisitorAction" type="list" default='BROWSER'       label="Language selection for new visitors?"
+       description="Determine language selection for new visitors (only Enable Language determination is 'Yes')" >
+					<option value="joomfish">Ordering of Languages in Joomfish Component</option>
+					<option value="browser">Browser Settings</option>
+					<option value="site">Site Default Language</option>
+				</field>
+				<field name="use302redirect" type="radio" default="0" label="Use 302 redirect" description="For new users the redirection to the correct language is done by automatic integration or an official 302 redirect to a different URL such as www.yourdomain.com/en">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="enableCookie" type="radio" default="1"
+			description="Switch off the cookie only if you have a different solution to define the once selected language, e.g. via an URL." label='SAVE_USER_LANGUAGE_IN_A_COOKIE' >
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="sefordomain" type="radio" default='SEFPREFIX'       label="Use SEF prefix or domains?" description='TBD'      >
+					<option value="sefprefix">SEF Prefix</option>
+					<option value="domain">Domain</option>
+				</field>
+				<field name="sefprefixes" type="sefprefix" default="lang-" label='SEF_PREFIX'  description='SEF_PREFIX_DESCRIPTION'  />
+				<field name="sefsubdomain" type="sefsubdomain" default="" label='SEF_DOMAIN'  description='SEF_DOMAIN_DESCRIPTION'  />
+			</fieldset>
+		</fields>
+	</config>
+</install>

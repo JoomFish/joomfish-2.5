@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Contact</name>
+  <author>A. Kempkens</author>
+  <version>2.1.5</version>
+  <description>Definition for the contact component</description>
+  <copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+  <reference>
+  	<table name="contact_details">
+  		<field type="referenceid" name="id" translate="0">ID</field>
+  		<field type="titletext" name="name" translate="1">Name</field>
+  		<field type="text" name="con_position" translate="1">Position</field>
+  		<field type="text" name="address" translate="1">Street Address</field>
+  		<field type="text" name="suburb" translate="1">Town/Suburb</field>
+  		<field type="text" name="state" translate="1">State/County</field>
+  		<field type="text" name="country" translate="1">Country</field>
+  		<field type="text" name="postcode" translate="1">Postcode</field>
+  		<field type="text" name="telephone" translate="1">Telefon</field>
+  		<field type="text" name="fax" translate="1">Fax</field>
+  		<field type="textarea" name="misc" translate="1">Miscellaneous Info</field>
+  		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
+  		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+  	</table>
+  	<component>
+  		<form>com_contact#contact_details#cid#!edit</form>
+  	</component>
+  </reference>
+</joomfish>

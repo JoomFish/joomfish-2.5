@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fieldset name="jfconfig"  label="COM_JOOMFISH_CONFIGURATION"	>
+		<field name="@spacer" type="spacer" default='WHAT_TO_SHOW_IF'  label='WHAT_TO_SHOW_IF'  />
+		<field name="noTranslation" type="list" default="2" label="NO_Translation_available" description="NOTRANSLATION_HELP">
+			<option value="0">Original content</option>
+			<option value="1">Placeholder</option>
+			<option value="2">Original with info</option>
+			<option value="3">Original with alt</option>
+		</field>
+		<field name="defaultText" type="textarea" rows="3" cols="50" default="" label='PLACEHOLDER'  description="TRANS_DEFAULT_HELP" />
+
+		<field name="overwriteGlobalConfig" type="radio" default="1" label='OVERWRITE_GLOBAL_CONFIG_VALUES'  description="OVERWRITE_GLOBAL_CONFIG_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		
+		<field name="@spacer" type="spacer" default='MEDIA_FILES'  label='MEDIA_FILES'  description="" />
+		<field name="directory_flags" type="text" size="50" default="/media/com_joomfish/default/flags" label='FLAGS_DIRECTORY'  description="FLAGS_DIRECTORY_HELP" />
+
+		<field name="@spacer" type="spacer" default='MANAGING_TRANSLATIONS'  label='MANAGING_TRANSLATIONS'  description="" />
+		<field name="storageOfOriginal" type="list" default="md5" label='STORE_ORIGINAL_VERSION_AS'  description="MNGORIGINAL_HELP">
+			<option value="md5">MD5 key only</option>
+			<option value="both">MD5 key and clear text</option>
+		</field>
+		<field name="frontEndPublish" type="radio" default="1" label='FRONTEND_PUBLISH'  description="FEPUBLISH_HELP">
+			<option value="0">Noone</option>
+			<option value="1">Publishers</option>
+		</field>
+		<field name="frontEndPreview" type="radio" default="1" label='INACTIVE_LANGUAGE_PREVIEW_PREFERENCE'  description="PREVIEW_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		<field name="showDefaultLanguageAdmin" type="radio" default="0" label='SHOW_DEFAULT_LANGUAGE_IN_ADMINISTRATION'  description="SHOWDEFAULTLANGUAGEADMIN_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		<field name="@spacer" type="spacer" default='ADVANCED_USERS_ONLY'  label='ADVANCED_USERS_ONLY'  description="" />
+		<field name="copyparams" type="radio" default="1" label='COPY_ORIGINAL_PARAMS_TO_EMPTY_TRANSLATION'  description="COPYPARAMS_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		<field name="@spacer" type="spacer" default='CACHING_OPTIONS'  label='CACHING_OPTIONS_FOR_MYSSQLI_AND_MYSQL'  />
+		<field name="transcaching" type="radio" default="0" label='ENABLE_TRANSLATION_CACHING'  description="TRANS_CACHING_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		<field name="cachelife" type="text" cols="50" default="180" label='CACHE_LIFE_IN_MINUTES'  description="TRANS_CACHELIFE_HELP" />
+		<field name="@spacer" type="spacer" default='CACHING_OPTIONS_MYSQL'  label='CACHING_OPTIONS_FOR_MYSQL_ONLY'  />
+		<field name="qacaching" type="radio" default="1" label='ENABLE_QUERY_ANALYSIS_CACHING'  description="QA_CACHING_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		<field name="qalogging" type="radio" default="0" label='ENABLE_QUERY_ANALYSIS_LOGGING'  description="QA_LOGGING_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		<field name="@spacer" type="spacer" default='USER_SUPPORT'  label='USER_SUPPORT'  />
+		<field name="usersplash" type="radio" default="1" label='SHOW_SPLASH_SCREEN'  description="USER_SPLASH_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+		<field name="showPanelNews" type="radio" default="1" label="CPANEL_NEWS" description="CPANEL_NEWS_HELP">
+			<option value="0">JF_NO</option>
+			<option value="1">JF_YES</option>
+		</field>
+	</fieldset>
+
+	<fieldset
+		name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC"
+		>
+
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			class="inputbox"
+			validate="rules"
+			filter="rules"
+			component="com_joomfish"
+			section="component" />
+	</fieldset>
+
+</config>

@@ -1,0 +1,180 @@
+/**
+ * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
+ * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ *
+ * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * the content management system Joomla!. It enables Joomla!
+ * to manage multi lingual sites especially in all dynamic information
+ * which are stored in the database.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * -----------------------------------------------------------------------------
+ * $Id: help.css 226 2011-05-27 07:29:41Z alex $
+ * @package joomfish
+ * @subpackage help
+ *
+*/
+
+body {
+	margin: 0;
+	padding: 10px;
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 12px;
+	color: #3f3f3f;		/* font color */
+}
+
+p {
+  /* setup some more readable paragraph spacing */
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+h1, h2, h3, h4, h4 {
+	/* setup some more readable header spacing */
+	padding-bottom: 5px;
+	margin: 15px 0;
+}
+h1 {
+	font-size: 200%;
+	color: #f69900;
+}
+
+h2 {
+	color: #F44372;
+	font-size: 180%;
+}
+
+h3 {
+   color: #F69900;
+ 			font-size: 150%;
+}
+p {
+  margin: 5px 10px 10px 10px;
+}
+a.readon {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	display: block;
+	float: left;
+	width:  116px;
+	height: 25px;
+	line-height: 25px;
+	padding-left: 5px;
+	/* background: see style css */
+}
+a.readon:hover {
+	text-decoration: none;
+}
+a.readon {
+	background: url(../images/body-readon.png) 0 0 no-repeat;
+	color: #fff;
+}
+img#logo {
+	float: left;
+	margin-left: 29px;
+	width: 200px;
+	height: 58px;
+	z-index: 1;
+	background: url(../images/joomfish.png) 0 0 no-repeat;
+}
+.clr {
+	clear: both;
+}
+div#top {
+	margin-left:  170px;
+}
+
+div#top .padding {
+	padding:  10px;
+}
+div#top h1 {
+	margin-top:  8px;
+}
+.nounder {
+	text-decoration: none;
+	border: 0;
+}
+div#header {
+	background: url(../images/header-bg.png) 0 0 repeat-x;
+}
+
+div#header .rk-1 {
+	background:  url(../images/header-r.png) 100% 0 no-repeat;
+}
+
+div#header .rk-2 {
+	background:  url(../images/header-l.png) 0 0 no-repeat;
+}
+div#footer {
+	background: url(../images/footer-bg.png) 0 0 repeat-x;
+	height: 53px;
+	margin-top: 25px;
+	font-size: 10px;
+}
+div#footer .rk-1 {
+	background: url(../images/footer-r.png) 100% 0 no-repeat;
+	height: 53px;
+}
+
+div#footer .rk-2 {
+	background: url(../images/footer-l.png) 0 0 no-repeat;
+	height: 53px;
+}
+div#the-footer {
+	color:#FFFFFF;
+	text-align: center;
+}
+div#the-footer a:link,
+div#the-footer a:visited {
+	color:#FFFFFF;
+	text-decoration: underline;
+}
+
+div#the-footer a:hover {
+	text-decoration: none;
+}
+
+div#the-footer div.copyright {
+	float: left;
+	margin: 10px 0px 0px 10px;
+}
+div#the-footer div.module {
+	float: right;
+	margin: 10px 10px 0px 0px;
+}
+
+div#the-footer ul
+{
+	vertical-align: middle;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+}
+
+div#the-footer ul li
+{
+	background-image: none;
+	padding-left: 2px;
+	padding-right: 2px;
+	float: left;
+	margin: 1px 1px 1px 1px;
+	white-space: nowrap;
+	border: none;
+	color: #000000;
+}
