@@ -32,7 +32,8 @@
 */
 defined('_JEXEC') or die('Restricted access'); ?>
 
-<div id="jfsplashcontainer" style="width:782px; height: 100%; margin: 0; padding: 0;">
+<div style="width: 782px; height: 565px; overflow: hidden;">
+<div id="jfsplashcontainer" style="width:782px; height: 540px; margin: 0; padding: 0;">
 	<div id="jfsplashcontent">
 		<div id="jfsplashwelcome">
 			<h1><?php echo JText::_('JF_SPLASH_WELCOME_TO')?></h1>
@@ -66,13 +67,15 @@ defined('_JEXEC') or die('Restricted access'); ?>
 		</div>
 	</div>
 </div>
+<div style="clear:both;" ></div>
 <div id="splashfooter" style="width: 780px; background-color: #c9c9c9; border-top: 1px solid #aaaaaa; margin-bottom: 2px;">
-<form id="jfusersplashform" action="index.php" style="width: 100%; padding: 4px;" name="adminform" method="post">
-	<input id="splash-usersplashstate" type="checkbox" value="1" <?php echo ($this->usersplash == 1 ? 'checked="checked"' : '');?>><?php echo JText::_('Show this screen if JoomFish cpanel is opened.')?></input>
+<form id="jfusersplashform" action="index.php" style="width: 100%; padding: 4px; background-color: #fff; border: none;" name="adminform" method="post">
+	<input id="splash-usersplashstate" type="checkbox" value="1" <?php echo ($this->usersplash == 1 ? 'checked="checked"' : '');?> /><?php echo JText::_('Show this screen if JoomFish cpanel is opened.')?>
 	<input id="splash-btn-close" class="button" type="button" value="<?php echo JText::_( 'CLOSE' );?>" style="float: right; margin-right: 20px; cursor: pointer;"/>
 	<input type="hidden" id="usersplashstate" name="params[usersplash]" value="<?php echo $this->usersplash;?>" />
 	<input type="hidden" name="option" value="com_joomfish" />
 	<input type="hidden" name="task" value="cpanel.saveconfig" />
 	<input type="hidden" name="<?php echo JUtility::getToken(); ?>" value="1" />
 </form>
+</div>
 </div>

@@ -102,7 +102,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 //<![CDATA[
 function showUserSplash() {
 	SqueezeBox.initialize({});
-	SqueezeBox.setOptions(SqueezeBox.presets,{'handler': 'iframe','size': {'x': 800, 'y':700},'closeWithOverlay': 0});
+	SqueezeBox.setOptions(SqueezeBox.presets,{'handler': 'iframe','size': {'x': 810, 'y':610},'closeWithOverlay': 0});
 	SqueezeBox.url = '<?php echo JURI::base()?>index.php?option=com_joomfish&task=cpanel.usersplash&layout=usersplash&tmpl=component';
 	SqueezeBox.setContent('iframe', SqueezeBox.url );
 	// The configuration shall be saved anytime the splash screen is closed.

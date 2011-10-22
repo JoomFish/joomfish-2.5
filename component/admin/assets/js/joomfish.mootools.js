@@ -32,7 +32,6 @@
  *
 */
 window.addEvent('domready', function(){
-
 	// Toggler
 	if($('jfToggleSidebar')){	
 		$('jfToggleSidebar').addEvent('click', function(){
