@@ -86,7 +86,8 @@ class CPanelViewCPanel extends JoomfishViewDefault
 		$this->assignRef('contentInfo', $this->contentInfo);
 		$this->assignRef('performanceInfo', $this->performanceInfo);
 		$this->assignRef('publishedTabs', $this->publishedTabs);
-		$this->assignRef('usersplash', $this->get('usersplash'));
+		$usersplash = $this->get('usersplash');
+		$this->assignRef('usersplash', $usersplash);
 		
 		JHTML::_('behavior.tooltip');
 		parent::display($tpl);

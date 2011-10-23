@@ -58,7 +58,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	* @access protected
 	* @param array $options optional parameters
 	*/
-	function __construct( $options = array() )
+	public function __construct( $options = array() )
 	{
 		static $expiredCacheCleaned;
 
@@ -98,7 +98,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * One time only DB setup function
 	 *
 	 */
-	function setupDB() {
+	public static function setupDB() {
 		$db =  JFactory::getDBO();
 		$charset = ($db->hasUTF()) ? 'CHARACTER SET utf8 COLLATE utf8_general_ci' : '';
 		$sql = "CREATE TABLE IF NOT EXISTS `#__dbcache` ("
@@ -125,9 +125,10 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * @param	string	$group		The cache data group
 	 * @param	boolean	$checkTime	True to verify cache time expiration threshold
 	 * @return	mixed	Boolean false on failure or a cached data string
-	 * @since	1.5
+	 * @since	11.1
 	 */
-	function get($id, $group, $checkTime)
+	//function get($id, $group, $checkTime)
+	public function get($id, $group, $checkTime = true)
 	{
 		
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile();
@@ -166,7 +167,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * @return	boolean	True on success, false otherwise
 	 * @since	1.5
 	 */
-	function store($id, $group, $data)
+	public function store($id, $group, $data)
 	{
 		//$this->db = JFactory::getDBO();
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile();
@@ -191,7 +192,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * @return	boolean	True on success, false otherwise
 	 * @since	1.5
 	 */
-	function remove($id, $group)
+	public function remove($id, $group)
 	{
 		//$this->db = JFactory::getDBO();
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile();
@@ -213,9 +214,9 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * @param	string	$group	The cache data group
 	 * @param	string	$mode	The mode for cleaning cache [group|notgroup]
 	 * @return	boolean	True on success, false otherwise
-	 * @since	1.5
+	 * @since	11.1
 	 */
-	function clean($group, $mode)
+	public function clean($group, $mode = null)
 	{
 		//$this->db = JFactory::getDBO();
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile();
@@ -244,7 +245,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	 *
 	 * @return	boolean	True on success, false otherwise
 	 */
-	function cleanCache()
+	public function cleanCache()
 	{
 		//$this->db = JFactory::getDBO();
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile();
@@ -264,7 +265,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * @access public
 	 * @return boolean  True on success, false otherwise.
 	 */
-	function gc()
+	public function gc()
 	{
 		//$this->db = JFactory::getDBO();
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile();
@@ -287,9 +288,8 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * @access public
 	 * @return boolean  True on success, false otherwise.
 	 */
-	static function test()
+	public static function test()
 	{
 		return true;
 	}
-
 }

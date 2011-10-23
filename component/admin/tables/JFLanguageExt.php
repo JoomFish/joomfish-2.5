@@ -92,15 +92,16 @@ class TableJFLanguageExt extends JTable  {
 	 * Bind the content of the newValues to the object. Overwrite to make it possible
 	 * to use also objects here
 	 */
-	public function bind( $newValues ) {
-		if (is_array( $newValues )) {
-			return parent::bind( $newValues );
-		} elseif (is_a($newValues, 'JLanguage')) {
-			$this->shortcode= $newValues->tag;
+	public function bind($src, $ignore = array()) {
+	//public function bind( $newValues ) {
+		if (is_array( $src )) {
+			return parent::bind( $src, $ignore );
+		} elseif (is_a($src, 'JLanguage')) {
+			$this->shortcode= $src->tag;
 		} else {
 			foreach (get_object_vars($this) as $k => $v) {
-				if ( isset($newValues->$k) ) {
-					$this->$k = $newValues->$k;
+				if ( isset($src->$k) ) {
+					$this->$k = $src->$k;
 				}
 			}
 		}

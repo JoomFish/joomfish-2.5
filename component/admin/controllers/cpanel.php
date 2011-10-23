@@ -61,10 +61,11 @@ class CpanelController extends JController  {
 	 * Standard display control structure
 	 * 
 	 */
-	public function display($msg=null)
+	public function display($cachable = false, $urlparams = false)
+	//public function display($msg=null)
 	{
 		$this->view =  $this->getView('cpanel');
-		parent::display();
+		parent::display($cachable, $urlparams);
 	}
 	
 	public function cancel()

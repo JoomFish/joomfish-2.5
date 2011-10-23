@@ -61,12 +61,12 @@ class CPanelModelCPanel extends JModel
 	public function getPanelStates() {
 		$panelStates = array();
 		$systemState = $this->_checkSystemState();
-		$panelStates['directory_state'] = $systemState['directory_state'];
-		$panelStates['directory'] = $systemState['directory'];
-		$panelStates['extension_state'] = $systemState['extension_state'];
-		$panelStates['extension'] = $systemState['extension'];
-		$panelStates['performance_state'] = $systemState['performance_state'];
-		$panelStates['performance'] = $systemState['performance'];
+		$panelStates['directory_state'] = array_key_exists('directory_state', $systemState) ? $systemState['directory_state'] : null;
+		$panelStates['directory'] = array_key_exists('directory', $systemState) ? $systemState['directory'] : null;
+		$panelStates['extension_state'] = array_key_exists('extension_state', $systemState) ? $systemState['extension_state']: null;
+		$panelStates['extension'] = array_key_exists('extension', $systemState) ? $systemState['extension']: null;
+		$panelStates['performance_state'] = array_key_exists('performance_state', $systemState) ? $systemState['performance_state']: null;
+		$panelStates['performance'] = array_key_exists('performance', $systemState) ? $systemState['performance']: null;
 		//$panelStates['system'] = $this->_getSystemInfo();
 
 		return $panelStates;

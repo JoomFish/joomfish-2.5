@@ -264,10 +264,11 @@ class TableJFLanguage extends JTable  {
 	 * @return	boolean	True if successful
 	 * @access public
 	 */
-	public function load($oid=null) {
+	public function load($keys = null, $reset = true) {
+	//public function load($oid=null) {
 		// loading all of the refered objects
-		$this->jLanguageTable->load($oid);
-		$this->jfLanguageExt->load($oid);
+		$this->jLanguageTable->load($keys, $reset);
+		$this->jfLanguageExt->load($keys, $reset);
 		
 		// now copy attributes of underlying objects to this instance for more easy access
 		foreach (get_object_vars($this->jLanguageTable) as $key => $value) {
@@ -394,30 +395,31 @@ class TableJFLanguage extends JTable  {
 	 * Bind the content of the newValues to the object. Overwrite to make it possible
 	 * to use also objects here
 	 */
-	public function bind( $newValues ) {
-		if (is_array( $newValues )) {
-			return parent::bind( $newValues );
-		} elseif (is_a($newValues, 'JLanguage')) {
+	public function bind($src, $ignore = array()) {
+//	public function bind( $newValues ) {
+		if (is_array( $src )) {
+			return parent::bind( $src, $ignore );
+		} elseif (is_a($src, 'JLanguage')) {
 			$this->set('published', false);
-			$this->set('title', $newValues->name);
-			$this->set('lang_code', $newValues->tag);
+			$this->set('title', $src->name);
+			$this->set('lang_code', $src->tag);
 		} else {
 			foreach (get_object_vars($this) as $k => $v) {
-				if ( isset($newValues->$k) ) {
-					$this->set($k, $newValues->$k);
+				if ( isset($src->$k) ) {
+					$this->set($k, $src->$k);
 				}
 			}
 		}
 		
 		// allow bind of aggregated objects
-		$this->jLanguageTable->bind($newValues);
+		$this->jLanguageTable->bind($src);
 		// If the core language object includes special meta information we ensure those are stored in our parameter objcet
 		$langParameter = new JParameter($this->params);
 		$langParameter->set('MetaDesc', $this->jLanguageTable->get('metadesc'));
 		$langParameter->set('MetaKeys',$this->jLanguageTable->get('metakey'));
 		$this->params = $langParameter->toString();
-		$newValues->params = $this->params;
-		$this->jfLanguageExt->bind($newValues);
+		$src->params = $this->params;
+		$this->jfLanguageExt->bind($src, $ignore);
 
 		// check for existing frontend language
 		$this->checkFrontendLanguage();
@@ -482,9 +484,10 @@ class TableJFLanguage extends JTable  {
 	 * @param int	$id
 	 * @return boolean	based on success or not
 	 */
-	public function delete($id) {
-		$res = $this->jLanguageTable->delete($id);
-		$res = $res & $this->jfLanguageExt->delete($id);
+	public function delete($pk = null) {
+	//public function delete($id) {
+		$res = $this->jLanguageTable->delete($pk);
+		$res = $res & $this->jfLanguageExt->delete($pk);
 		return $res;
 	}
 	

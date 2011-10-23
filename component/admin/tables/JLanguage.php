@@ -164,7 +164,8 @@ class TableJLanguage extends JTable  {
 	 * Bind the content of the newValues to the object. Overwrite to make it possible
 	 * to use also objects here
 	 */
-	public function bind( $newValues ) {
+	public function bind($src, $ignore = array()) {
+	//public function bind( $newValues ) {
 		if (is_array( $newValues )) {
 			return parent::bind( $newValues );
 		} elseif (is_a($newValues, 'JLanguage')) {
