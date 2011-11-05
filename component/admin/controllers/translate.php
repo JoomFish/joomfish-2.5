@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: translate.php 247 2011-07-19 11:16:55Z geraint $
+ * $Id: translate.php 225M 2011-05-26 16:40:14Z (local) $
  * @package joomfish
  * @subpackage translate
  *
@@ -317,16 +317,16 @@ class TranslateController extends JController
 			$storeOriginalText = ($this->_joomfishManager->getCfg('storageOfOriginal') == 'md5') ? false : true;
 			$actContentObject->bind($_POST, '', '', true, $storeOriginalText);
 			$success = $actContentObject->store();
-			if ( $success == null || $success ==false)
-			{
-				$this->view->message = JText::_('ERROR_SAVING_TRANSLATION');
-			}
-			else
+			if ( $success)
 			{
 				JPluginHelper::importPlugin('joomfish');
 				$dispatcher = JDispatcher::getInstance();
 				$dispatcher->trigger('onAfterTranslationSave', array($_POST));
 				$this->view->message = JText::_('TRANSLATION_SAVED');
+			}
+			else
+			{
+				$this->view->message = JText::_('ERROR_SAVING_TRANSLATION');
 			}
 
 			// Clear Translation Cache

@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: controllerHelper.php 226 2011-05-27 07:29:41Z alex $
+ * $Id: controllerHelper.php 225 2011-05-26 16:40:14Z geraint $
  * @package joomfish
  * @subpackage controllerHelper
  *

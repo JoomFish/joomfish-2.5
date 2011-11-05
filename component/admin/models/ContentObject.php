@@ -26,7 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: ContentObject.php 247 2011-07-19 11:16:55Z geraint $
+ * $Id: ContentObject.php 239M 2011-06-22 06:28:53Z (local) $
  * @package joomfish
  * @subpackage Models
  *
@@ -189,12 +189,6 @@ class ContentObject implements iJFTranslatable
 						$translationValue = NULL;
 					}
 				}
-				if ($field->Type == "params" && is_array($translationValue))
-				{
-					$registry = new JRegistry();
-					$registry->loadArray($translationValue);
-					$translationValue = $registry->toString();
-				}
 				if ($field->posthandler != "")
 				{
 					if (method_exists($this, $field->posthandler))
@@ -224,6 +218,32 @@ class ContentObject implements iJFTranslatable
 				$fieldContent->published = $this->published;
 				$field->translationContent = $fieldContent;
 			}
+			else 	if ($field->Type == "params" && isset($formArray["jform"]["params"]))
+			{
+				$translationValue =$formArray["jform"]["params"];
+				$registry = new JRegistry();
+				$registry->loadArray($translationValue);
+				$translationValue = $registry->toString();
+
+				$fieldContent = new jfContent($db);
+				$fieldContent->id = $formArray[$prefix . "id_" . $fieldName . $suffix];
+				$fieldContent->reference_id = (intval($formArray[$prefix . "reference_id" . $suffix]) > 0) ? intval($formArray[$prefix . "reference_id" . $suffix]) : $this->id;
+				$fieldContent->language_id = $this->language_id;
+				$fieldContent->reference_table = $db->getEscaped($elementTable->Name);
+				$fieldContent->reference_field = $db->getEscaped($fieldName);
+				$fieldContent->value = $translationValue;
+				$fieldContent->original_value = "";
+				$fieldContent->original_text = "";
+
+				$datenow = & JFactory::getDate();
+				$fieldContent->modified = $datenow->toMySQL();
+
+				$fieldContent->modified_by = $user->id;
+				$fieldContent->published = $this->published;
+				$field->translationContent = $fieldContent;
+
+			}
+
 		}
 
 	}
@@ -581,7 +601,7 @@ class ContentObject implements iJFTranslatable
 
 		$elementTable = $this->getTable();
 
-		if (!$this->_contentElement->Storage == "joomfish")
+		if ($this->_contentElement->getTarget() == "joomfish")
 		{
 			$sql = "select * "
 					. "\n  from #__jf_content"
@@ -603,10 +623,10 @@ class ContentObject implements iJFTranslatable
 			$translationFields = null;
 			if (count($rows) > 0)
 			{
-				foreach ($rows as $row)
+				foreach ($rows as $trow)
 				{
 					$fieldContent = new jfContent($db);
-					if (!$fieldContent->bind($row))
+					if (!$fieldContent->bind($trow))
 					{
 						JError::raiseWarning(200, JText::_('Problems binding object to fields: ' . $fieldContent->getError()));
 					}
@@ -689,15 +709,15 @@ class ContentObject implements iJFTranslatable
 				for ($i = 0; $i < count($elementTable->Fields); $i++)
 				{
 					$field = $elementTable->Fields[$i];
-					/*
-					  if ($field->prehandlertranslation != "")
-					  {
-					  if (method_exists($this, $field->prehandlertranslation))
-					  {
-					  $handler = $field->prehandlertranslation;
-					  $this->$handler($field, $translationFields);
-					  }
-					  } */
+/*
+					if ($field->prehandlertranslation != "")
+					{
+						if (method_exists($this, $field->prehandlertranslation))
+						{
+							$handler = $field->prehandlertranslation;
+							$this->$handler($field, $translationFields);
+						}
+					}*/
 					$fieldname = $field->Name;
 					$transfieldname = "jfc_" . $field->Name;
 					$fieldContent = null;
@@ -830,11 +850,10 @@ class ContentObject implements iJFTranslatable
 	public function store()
 	{
 		$elementTable = $this->_contentElement->getTable();
-		$referenceField = $this->_contentElement->getReferenceId();
-		// different route based on target for saving data
-		if ($this->_contentElement->getTarget() == "joomla")
-		{
 
+		// different route based on target for saving data
+		if ($this->_contentElement->getTarget() == "native")
+		{
 			$db = JFactory::getDbo();
 			$tableclass = $this->_contentElement->getTableClass();
 			if ($tableclass)
@@ -854,6 +873,7 @@ class ContentObject implements iJFTranslatable
 						if (isset($fieldContent->reference_id) && intval($fieldContent->reference_id) > 0)
 						{
 							$reference_id = intval($fieldContent->reference_id);
+							$translation_id = intval($fieldContent->id);
 							$language_id = intval($fieldContent->language_id);
 							break;
 						}
@@ -864,24 +884,14 @@ class ContentObject implements iJFTranslatable
 					return false;
 				}
 
-				$jf = JoomFishManager::getInstance();
-				$lang = $jf->getLanguageByID($language_id);
-				
-				// Find the active translation id from the translation map table
-				$translation_id =0;
-				$db = JFactory::getDbo();
-				$db->setQuery("SELECT * FROM #__jf_translationmap WHERE language=".$db->Quote("$lang->code"). " AND reference_id=$reference_id AND reference_table=" . $db->Quote($elementTable->Name));
-				$translation = $db->loadObject();
-				if ($translation) {
-					$translation_id = $translation->translation_id;
-				}
-								
-				// Now do the translation				
+				// Now do the translation
 				if (intval($translation_id) > 0)
 				{
 					// load the translation and amend
 					$table = JTable::getInstance($tableclass);
 					$table->load(intval($translation_id));
+
+					return true;
 				}
 				else
 				{
@@ -890,78 +900,75 @@ class ContentObject implements iJFTranslatable
 					$table->load(intval($reference_id));
 					$key = $table->getKeyName();
 					$table->$key = 0;
-				}
-				if (isset($table->lft))
-				{
-					//$table->lft = $table->rgt = 0;
-				}
-								
-				$table->language = $lang->code;
-				for ($i = 0; $i < count($elementTable->Fields); $i++)
-				{
-					$field = $elementTable->Fields[$i];
-					$fieldContent = $field->translationContent;
-
-					if ($field->Translate)
+					if (isset($table->lft))
 					{
-						$fieldname = $field->Name;
-						$table->$fieldname = $fieldContent->value;
+						$table->lft = $table->rgt = 0;
 					}
+					$table->language = $language_id;
+					for ($i = 0; $i < count($elementTable->Fields); $i++)
+					{
+						$field = $elementTable->Fields[$i];
+						$fieldContent = $field->translationContent;
+
+						if ($field->Translate)
+						{
+							$fieldname = $field->Name;
+							$table->$fieldname = $fieldContent->value;
+						}
+					}
+
+					// Check the data.
+					if (!$table->check())
+					{
+						$this->setError($table->getError());
+						return false;
+					}
+
+					// Store the data.
+					if (!$table->store())
+					{
+						$this->setError($table->getError());
+						return false;
+					}
+
+					// Save the translation map - should be moved to table class!
+					//$db->setQuery();			
+
+					return true;
 				}
-
-				// Check the data.
-				if (!$table->check())
-				{
-					JError::raiseError(101,$table->getError());
-					return false;
-				}
-
-				// Store the data.
-				if (!$table->store())
-				{
-					JError::raiseError(101,$table->getError());
-					return false;
-				}
-
-				// Save the translation map - should be moved to table class!
-				$translation_id = $table->$referenceField;
-				
-				$db = JFactory::getDbo();
-				$db->setQuery("REPLACE INTO #__jf_translationmap (language, reference_id, translation_id, reference_table) VALUES (".$db->Quote("$lang->code"). ", $reference_id, $translation_id ," . $db->Quote($elementTable->Name).")");
-				$db->query(); 
-
-				return true;
 			}
 			else
 				return false;
 		}
 		else
 		{
+			$success = true;
 			for ($i = 0; $i < count($elementTable->Fields); $i++)
 			{
 				$field = $elementTable->Fields[$i];
 				$fieldContent = $field->translationContent;
-
+				
 				if ($field->Translate)
 				{
 					if (isset($fieldContent->reference_id))
 					{
 						if (isset($fieldContent->value) && $fieldContent->value != '')
 						{
-							$fieldContent->store(true);
+							$success = $success && $fieldContent->store(true);
 						}
 						// special case to handle readmore in original when there is none in the translation
 						else if (isset($fieldContent->value) && $fieldContent->reference_table == "content" && $fieldContent->reference_field == "fulltext")
 						{
-							$fieldContent->store(true);
+							$success = $success && $fieldContent->store(true);
 						}
 						else
 						{
-							$fieldContent->delete();
+							$success = $success && $fieldContent->delete();
 						}
 					}
 				}
 			}
+			return $success;
 		}
 
 	}

@@ -31,8 +31,9 @@
 	<treatment>
 		<target>joomfish</target>
 		<tableclass>Content</tableclass>
-	</treatment>
+	</treatment>	
   </reference>
+  <storage>joomfish</storage>
   <translationfilters>
 	  <frontpage>id</frontpage>
 <!--	  <section>sectionid</section>//-->

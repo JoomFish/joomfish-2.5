@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: edit.php 226 2011-05-27 07:29:41Z alex $
+ * $Id: edit.php 225M 2011-05-26 16:40:14Z (local) $
  * @package joomfish
  * @subpackage Views
  *
@@ -51,6 +51,10 @@ $select_language_id = $this->select_language_id;
 $user = JFactory::getUser();
 $db = JFactory::getDBO();
 $elementTable = $this->actContentObject->getTable();
+$option = JRequest::getCmd("option");
+
+ini_set('xdebug.var_display_max_children', 3000 );
+ini_set('xdebug.var_display_max_depth', 3000 );
 
 // Should use CSS for image waps - in the meantime to this.
 //$jsfile = '<script language="javascript" type="text/javascript" src="'.JURI::root().'/includes/js/mambojavascript.js" ></script>';
@@ -191,9 +195,9 @@ else {
 				if( $field->Translate ) {
 					$translationContent = $field->translationContent;
 
-					// This causes problems in Japanese/Russian etc. ??
-					jimport('joomla.filter.output');
-					JFilterOutput::objectHTMLSafe( $translationContent );
+					// This causes problems in Japanese/Russian and params fields
+					//jimport('joomla.filter.output');
+					//JFilterOutput::objectHTMLSafe( $translationContent );
 
 
 					if( strtolower($field->Type)=='hiddentext') {
@@ -300,21 +304,10 @@ else {
 	      	?>
 		    <tr class="<?php echo "row$k"; ?>">
 		      <td colspan="3">
-		      <table class='translateparams'>
-			      <tr>
-				      <td valign="top" style="text-align:center!important"><?php echo JText::_( 'ORIGINAL' );?></td>
-				      <td valign="top" style="text-align:center!important"><?php echo JText::_( 'TRANSLATION' );?></td>
-				      <td valign="top" align="right">
-						<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
-						<!--<input type="hidden" name="origText_<?php echo $field->Name;?>" value='<?php echo $field->originalValue;?>' />//-->
+				<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
 					    <textarea  name="origText_<?php echo $field->Name;?>" style="display:none"><?php echo $field->originalValue;?></textarea>
-						<a class="toolbar" onclick="copyParams('orig', '<?php echo $field->Name;?>');"><span class="icon-32-copy"></span><?php echo JText::_( 'COPY' ); ?></a>
-						<a class="toolbar" onclick="copyParams('defaultvalue', '<?php echo $field->Name;?>');"><span class="icon-32-delete"></span><?php echo JText::_( 'DELETE' ); ?></a>
-					   </td>
-			     </tr>
-			     <tr>
-			      <td align="left" valign="top" class="origparams" id="original_value_<?php echo $field->Name?>">
 			      <!--
+				  // We will have to use this method for JForm originals and defaults!
 			      <iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=orig&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>
 			      <iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=default&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>
 			      //-->
@@ -326,22 +319,15 @@ else {
 			      }
 			      $transparams = new $tpclass($field->originalValue,$translationContent->value, $field->Name,$elementTable->Fields);
 			      // comment lut if using iframes above
-			      $transparams->showOriginal();
-			      $transparams->showDefault();
-			      ?>
-			      </td>
-			      <td align="left" valign="top" class="translateparams">
-						  <input type="hidden" name="id_<?php echo $field->Name;?>" value="<?php echo $translationContent->id;?>" />
-							<?php
-							// TODO sort out default value for author in params when editing new translation
-							$retval = $transparams->editTranslation();
-							if ($retval){
-								$editorFields[] = $retval;
-							}
-							?>
-					</td>
-			      </tr>
-		      </table>
+			      //$transparams->showOriginal();
+			      //$transparams->showDefault();
+				  
+				// TODO sort out default value for author in params when editing new translation
+				$retval = $transparams->editTranslation();
+				if ($retval){
+					$editorFields[] = $retval;
+				}
+				?>
 		      </td>
 		    </tr>
 	      	<?php
