@@ -40,7 +40,7 @@
     </files>
     
     <!-- Joom!Fish Site language files -->
-	<languages folder="site/language">
+	<languages folder="site/language/en-GB">
 		<language tag="en-GB">en-GB.com_joomfish.ini</language>
    	</languages>
 
@@ -84,7 +84,7 @@
 	    </files>
 
 		<!-- Joom!Fish Admin Language Files -->
-		<languages folder="admin/language">
+		<languages folder="admin/language/en-GB">
 			<language tag="en-GB">en-GB.com_joomfish.ini</language>
 			<language tag="en-GB">en-GB.com_joomfish.menu.ini</language>
     	</languages>
