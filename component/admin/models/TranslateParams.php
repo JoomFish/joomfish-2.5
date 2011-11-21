@@ -179,6 +179,7 @@ SCRIPT;
 	function editTranslation()
 	{
 		echo $this->transparams->render("refField_" . $this->fieldname);
+
 		return false;
 
 	}
@@ -200,31 +201,76 @@ class JFMenuParams extends JObject
 	{
 		$this->menuform = $this->form;
 //		var_dump($this->menuform );
-
-		$fieldSets = $this->form->getFieldsets('params');
 		$sliders = & JPane::getInstance('sliders');
 		echo $sliders->startPane('params');
-		foreach ($fieldSets as $name => $fieldSet)
+		
+		$fieldSets = $this->form->getFieldsets('request');
+		if ($fieldSets)
 		{
-			$label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_MENUS_' . $name . '_FIELDSET_LABEL';
-			echo $sliders->startPanel(JText::_($label), $name . '-options');
+			foreach ($fieldSets as $name => $fieldSet)
+			{
+				$hidden_fields = '';
+				$label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_MENUS_' . $name . '_FIELDSET_LABEL';
+				echo $sliders->startPanel(JText::_($label), $name . '-options');
 
-			if (isset($fieldSet->description) && trim($fieldSet->description)) :
-				echo '<p class="tip">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
-			endif;
-			?>
-			<div class="clr"></div>
-			<fieldset class="panelform">
-				<ul class="adminformlist">
-			<?php foreach ($this->form->getFieldset($name) as $field) : ?>
-						<li><?php echo $field->label; ?>
-				<?php echo $field->input; ?></li>
-			<?php endforeach; ?>
-				</ul>
-			</fieldset>
+				if (isset($fieldSet->description) && trim($fieldSet->description)) :
+					echo '<p class="tip">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
+				endif;
+				?>
+				<div class="clr"></div>
+				<fieldset class="panelform">
+					<ul class="adminformlist">
+						<?php foreach ($this->form->getFieldset($name) as $field)
+						{ ?>
+							<?php if (!$field->hidden)
+							{
+								echo $field->value;
+								?>
+								<li><?php echo $field->label; ?>
+									<?php echo $field->input; ?></li>
+								<?php
+							}
+							else
+							{
+								$hidden_fields.= $field->input;
+								?>
+							<?php } ?>
 
-			<?php
-			echo $sliders->endPanel();
+						<?php } ?>
+					</ul>
+					<?php echo $hidden_fields; ?>
+				</fieldset>
+
+				<?php
+				echo $sliders->endPanel();
+			}
+		}
+
+		$paramsfieldSets = $this->form->getFieldsets('params');
+		if ($paramsfieldSets)
+		{
+			foreach ($paramsfieldSets as $name => $fieldSet)
+			{
+				$label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_MENUS_' . $name . '_FIELDSET_LABEL';
+				echo $sliders->startPanel(JText::_($label), $name . '-options');
+
+				if (isset($fieldSet->description) && trim($fieldSet->description)) :
+					echo '<p class="tip">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
+				endif;
+				?>
+				<div class="clr"></div>
+				<fieldset class="panelform">
+					<ul class="adminformlist">
+						<?php foreach ($this->form->getFieldset($name) as $field) : ?>
+							<li><?php echo $field->label; ?>
+								<?php echo $field->input; ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</fieldset>
+
+				<?php
+				echo $sliders->endPanel();
+			}
 		}
 		echo $sliders->endPane();
 		return;
@@ -241,8 +287,9 @@ class TranslateParams_menu extends TranslateParams_xml
 	var $orig_menuModelItem;
 	var $trans_menuModelItem;
 
-	function TranslateParams_menu($original, $translation, $fieldname, $fields=null)
+	function __construct($original, $translation, $fieldname, $fields=null)
 	{
+		parent::__construct($original, $translation, $fieldname, $fields);
 		$lang = JFactory::getLanguage();
 		$lang->load("com_menus", JPATH_ADMINISTRATOR);
 
@@ -277,7 +324,12 @@ class TranslateParams_menu extends TranslateParams_xml
 			$translation = json_decode($translation);
 		}
 		$translationMenuModelForm = $this->trans_menuModelItem->getForm();
-		$translationMenuModelForm->bind(array("params" => $translation));
+		if (isset($translation->jfrequest)){
+			$translationMenuModelForm->bind(array("params" => $translation, "request" =>$translation->jfrequest));
+		}
+		else {
+			$translationMenuModelForm->bind(array("params" => $translation));
+		}
 
 		// NOW GET THE Default- IF AVAILABLE
 		//	$this->default_menuModelItem = new JFDefaultMenusModelItem();

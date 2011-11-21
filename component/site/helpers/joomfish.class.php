@@ -364,7 +364,9 @@ class JoomFish {
 				$table =$value["orgtable"];
 
 				// If there is no translated content for this table then skip it!
-				if (!$db->translatedContentAvailable($table) || in_array($table,array("content","menu","modules"))) continue;
+				// TODO New method for storage - mapping table
+				//if (!$db->translatedContentAvailable($table) || in_array($table,array("content","menu","modules"))) continue;
+				if (!$db->translatedContentAvailable($table) || in_array($table,array("content","modules"))) continue;
 
 				// get primary key for tablename
 				$idkey = $jfManager->getPrimaryKey( trim($reftable) );

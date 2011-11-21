@@ -223,6 +223,7 @@ class interceptDB extends JDatabaseMySQLi
 	public function query()
 	{
 		if ($this->skipjf) return parent::query();
+		$jfmCount = 0;
 		if (is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
 		{
 			// Do the from first
@@ -240,7 +241,6 @@ class interceptDB extends JDatabaseMySQLi
 			{
 				$this->setLanguage($language);
 			}
-			$jfmCount = 0;
 			// Annoying that _from is protected in databasequery object and no get method!
 			$from = $this->sql->from;
 			if ($from)
@@ -258,7 +258,9 @@ class interceptDB extends JDatabaseMySQLi
 						$table = trim($parts[0]);
 						//if ($this->translatedContentAvailable($table))
 						// TODO need new translatedContentAvailable method !
-						if (in_array($table,array("menu", "content",  "categories")))
+						// This is the mapping table method!!
+						//if (in_array($table,array("menu", "content",  "categories")))
+						if (in_array($table,array("content",  "categories")))
 						{
 							$alias = trim($parts[count($parts) - 1]);
 							$jfalias = 'jftm' . $jfmCount;
@@ -270,7 +272,9 @@ class interceptDB extends JDatabaseMySQLi
 					}
 				}
 			}
-			$this->sql->jfprocessed = true;
+			if ($jfmCount>0){
+				$this->sql->jfprocessed = true;
+			}
 		}
 		return parent::query();
 

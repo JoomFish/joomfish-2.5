@@ -81,7 +81,7 @@ interface iJFTranslatable {
 
 	public function filterName(&$alias);
 
-	public function saveUrlParams(&$link);
+	public function saveUrlParams(&$link, $fields, $formarray);
 
 	/**
 	 * Special pre translation handler for content text to combine intro and full text

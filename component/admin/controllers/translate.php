@@ -350,7 +350,7 @@ class TranslateController extends JController
 		else
 		{
 			// redirect to overview
-			$this->showTranslate();
+			$this->setRedirect( "index.php?option=com_joomfish&task=translate.overview",$this->view->message);
 		}
 
 	}

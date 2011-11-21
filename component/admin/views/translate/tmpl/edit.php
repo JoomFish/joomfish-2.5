@@ -234,7 +234,11 @@ else {
 			  <td valign="top" class="button">
 				<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
 				<textarea  name="origText_<?php echo $field->Name;?>" style="display:none"><?php echo $field->originalValue;?></textarea>
-				<?php if( strtolower($field->Type)!='htmltext' ) {?>
+				<?php 
+				 if( strtolower($field->Type)=='readonlytext'){
+					 
+				 }
+				else if( strtolower($field->Type)!='htmltext' ) {?>
 					<a class="toolbar" onclick="document.adminForm.refField_<?php echo $field->Name;?>.value = document.adminForm.origText_<?php echo $field->Name;?>.value;"><span class="icon-32-copy"></span><?php echo JText::_( 'COPY' ); ?></a>
 				<?php }	else { ?>
 					<div id='googlebranding'>
@@ -274,7 +278,7 @@ else {
 							$maxLength = ($field->MaxLength>0)?$field->MaxLength:60;
 							$value =  strlen($translationContent->value)>0? $translationContent->value:$field->originalValue;
 							?>
-							<input class="inputbox" readonly="yes" type="text" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $value; ?>" maxlength="<?php echo $maxLength;?>"/>
+							<input class="inputbox" type="text" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $value; ?>" maxlength="<?php echo $maxLength;?>"/>
 							<?php
 						}
 						?>
@@ -306,6 +310,7 @@ else {
 		      <td colspan="3">
 				<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
 					    <textarea  name="origText_<?php echo $field->Name;?>" style="display:none"><?php echo $field->originalValue;?></textarea>
+				<input type="hidden" name="id_<?php echo $field->Name;?>" value="<?php echo $translationContent->id;?>" />
 			      <!--
 				  // We will have to use this method for JForm originals and defaults!
 			      <iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=orig&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>

@@ -26,7 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfdatabase.php 246 2011-07-19 11:15:13Z geraint $
+ * $Id: jfdatabase.php 241 2011-06-22 15:42:55Z geraint $
  * @package joomfish
  * @subpackage jfdatabase
  * @version 2.0
@@ -117,11 +117,7 @@ class plgSystemJFDatabase extends JPlugin
 
 	function onAfterRoute()
 	{
-		// disable Joomla based translations for now
-		return;
-		
-		// amend editing page 
-		// TODO make sure reference id is "id" 
+		// amend editing page!
 		$reference_id = JRequest::getInt("id");
 		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit" && $reference_id > 0)
 		{
@@ -131,11 +127,6 @@ class plgSystemJFDatabase extends JPlugin
 			{
 				$table = "menu";
 			}
-			else if (JRequest::getCmd('option') == "com_categories")
-			{
-				$table = "categories";
-			}
-
 			$db->setQuery('select * from #__jf_translationmap where reference_table="' . $table . '" AND translation_id=' . JRequest::getInt("id"));
 			$translations = $db->loadObjectList();
 			$original = 0;
@@ -182,18 +173,18 @@ window.addEvent('domready', function() {
 		var jforigalinput = new Element("input",{ type:'text', name:'jforiginal_id', id:'jforiginal_id', value:refid});
 
 		var jftranslabel  = new Element("label", {for:"jftranslation_id"});
-		jftranslabel.appendChild(document.createTextNode("Translation id : "));
+		jftranslabel.appendText("translation id : ");
 
 		var jforiglabel  = new Element("label", {for:"jforiginal_id"});
-		jforiglabel.appendChild(document.createTextNode("Original id : "));
+		jforiglabel.appendText("origional id : ");
 
 		var newid = false;
 		if (!$('id')){
 			// must also have a new pseudo  id to make sure replaces anything in the URL!
 			// editing existing elements don't have this 
 			var newid = new Element("input",{ type:'text', name:'id', id:'jfid', value:refid});		
-			var jfnewidlabel  = new Element("label", {for:"id"});
-			jfnewidlabel.appendChild(document.createTextNode("New id : "));
+			var jfnewidlabel  = new Element("label", {for:"jfid"});
+			jfnewidlabel.appendText("new id : ");
 		}
 
 
@@ -231,12 +222,7 @@ SCRIPT;
 
 	public function onContentAfterSave($context, &$article, $isNew)
 	{
-		if ($context == "com_categories.category"){
-			$this->doAfterSave($context, $article, $isNew, "categories");
-		}
-		else {
-			$this->doAfterSave($context, $article, $isNew, "content");
-		}
+		$this->doAfterSave($context, $article, $isNew, "content");
 
 	}
 
@@ -378,21 +364,5 @@ SCRIPT;
 		
 	}
 
-	
-	/* 
-	 * SQL to create view
-	 */
-	/*
-CREATE OR REPLACE VIEW  joomla17.jos_jf_categories_de AS
-SELECT tm.reference_id , CASE WHEN tm.reference_id IS NULL THEN c.id ELSE tm.reference_id END as newid , c.* FROM joomla17.jos_categories as c
-LEFT JOIN joomla17.jos_jf_translationmap as tm ON c.id=tm.translation_id AND tm.reference_table='categories' AND tm.language='de-DE'
-WHERE c.extension='com_content' 
-AND c.id IN (
-SELECT c2.id FROM joomla17.jos_categories as c2
-LEFT JOIN joomla17.jos_jf_translationmap as tm2 ON c2.id=tm2.reference_id AND tm2.reference_table='categories' AND tm2.language='de-DE'
-WHERE c.extension='com_content' AND (tm2.reference_id is null OR c2.language ='*' OR c2.language='de-DE')
-)
-	 * 
-	 */
 }
-	 
+

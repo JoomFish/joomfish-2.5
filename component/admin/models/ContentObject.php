@@ -221,6 +221,16 @@ class ContentObject implements iJFTranslatable
 			else 	if ($field->Type == "params" && isset($formArray["jform"]["params"]))
 			{
 				$translationValue =$formArray["jform"]["params"];
+				
+				if ($field->posthandler != "")
+				{
+					if (method_exists($this, $field->posthandler))
+					{
+						$handler = $field->posthandler;
+						$this->$handler($translationValue, $elementTable->Fields, $formArray, $prefix, $suffix, $storeOriginalText);
+					}
+				}
+				
 				$registry = new JRegistry();
 				$registry->loadArray($translationValue);
 				$translationValue = $registry->toString();
@@ -242,6 +252,10 @@ class ContentObject implements iJFTranslatable
 				$fieldContent->published = $this->published;
 				$field->translationContent = $fieldContent;
 
+				// TODO must also save 'request' object for Menu items - this should be moved to a separate 'post translation save' handler
+				// Joomla STILL treats this as a special case in menu items see administrator/omponnets/com_menus/controllers/item.php line 167
+				// its not even in the model or table class!
+				
 			}
 
 		}
@@ -269,57 +283,19 @@ class ContentObject implements iJFTranslatable
 
 	}
 
-	public function saveUrlParams(&$link)
+	public function saveUrlParams(&$link, $fields, $formarray)
 	{
-		$urlparams = JRequest::getVar("urlparams", array(), 'post', "array");
-		if (is_array($urlparams) && count($urlparams) > 0)
-		{
-			$pos = strpos($link, '?');
-			if ($pos !== false)
-			{
-				$prefix = substr($link, 0, $pos);
-				$query = substr($link, $pos + 1);
+		// Check for the special 'request' entry.
+		$data = $formarray["jform"];
+		if (isset($formarray['refField_link']) && isset($data['request']) && is_array($data['request']) && !empty($data['request'])) {
+			// Parse the submitted link arguments.
+			$args = array();
+			parse_str(parse_url($formarray['refField_link'], PHP_URL_QUERY), $args);
 
-				$temp = array();
-				if (strpos($query, '&amp;') !== false)
-				{
-					$query = str_replace('&amp;', '&', $query);
-				}
-				parse_str($query, $temp);
-				$temp2 = array_merge($temp, $urlparams);
-
-				$temp3 = array();
-				foreach ($temp2 as $k => $v)
-				{
-					$temp3[] = $k . '=' . $v;
-				}
-				$url = null;
-				$link = $prefix . '?' . implode('&', $temp3);
-			}
+			// Merge in the user supplied request arguments.
+			$args = array_merge($args, $data['request']);
+			$link = 'index.php?'.urldecode(http_build_query($args,'','&'));
 		}
-		else
-		{
-			$menuid = JRequest::getInt("reference_id", 0);
-			if ($menuid == 0)
-				return;
-			include_once( JPATH_SITE . DS . 'includes' . DS . 'application.php');
-			$menu = JSite::getMenu();
-			$item = $menu->getItem($menuid);
-			if ($item->type == "menulink")
-			{
-				$urlparams = JRequest::getVar("refField_params", array(), 'post', "array");
-				if (is_array($urlparams) && count($urlparams) > 0 && array_key_exists("menu_item", $urlparams))
-				{
-					$pos = strpos($link, '?');
-					if ($pos !== false)
-					{
-						$prefix = substr($link, 0, $pos);
-						$link = $prefix . '?Itemid=' . $urlparams["menu_item"];
-					}
-				}
-			}
-		}
-
 	}
 
 	public function saveMenuPath(&$path, $fields, $formArray, $prefix, $suffix, $storeOriginalText)
