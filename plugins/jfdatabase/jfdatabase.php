@@ -232,10 +232,89 @@ SCRIPT;
 
 	}
 
+	public function onModuleAfterSave($context, &$table, $isNew)
+	{
+		$this->doAfterSave($context, $article, $isNew, "modules");
+
+		// For modules must also save module/menu assignments
+
+		$data = JRequest::getVar("jform", array());
+		if (isset($data['assignment']))
+		{
+			//
+			// Process the menu link mappings.
+			//
+
+			$assignment = isset($data['assignment']) ? $data['assignment'] : 0;
+
+			$db = JFactory::getDbo();
+
+			$query = $db->getQuery(true);
+			$query->delete();
+			$query->from('#__modules_menu');
+			$query->where('moduleid = ' . (int) $table->id);
+			$db->setQuery((string) $query);
+			$db->query();
+
+			// If the assignment is numeric, then something is selected (otherwise it's none).
+			if (is_numeric($assignment))
+			{
+				// Variable is numeric, but could be a string.
+				$assignment = (int) $assignment;
+
+				// Logic check: if no module excluded then convert to display on all.
+				if ($assignment == -1 && empty($data['assigned']))
+				{
+					$assignment = 0;
+				}
+
+				// Check needed to stop a module being assigned to `All`
+				// and other menu items resulting in a module being displayed twice.
+				if ($assignment === 0)
+				{
+					$query->clear();
+					$query->insert('#__modules_menu');
+					$query->set('moduleid=' . (int) $table->id);
+					$query->set('menuid=0');
+					$db->setQuery((string) $query);
+					if (!$db->query())
+					{
+						$this->setError($db->getErrorMsg());
+						return false;
+					}
+				}
+				elseif (!empty($data['assigned']))
+				{
+					// Get the sign of the number.
+					$sign = $assignment < 0 ? -1 : +1;
+
+					// Preprocess the assigned array.
+					$tuples = array();
+					foreach ($data['assigned'] as &$pk)
+					{
+						$tuples[] = '(' . (int) $table->id . ',' . (int) $pk * $sign . ')';
+					}
+
+					$db->setQuery(
+							'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ' .
+							implode(',', $tuples)
+					);
+
+					if (!$db->query())
+					{
+						$this->setError($db->getErrorMsg());
+						return false;
+					}
+				}
+			}
+		}
+
+	}
+
 	private function doAfterSave($context, &$article, $isNew, $table)
 	{
-		$translationid = JRequest::getInt("jftranslation_id",JRequest::getInt("reference_id"));
-		$originalid = JRequest::getInt("jforiginal_id",JRequest::getInt("reference_id"));
+		$translationid = JRequest::getInt("jftranslation_id", JRequest::getInt("reference_id"));
+		$originalid = JRequest::getInt("jforiginal_id", JRequest::getInt("reference_id"));
 		$jftranslation = JRequest::getInt("jftranslation");
 		if ($originalid > 0)
 		{
@@ -250,9 +329,9 @@ SCRIPT;
 				$jfm = JoomFishManager::getInstance();
 				$languages = $jfm->getLanguagesIndexedById();
 				$language = $languages[$language]->code;
-
 			}
-			else {
+			else
+			{
 				return;
 			}
 			if ($translationid > 0)
@@ -327,7 +406,7 @@ SCRIPT;
 
 			// make sure jfManager is initialised before we switch db handler
 			$jfManager = JoomFishManager::getInstance();
-			
+
 			$conf = JFactory::getConfig();
 
 			$host = $conf->getValue('config.host');

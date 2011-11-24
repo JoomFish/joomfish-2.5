@@ -25,7 +25,6 @@
 		<tableclass>Menu</tableclass>
 	</treatment>
   </reference>
-  <storage>native</storage>
   <translationfilters>
   	  <keyword>title</keyword>
   	  <menutype>menutype</menutype>

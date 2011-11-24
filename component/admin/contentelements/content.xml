@@ -33,7 +33,6 @@
 		<tableclass>Content</tableclass>
 	</treatment>	
   </reference>
-  <storage>native</storage>
   <translationfilters>
 	  <frontpage>id</frontpage>
 <!--	  <section>sectionid</section>//-->

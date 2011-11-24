@@ -387,6 +387,7 @@ class ContentObject implements iJFTranslatable
 
 	}
 
+
 	/**
 	 * Special pre translation handler for content text to combine intro and full text
 	 *
@@ -930,9 +931,13 @@ class ContentObject implements iJFTranslatable
 
 				// Save the translation map - should be moved to table class!
 				// contient has its own plugin!
-				if  ($tableclass == "Menu"){
+				if  ($tableclass == "Menu" ){
 					$dispatcher = JDispatcher::getInstance();
 					$dispatcher->trigger("onMenuAfterSave", array("com_menu,menu", &$table, $isNew));
+				}
+				else if  ($tableclass == "Module" ){
+					$dispatcher = JDispatcher::getInstance();
+					$dispatcher->trigger("onModuleAfterSave", array("com_modules,module", &$table, $isNew));
 				}
 
 				return true;
