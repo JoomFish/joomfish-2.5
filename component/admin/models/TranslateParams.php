@@ -390,7 +390,7 @@ class TranslateParams_menu extends TranslateParams_xml
 class TranslateParams_modules extends TranslateParams_xml
 {
 
-	function TranslateParams_modules($original, $translation, $fieldname, $fields=null)
+	function __construct($original, $translation, $fieldname, $fields=null)
 	{
 
 		$this->fieldname = $fieldname;
@@ -503,34 +503,117 @@ class TranslateParams_modules extends TranslateParams_xml
 
 }
 
+class JFContentParams extends JObject
+{
+
+	var $form = null;
+
+	function __construct($form=null, $item=null)
+	{
+		$this->form = $form;
+
+	}
+
+	function render($type)
+	{
+		$sliders = & JPane::getInstance('sliders');
+		echo $sliders->startPane('params');
+		
+		$paramsfieldSets = $this->form->getFieldsets('attribs');
+		if ($paramsfieldSets)
+		{
+			foreach ($paramsfieldSets as $name => $fieldSet)
+			{
+				$label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_MENUS_' . $name . '_FIELDSET_LABEL';
+				echo $sliders->startPanel(JText::_($label), $name . '-options');
+
+				if (isset($fieldSet->description) && trim($fieldSet->description)) :
+					echo '<p class="tip">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
+				endif;
+				?>
+				<div class="clr"></div>
+				<fieldset class="panelform">
+					<ul class="adminformlist">
+						<?php foreach ($this->form->getFieldset($name) as $field) : ?>
+							<li><?php echo $field->label; ?>
+								<?php echo $field->input; ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</fieldset>
+
+				<?php
+				echo $sliders->endPanel();
+			}
+		}
+		echo $sliders->endPane();
+		return;
+
+	}
+
+}
+
 class TranslateParams_content extends TranslateParams_xml
 {
 
-	function TranslateParams_content($original, $translation, $fieldname, $fields=null)
+	var $orig_contentModelItem;
+	var $trans_contentModelItem;
+	
+	function __construct($original, $translation, $fieldname, $fields=null)
 	{
 
-		$this->fieldname = $fieldname;
-		$content = null;
-		foreach ($fields as $field)
-		{
-			if ($field->Type == "params")
-			{
-				$content = $field->originalValue;
-				break;
-			}
-		}
-		if (is_null($content))
-		{
-			echo JText::_('PROBLEMS_WITH_CONTENT_ELEMENT_FILE');
-			exit();
-		}
+		parent::__construct($original, $translation, $fieldname, $fields);
 		$lang = JFactory::getLanguage();
-		$lang->load("com_content", JPATH_SITE);
+		$lang->load("com_content", JPATH_ADMINISTRATOR);
 
-		$this->origparams = new JParameter($original, JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_content' . DS . 'models' . DS . 'article.xml');
-		$this->transparams = new JParameter($translation, JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_content' . DS . 'models' . DS . 'article.xml');
-		$this->defaultparams = new JParameter("", JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_content' . DS . 'models' . DS . 'article.xml');
-		$this->fields = $fields;
+		$cid = JRequest::getVar('cid', array(0));
+		$oldcid = $cid;
+		$translation_id = 0;
+		if (strpos($cid[0], '|') !== false)
+		{
+			list($translation_id, $contentid, $language_id) = explode('|', $cid[0]);
+		}
+
+		JRequest::setVar("cid", array($contentid));
+		JRequest::setVar("edit", true);
+
+		// model's populate state method assumes the id is in the request object!
+		$oldid = JRequest::getInt("article_id", 0);
+		// Take care of the name of the id for the item
+		JRequest::setVar("article_id", $contentid);
+		
+		JLoader::import('models.JFContentModelItem', JOOMFISH_ADMINPATH);
+		$this->orig_contentModelItem = new JFContentModelItem();
+
+		// Get The Original form 
+		// JRequest does NOT this for us in articles!!
+		$this->orig_contentModelItem->setState('article.id',$contentid);
+		$jfcontentModelForm = $this->orig_contentModelItem->getForm();
+
+		// NOW GET THE TRANSLATION - IF AVAILABLE
+		$this->trans_contentModelItem = new JFContentModelItem();
+		$this->trans_contentModelItem->setState('article.id', $contentid);
+		if ($translation != "")
+		{
+			$translation = json_decode($translation);
+		}
+		$translationcontentModelForm = $this->trans_contentModelItem->getForm();
+		if (isset($translation->jfrequest)){
+			$translationcontentModelForm->bind(array("attribs" => $translation, "request" =>$translation->jfrequest));
+		}
+		else {
+			$translationcontentModelForm->bind(array("attribs" => $translation));
+		}
+
+		// reset old values in REQUEST array
+		$cid = $oldcid;
+		JRequest::setVar('cid', $cid);
+		JRequest::setVar("article_id", $oldid);
+
+		//	$this->origparams = new JFContentParams( $jfcontentModelForm);
+		$this->transparams = new JFContentParams($translationcontentModelForm);
+
+		// This is tricky!!
+		//	$this->defaultparams = new JFContentParams( $defaultcontentModelForm);
 
 	}
 
@@ -553,43 +636,9 @@ class TranslateParams_content extends TranslateParams_xml
 
 	}
 
-	function showDefault()
-	{
-		parent::showDefault();
-
-		$output = "<span style='display:none'>";
-		if ($this->origparams->getNumParams('advanced'))
-		{
-			$fieldname = 'defaultvalue_' . $this->fieldname;
-			$output .= $this->defaultparams->render($fieldname, 'advanced');
-		}
-		if ($this->origparams->getNumParams('legacy'))
-		{
-			$fieldname = 'defaultvalue_' . $this->fieldname;
-			$output .= $this->defaultparams->render($fieldname, 'legacy');
-		}
-		$output .= "</span>\n";
-		echo $output;
-
-	}
-
 	function editTranslation()
 	{
 		parent::editTranslation();
-
-		$output = "";
-		if ($this->origparams->getNumParams('advanced'))
-		{
-			$fieldname = 'refField_' . $this->fieldname;
-			$output .= $this->transparams->render($fieldname, 'advanced');
-		}
-		if ($this->origparams->getNumParams('legacy'))
-		{
-			$fieldname = 'refField_' . $this->fieldname;
-			$output .= $this->transparams->render($fieldname, 'legacy');
-		}
-		echo $output;
-
 	}
 
 }
@@ -602,7 +651,7 @@ class TranslateParams_components extends TranslateParams_xml
 	var $orig_menuModelItem;
 	var $trans_menuModelItem;
 
-	function TranslateParams_components($original, $translation, $fieldname, $fields=null)
+	function __construct($original, $translation, $fieldname, $fields=null)
 	{
 		$lang = JFactory::getLanguage();
 		$lang->load("com_config", JPATH_ADMINISTRATOR);

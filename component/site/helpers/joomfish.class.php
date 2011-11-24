@@ -365,8 +365,8 @@ class JoomFish {
 
 				// If there is no translated content for this table then skip it!
 				// TODO New method for storage - mapping table
-				//if (!$db->translatedContentAvailable($table) || in_array($table,array("content","menu","modules"))) continue;
-				if (!$db->translatedContentAvailable($table) || in_array($table,array("content","modules"))) continue;
+				if (!$db->translatedContentAvailable($table) || in_array($table,array("content","menu","modules"))) continue;
+				//if (!$db->translatedContentAvailable($table) || in_array($table,array("content","modules"))) continue;
 
 				// get primary key for tablename
 				$idkey = $jfManager->getPrimaryKey( trim($reftable) );

@@ -234,18 +234,25 @@ SCRIPT;
 
 	private function doAfterSave($context, &$article, $isNew, $table)
 	{
-		$translationid = JRequest::getInt("jftranslation_id");
-		$originalid = JRequest::getInt("jforiginal_id");
+		$translationid = JRequest::getInt("jftranslation_id",JRequest::getInt("reference_id"));
+		$originalid = JRequest::getInt("jforiginal_id",JRequest::getInt("reference_id"));
 		$jftranslation = JRequest::getInt("jftranslation");
-		if ($jftranslation > 0)
+		if ($originalid > 0)
 		{
 			$jform = JRequest::getVar("jform");
 			if ($jform && isset($jform['language']))
 			{
 				$language = $jform['language'];
 			}
-			else
+			else if (JRequest::getInt("select_language_id"))
 			{
+				$language = JRequest::getInt("select_language_id");
+				$jfm = JoomFishManager::getInstance();
+				$languages = $jfm->getLanguagesIndexedById();
+				$language = $languages[$language]->code;
+
+			}
+			else {
 				return;
 			}
 			if ($translationid > 0)

@@ -21,11 +21,11 @@
   		<form>com_menus#menu#cid#task#!edit</form>
   	</component>
 	<treatment>
-		<target>joomfish</target>
+		<target>native</target>
 		<tableclass>Menu</tableclass>
 	</treatment>
   </reference>
-  <storage>joomfish</storage>
+  <storage>native</storage>
   <translationfilters>
   	  <keyword>title</keyword>
   	  <menutype>menutype</menutype>

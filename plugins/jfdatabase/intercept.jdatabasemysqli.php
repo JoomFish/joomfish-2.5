@@ -259,8 +259,8 @@ class interceptDB extends JDatabaseMySQLi
 						//if ($this->translatedContentAvailable($table))
 						// TODO need new translatedContentAvailable method !
 						// This is the mapping table method!!
-						//if (in_array($table,array("menu", "content",  "categories")))
-						if (in_array($table,array("content",  "categories")))
+						if (in_array($table,array("menu", "content",  "categories")))
+						//if (in_array($table,array("content",  "categories")))
 						{
 							$alias = trim($parts[count($parts) - 1]);
 							$jfalias = 'jftm' . $jfmCount;

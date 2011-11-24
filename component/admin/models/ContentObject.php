@@ -55,36 +55,50 @@ class ContentObject implements iJFTranslatable
 
 	/** @var _contentElement Reference to the ContentElement definition of the instance */
 	private $_contentElement;
+
 	/** @var id ID of the based content */
 	public $id;
+
 	/** @var translation_id 	translation id value */
 	public $translation_id = 0;
+
 	/** @var checked_out User who checked out this content if any */
 	public $checked_out;
+
 	/** @var title Title of the object; used from the field configured as titletext */
 	public $title;
+
 	/** @var titleTranslation the actual translation of the title */
 	public $titleTranslation;
+
 	/** @var language_id language for the translation */
 	public $language_id;
+
 	/** @var language Language name of the content */
 	public $language;
+
 	/** @var lastchanged Date when the translation was last modified */
 	public $lastchanged;
+
 	/** @var modified_date Date of the last modification of the content - if existing */
 	public $modified_date;
+
 	/** @var state State of the translation
 	 * -1 := for at least one field of the content the translation is missing
 	 *  0 := the translation exists but the original content was changed
 	 *  1 := the translation is valid
 	 */
 	public $state = -1;
+
 	/** @var int Number of changed fields */
 	private $_numChangedFields = 0;
+
 	/** @var int Number of new fields, with an original other than NULL */
 	private $_numNewAndNotNullFields = 0;
+
 	/** @var int Number for fields unchanged */
 	private $_numUnchangedFields = 0;
+
 	/** published Flag if the translation is published or not */
 	public $published = false;
 
@@ -218,10 +232,10 @@ class ContentObject implements iJFTranslatable
 				$fieldContent->published = $this->published;
 				$field->translationContent = $fieldContent;
 			}
-			else 	if ($field->Type == "params" && isset($formArray["jform"]["params"]))
+			else if ($field->Type == "params" && isset($formArray["jform"][$field->Name]))
 			{
-				$translationValue =$formArray["jform"]["params"];
-				
+				$translationValue = $formArray["jform"][$field->Name];
+
 				if ($field->posthandler != "")
 				{
 					if (method_exists($this, $field->posthandler))
@@ -230,7 +244,7 @@ class ContentObject implements iJFTranslatable
 						$this->$handler($translationValue, $elementTable->Fields, $formArray, $prefix, $suffix, $storeOriginalText);
 					}
 				}
-				
+
 				$registry = new JRegistry();
 				$registry->loadArray($translationValue);
 				$translationValue = $registry->toString();
@@ -255,9 +269,7 @@ class ContentObject implements iJFTranslatable
 				// TODO must also save 'request' object for Menu items - this should be moved to a separate 'post translation save' handler
 				// Joomla STILL treats this as a special case in menu items see administrator/omponnets/com_menus/controllers/item.php line 167
 				// its not even in the model or table class!
-				
 			}
-
 		}
 
 	}
@@ -287,15 +299,17 @@ class ContentObject implements iJFTranslatable
 	{
 		// Check for the special 'request' entry.
 		$data = $formarray["jform"];
-		if (isset($formarray['refField_link']) && isset($data['request']) && is_array($data['request']) && !empty($data['request'])) {
+		if (isset($formarray['refField_link']) && isset($data['request']) && is_array($data['request']) && !empty($data['request']))
+		{
 			// Parse the submitted link arguments.
 			$args = array();
 			parse_str(parse_url($formarray['refField_link'], PHP_URL_QUERY), $args);
 
 			// Merge in the user supplied request arguments.
 			$args = array_merge($args, $data['request']);
-			$link = 'index.php?'.urldecode(http_build_query($args,'','&'));
+			$link = 'index.php?' . urldecode(http_build_query($args, '', '&'));
 		}
+
 	}
 
 	public function saveMenuPath(&$path, $fields, $formArray, $prefix, $suffix, $storeOriginalText)
@@ -685,15 +699,15 @@ class ContentObject implements iJFTranslatable
 				for ($i = 0; $i < count($elementTable->Fields); $i++)
 				{
 					$field = $elementTable->Fields[$i];
-/*
-					if ($field->prehandlertranslation != "")
-					{
-						if (method_exists($this, $field->prehandlertranslation))
-						{
-							$handler = $field->prehandlertranslation;
-							$this->$handler($field, $translationFields);
-						}
-					}*/
+					/*
+					  if ($field->prehandlertranslation != "")
+					  {
+					  if (method_exists($this, $field->prehandlertranslation))
+					  {
+					  $handler = $field->prehandlertranslation;
+					  $this->$handler($field, $translationFields);
+					  }
+					  } */
 					$fieldname = $field->Name;
 					$transfieldname = "jfc_" . $field->Name;
 					$fieldContent = null;
@@ -849,8 +863,14 @@ class ContentObject implements iJFTranslatable
 						if (isset($fieldContent->reference_id) && intval($fieldContent->reference_id) > 0)
 						{
 							$reference_id = intval($fieldContent->reference_id);
-							$translation_id = intval($fieldContent->id);
+							// This is the id of the row!
+							//$translation_id = intval($fieldContent->id);
+							$translation_id = JRequest::getInt("translation_id",0);
 							$language_id = intval($fieldContent->language_id);
+							$jfm = JoomFishManager::getInstance();
+							$languages = $jfm->getLanguagesIndexedById();
+							$language_id = $languages[$language_id]->code;
+
 							break;
 						}
 					}
@@ -866,8 +886,7 @@ class ContentObject implements iJFTranslatable
 					// load the translation and amend
 					$table = JTable::getInstance($tableclass);
 					$table->load(intval($translation_id));
-
-					return true;
+					$isNew = false;
 				}
 				else
 				{
@@ -876,42 +895,47 @@ class ContentObject implements iJFTranslatable
 					$table->load(intval($reference_id));
 					$key = $table->getKeyName();
 					$table->$key = 0;
-					if (isset($table->lft))
-					{
-						$table->lft = $table->rgt = 0;
+					if (is_callable(array($table,"setLocation"))){
+						//$table->setLocation($table->parent_id, 'last-child');
+						$table->setLocation(intval($reference_id), 'after');
 					}
-					$table->language = $language_id;
-					for ($i = 0; $i < count($elementTable->Fields); $i++)
-					{
-						$field = $elementTable->Fields[$i];
-						$fieldContent = $field->translationContent;
-
-						if ($field->Translate)
-						{
-							$fieldname = $field->Name;
-							$table->$fieldname = $fieldContent->value;
-						}
-					}
-
-					// Check the data.
-					if (!$table->check())
-					{
-						$this->setError($table->getError());
-						return false;
-					}
-
-					// Store the data.
-					if (!$table->store())
-					{
-						$this->setError($table->getError());
-						return false;
-					}
-
-					// Save the translation map - should be moved to table class!
-					//$db->setQuery();			
-
-					return true;
+					$isNew = true;
 				}
+				$table->language = $language_id;
+				for ($i = 0; $i < count($elementTable->Fields); $i++)
+				{
+					$field = $elementTable->Fields[$i];
+
+					if ($field->Translate && isset($field->translationContent))
+					{
+						$fieldContent = $field->translationContent;
+						$fieldname = $field->Name;
+						$table->$fieldname = $fieldContent->value;
+					}
+				}
+
+				// Check the data.
+				if (!$table->check())
+				{
+					//$this->setError($table->getError());
+					return false;
+				}
+
+				// Store the data.
+				if (!$table->store())
+				{
+					//$this->setError($table->getError());
+					return false;
+				}
+
+				// Save the translation map - should be moved to table class!
+				// contient has its own plugin!
+				if  ($tableclass == "Menu"){
+					$dispatcher = JDispatcher::getInstance();
+					$dispatcher->trigger("onMenuAfterSave", array("com_menu,menu", &$table, $isNew));
+				}
+
+				return true;
 			}
 			else
 				return false;
@@ -923,7 +947,7 @@ class ContentObject implements iJFTranslatable
 			{
 				$field = $elementTable->Fields[$i];
 				$fieldContent = $field->translationContent;
-				
+
 				if ($field->Translate)
 				{
 					if (isset($fieldContent->reference_id))

@@ -278,7 +278,7 @@ else {
 							$maxLength = ($field->MaxLength>0)?$field->MaxLength:60;
 							$value =  strlen($translationContent->value)>0? $translationContent->value:$field->originalValue;
 							?>
-							<input class="inputbox" type="text" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $value; ?>" maxlength="<?php echo $maxLength;?>"/>
+							<input class="inputbox" type="text" readonly="readonly" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $value; ?>" maxlength="<?php echo $maxLength;?>"/>
 							<?php
 						}
 						?>
@@ -377,6 +377,7 @@ else {
 		?>
 	  <input type="hidden" name="select_language_id" value="<?php echo $select_language_id;?>" />
 	  <input type="hidden" name="reference_id" value="<?php echo $this->actContentObject->id;?>" />
+	  <input type="hidden" name="translation_id" value="<?php echo $this->actContentObject->translation_id;?>" />
 	  <input type="hidden" name="reference_table" value="<?php echo (isset($elementTable->name) ? $elementTable->name : '');?>" />
 	  <input type="hidden" name="catid" value="<?php echo $this->catid;?>" />
 	</td></tr>
