@@ -117,6 +117,8 @@ class plgSystemJFDatabase extends JPlugin
 
 	function onAfterRoute()
 	{
+		// don't use the NEW SYSTEM for now - the queries are too complex
+		return;
 		// amend editing page!
 		$reference_id = JRequest::getInt("id");
 		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit" && $reference_id > 0)
@@ -126,6 +128,14 @@ class plgSystemJFDatabase extends JPlugin
 			if (JRequest::getCmd('option') == "com_menus")
 			{
 				$table = "menu";
+			}
+			else if (JRequest::getCmd('option') == "com_modules")
+			{
+				$table = "modules";
+			}
+			else if (JRequest::getCmd('option') == "com_categories")
+			{
+				$table = "categories";
 			}
 			$db->setQuery('select * from #__jf_translationmap where reference_table="' . $table . '" AND translation_id=' . JRequest::getInt("id"));
 			$translations = $db->loadObjectList();
@@ -176,7 +186,7 @@ window.addEvent('domready', function() {
 		jftranslabel.appendText("translation id : ");
 
 		var jforiglabel  = new Element("label", {for:"jforiginal_id"});
-		jforiglabel.appendText("origional id : ");
+		jforiglabel.appendText("original id : ");
 
 		var newid = false;
 		if (!$('id')){

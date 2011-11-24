@@ -137,7 +137,9 @@ class JFDatabase extends interceptDB {
 	 * @param string $table : tablename to test
 	 */
 	function translatedContentAvailable($table){
-		return in_array( $table, $this->mlTableList) || $table=="content";
+		// NEW SYSTEM
+		// return in_array( $table, $this->mlTableList) || in_array($table,array("content","modules","menu","categories" ));
+		return in_array( $table, $this->mlTableList) ;
 	}
 
 	/**

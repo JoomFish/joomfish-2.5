@@ -21,7 +21,7 @@
   		<form>com_menus#menu#cid#task#!edit</form>
   	</component>
 	<treatment>
-		<target>native</target>
+		<target>joomfish</target>
 		<tableclass>Menu</tableclass>
 	</treatment>
   </reference>

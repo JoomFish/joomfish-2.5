@@ -364,9 +364,7 @@ class JoomFish {
 				$table =$value["orgtable"];
 
 				// If there is no translated content for this table then skip it!
-				// TODO New method for storage - mapping table
-				if (!$db->translatedContentAvailable($table) || in_array($table,array("content","menu","modules","categories"))) continue;
-				//if (!$db->translatedContentAvailable($table) || in_array($table,array("content","modules"))) continue;
+				if (!$db->translatedContentAvailable($table)) continue;
 
 				// get primary key for tablename
 				$idkey = $jfManager->getPrimaryKey( trim($reftable) );
@@ -419,10 +417,12 @@ class JoomFish {
 				if ($field->orgname == $idkey ){
 					$data[$table]['idindex'] = $fieldcount;
 				}
-				$data[$table]['fields'][]=$field;
 				$data[$table]['orgtable']=$orgtable;
-				$fieldcount++;
+				// I always want the field position otherwise the translations could be shifted to the wrong columns
+				$data[$table]['fields'][$fieldcount]=$field;
 			}
+			$data["allfields"][]=$field;
+			$fieldcount++;
 		}
 		return $data;
 	}
@@ -510,13 +510,11 @@ class JoomFish {
 							if ($row->reference_id==$row_to_translate[$keycol]) {
 								$refField = $row->reference_field;
 
-								$fieldcount = 0;
-								foreach ($fielddata[$tablealias]["fields"] as $field){
+								foreach ($fielddata[$tablealias]["fields"] as $fieldcount => $field){
 									if ($field->orgname == $refField){
 										$row_to_translate[$fieldcount] = $row->value;
 										$rowTranslationExists=true;
 									}
-									$fieldcount++;
 								}
 							}
 

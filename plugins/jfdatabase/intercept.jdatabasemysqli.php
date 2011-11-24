@@ -205,7 +205,7 @@ class interceptDB extends JDatabaseMySQLi
 			$fields = mysqli_fetch_fields($cur);
 			foreach ($fields as $field)
 			{
-				if (isset($field->orgtable))
+				if (isset($field->orgtable) && $field->orgtable!="")
 				{
 					$table = substr($field->orgtable, strlen($this->tablePrefix));
 					if ($this->translatedContentAvailable($table))
@@ -224,7 +224,8 @@ class interceptDB extends JDatabaseMySQLi
 	{
 		if ($this->skipjf) return parent::query();
 		$jfmCount = 0;
-		if (is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
+		// NEW SYSTEM
+		if (false && is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
 		{
 			// Do the from first
 			$sql = $this->replacePrefix((string) $this->sql);
@@ -241,10 +242,16 @@ class interceptDB extends JDatabaseMySQLi
 			{
 				$this->setLanguage($language);
 			}
-			// Annoying that _from is protected in databasequery object and no get method!
 			$from = $this->sql->from;
-			if ($from)
+			$joins = $this->sql->join;
+			if ($from || $join)
 			{
+				$joinElements = array();
+				if ($joins){
+					foreach ($joins as $join) {
+						 $joinElements = array_merge($joinElements, $join->getElements() );
+					}
+				}
 				$fromElements = $from->getElements();
 				if ($fromElements)
 				{
@@ -259,6 +266,7 @@ class interceptDB extends JDatabaseMySQLi
 						//if ($this->translatedContentAvailable($table))
 						// TODO need new translatedContentAvailable method !
 						// This is the mapping table method!!
+						// NEW SYSTEM
 						if (in_array($table,array("menu", "content", "modules",  "categories")))
 						//if (in_array($table,array("content",  "categories")))
 						{
