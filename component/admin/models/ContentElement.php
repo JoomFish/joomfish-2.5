@@ -462,18 +462,11 @@ class ContentElement
 			}
 
 			$sqlFields[] = "ct.id as jfc_id";
-			// TODO make sure published is a valid field!
-			$db->setQuery("Show columns from #__".$contentTable->Name. " where field like 'published' OR field like 'state'");
-			$cols = $db->loadObjectList('Field');
-			if (array_key_exists('published',$cols)){
-				$sqlFields[] = 'ct.published as published';
-			}
-			else if (array_key_exists('state',$cols)){
-				$sqlFields[] = 'ct.state as published';
-			}
-
+			// NEW SYSTEM make sure published is a valid field!
+			$publishedField = $this->getPublishedField();
+			$sqlFields[] = 'ct.'.$publishedField.' as published';
 			$sqlFields[] = "ct." . $referencefield . " as jfc_refid";
-			// TODO get the last changed from the translation map table - ALSO keep a record of the ORIGINAL record
+			// NEW SYSTEM TODO get the last changed from the translation map table - ALSO keep a record of the ORIGINAL record
 			//$sqlFields[] = "tm.lastchanged  as lastchanged";
 			$sqlFields[] = "'2010-06-11 05:30:30' as lastchanged";
 

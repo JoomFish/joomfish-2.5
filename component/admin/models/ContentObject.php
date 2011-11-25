@@ -845,7 +845,7 @@ class ContentObject implements iJFTranslatable
 	/** 
 	 * Stores all fields of the content element
 	 */
-	public function store()
+	public function store($savingtranslation=true)
 	{
 		$elementTable = $this->_contentElement->getTable();
 
@@ -874,7 +874,7 @@ class ContentObject implements iJFTranslatable
 							//// NEW SYSTEM - Split the store method into 2  methods store and store Translation or override the bind method
 							// We only have this from the request when saving a translation - if not then we are probabl updating the published state
 							$translation_id = JRequest::getInt("translation_id", 0);
-							if ($translation_id==0 && $fieldContent->id>0){
+							if (!$savingtranslation && $translation_id==0 && $fieldContent->id>0){
 								$translation_id = $reference_id;
 								$reference_id = $fieldContent->id;
 							}
@@ -947,20 +947,26 @@ class ContentObject implements iJFTranslatable
 					//$this->setError($table->getError());
 					return false;
 				}
-
-				// Save the translation map - should be moved to table class!
-				// contient has its own plugin!
-				if ($tableclass == "Menu")
-				{
-					$dispatcher = JDispatcher::getInstance();
-					$dispatcher->trigger("onMenuAfterSave", array("com_menu,menu", &$table, $isNew));
+				
+				if ($savingtranslation){
+					// Save the translation map - should be moved to table class!
+					// contient has its own plugin!
+					if ($tableclass == "Menu")
+					{
+						$dispatcher = JDispatcher::getInstance();
+						$dispatcher->trigger("onMenuAfterSave", array("com_menu,menu", &$table, $isNew));
+					}
+					else if ($tableclass == "Module")
+					{
+						$dispatcher = JDispatcher::getInstance();
+						$dispatcher->trigger("onModuleAfterSave", array("com_modules,module", &$table, $isNew));
+					}
+					else if ($tableclass == "Content")
+					{
+						$dispatcher = JDispatcher::getInstance();
+						$dispatcher->trigger("onContentAfterSave", array("com_content.content", &$table, $isNew));
+					}
 				}
-				else if ($tableclass == "Module")
-				{
-					$dispatcher = JDispatcher::getInstance();
-					$dispatcher->trigger("onModuleAfterSave", array("com_modules,module", &$table, $isNew));
-				}
-
 				return true;
 			}
 			else

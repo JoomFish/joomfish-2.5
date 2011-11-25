@@ -399,7 +399,8 @@ class TranslateController extends JController
 			if ($actContentObject->state >= 0)
 			{
 				$actContentObject->setPublished($publish);
-				$actContentObject->store();
+				// This is not saving an updated translation so pass a false here
+				$actContentObject->store(false);
 				$model->setState('message', $publish ? JText::_('TRANSLATION_PUBLISHED') : JText::_('TRANSLATION_PUBLISHED'));
 			}
 		}
