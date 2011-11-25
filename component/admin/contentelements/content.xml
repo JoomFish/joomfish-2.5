@@ -30,7 +30,7 @@
   		<form>com_frontpage#content#cid#task#!edit</form>
   	</component>
 	<treatment>
-		<target>joomfish</target>
+		<target>native</target>
 		<tableclass>Content</tableclass>
 	</treatment>	
   </reference>

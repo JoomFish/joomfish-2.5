@@ -117,9 +117,10 @@ class plgSystemJFDatabase extends JPlugin
 
 	function onAfterRoute()
 	{
-		// don't use the NEW SYSTEM for now - the queries are too complex
-		return;
-		// amend editing page!
+		// NEW SYSTEM
+		// amend editing page but only for native elements
+		if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
+		
 		$reference_id = JRequest::getInt("id");
 		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit" && $reference_id > 0)
 		{
@@ -179,11 +180,11 @@ window.addEvent('domready', function() {
 		jflanglabel.appendText("Is Translation?");
 		
 		var refid = $('jform_id').value;
-		var jflanginput = new Element("input",{ type:'text', name:'jftranslation_id', id:'jftranslation_id', value:$original});
-		var jforigalinput = new Element("input",{ type:'text', name:'jforiginal_id', id:'jforiginal_id', value:refid});
+		var jflanginput = new Element("input",{ type:'text', name:'jftranslation_id', id:'jftranslation_id', value:$original, readonly:'readonly'});
+		var jforigalinput = new Element("input",{ type:'text', name:'jforiginal_id', id:'jforiginal_id', value:refid, readonly:'readonly'});
 
 		var jftranslabel  = new Element("label", {for:"jftranslation_id"});
-		jftranslabel.appendText("translation id : ");
+		jftranslabel.appendText("translation of : ");
 
 		var jforiglabel  = new Element("label", {for:"jforiginal_id"});
 		jforiglabel.appendText("original id : ");
@@ -192,7 +193,7 @@ window.addEvent('domready', function() {
 		if (!$('id')){
 			// must also have a new pseudo  id to make sure replaces anything in the URL!
 			// editing existing elements don't have this 
-			var newid = new Element("input",{ type:'text', name:'id', id:'jfid', value:refid});		
+			var newid = new Element("input",{ type:'text', name:'id', id:'jfid', value:refid, readonly:'readonly'});		
 			var jfnewidlabel  = new Element("label", {for:"jfid"});
 			jfnewidlabel.appendText("new id : ");
 		}

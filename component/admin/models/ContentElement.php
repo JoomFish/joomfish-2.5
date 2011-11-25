@@ -310,7 +310,7 @@ class ContentElement
 						{
 							$sqlFields[] = 'c.' . $tableField->Name . ' as id';
 							if ($contentid_exist)
-								$where[] = 'c.' . $tableField->Name . '=' . $db->Quote($contentid);
+								$where[] = 'c.' . $tableField->Name . '=' . $db->quote($contentid);
 						}
 						else
 						{
@@ -418,7 +418,7 @@ class ContentElement
 						{
 							$sqlFields[] = 'c.' . $tableField->Name . ' as id';
 							if ($contentid_exist)
-								$where[] = 'c.' . $tableField->Name . '=' . $db->Quote($contentid);
+								$where[] = 'c.' . $tableField->Name . '=' . $db->quote($contentid);
 						}
 						else
 						{

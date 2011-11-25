@@ -18,7 +18,7 @@
   		<form>com_categories#categories#cid#task#!edit</form>
   	</component>
 	<treatment>
-		<target>joomfish</target>
+		<target>native</target>
 		<tableclass>Category</tableclass>
 	</treatment>
   </reference>
