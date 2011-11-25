@@ -387,7 +387,6 @@ class ContentObject implements iJFTranslatable
 
 	}
 
-
 	/**
 	 * Special pre translation handler for content text to combine intro and full text
 	 *
@@ -806,12 +805,19 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function setPublished($published)
 	{
-		$elementTable = $this->_contentElement->getTable();
-		for ($i = 0; $i < count($elementTable->Fields); $i++)
+		if ($this->_contentElement->getTarget() == "native")
 		{
-			$field = $elementTable->Fields[$i];
-			$fieldContent = $field->translationContent;
-			$fieldContent->published = $published;
+			$this->published = $published;
+		}
+		else
+		{
+			$elementTable = $this->_contentElement->getTable();
+			for ($i = 0; $i < count($elementTable->Fields); $i++)
+			{
+				$field = $elementTable->Fields[$i];
+				$fieldContent = $field->translationContent;
+				$fieldContent->published = $published;
+			}
 		}
 
 	}
@@ -836,7 +842,8 @@ class ContentObject implements iJFTranslatable
 
 	}
 
-	/** Stores all fields of the content element
+	/** 
+	 * Stores all fields of the content element
 	 */
 	public function store()
 	{
@@ -864,9 +871,13 @@ class ContentObject implements iJFTranslatable
 						if (isset($fieldContent->reference_id) && intval($fieldContent->reference_id) > 0)
 						{
 							$reference_id = intval($fieldContent->reference_id);
-							// This is the id of the row!
-							//$translation_id = intval($fieldContent->id);
-							$translation_id = JRequest::getInt("translation_id",0);
+							//// NEW SYSTEM - Split the store method into 2  methods store and store Translation or override the bind method
+							// We only have this from the request when saving a translation - if not then we are probabl updating the published state
+							$translation_id = JRequest::getInt("translation_id", 0);
+							if ($translation_id==0 && $fieldContent->id>0){
+								$translation_id = $reference_id;
+								$reference_id = $fieldContent->id;
+							}
 							$language_id = intval($fieldContent->language_id);
 							$jfm = JoomFishManager::getInstance();
 							$languages = $jfm->getLanguagesIndexedById();
@@ -896,7 +907,8 @@ class ContentObject implements iJFTranslatable
 					$table->load(intval($reference_id));
 					$key = $table->getKeyName();
 					$table->$key = 0;
-					if (is_callable(array($table,"setLocation"))){
+					if (is_callable(array($table, "setLocation")))
+					{
 						//$table->setLocation($table->parent_id, 'last-child');
 						$table->setLocation(intval($reference_id), 'after');
 					}
@@ -915,6 +927,13 @@ class ContentObject implements iJFTranslatable
 					}
 				}
 
+				// Is the translation published
+				$publishfield = $this->_contentElement->getPublishedField();
+				if (isset($table->$publishfield))
+				{
+					$table->$publishfield = $this->published;
+				}
+
 				// Check the data.
 				if (!$table->check())
 				{
@@ -931,11 +950,13 @@ class ContentObject implements iJFTranslatable
 
 				// Save the translation map - should be moved to table class!
 				// contient has its own plugin!
-				if  ($tableclass == "Menu" ){
+				if ($tableclass == "Menu")
+				{
 					$dispatcher = JDispatcher::getInstance();
 					$dispatcher->trigger("onMenuAfterSave", array("com_menu,menu", &$table, $isNew));
 				}
-				else if  ($tableclass == "Module" ){
+				else if ($tableclass == "Module")
+				{
 					$dispatcher = JDispatcher::getInstance();
 					$dispatcher->trigger("onModuleAfterSave", array("com_modules,module", &$table, $isNew));
 				}

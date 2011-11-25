@@ -57,18 +57,21 @@ include_once(dirname(__FILE__)."/intercept.".strtolower(get_class(JFactory::getD
 class JFDatabase extends interceptDB {
 
 	/** @var array list of multi lingual tables */
-	var $mlTableList=null;
+	public $mlTableList=null;
 	/** @var Internal variable to hold array of unique tablenames and mapping data*/
-	var $refTables=null;
+	public $refTables=null;
 
 	/** @var Internal variable to hold flag about whether setRefTables is needed - JF queries don't need it */
-	var $skipSetRefTables = false;
+	public $skipSetRefTables = false;
 
-	var $orig_limit	= 0;
-	var $orig_offset	= 0;
+	public $orig_limit	= 0;
+	public $orig_offset	= 0;
 
-	var $skipjf = 0;
+	public $skipjf = 0;
 	
+	private $tableFields = null;
+
+
 	/** Constructor
 	*/
 	function JFDatabase( $options) {
@@ -88,11 +91,11 @@ class JFDatabase extends interceptDB {
 				JError::raiseWarning( 200, JTEXT::_('No valid table list:') .$this->getErrorMsg());
 			}
 		}
-
+		
 		$pfunc = $this->profile($pfunc);
 	}
 
-	var $profileData = array();
+	public $profileData = array();
 
 	function profile($func = "", $forcestart=false){
 		if ($this->skipjf) return "";
@@ -137,8 +140,7 @@ class JFDatabase extends interceptDB {
 	 * @param string $table : tablename to test
 	 */
 	function translatedContentAvailable($table){
-		// NEW SYSTEM
-		// return in_array( $table, $this->mlTableList) || in_array($table,array("content","modules","menu","categories" ));
+		// mltable is a union of joomfish and native translations!
 		return in_array( $table, $this->mlTableList) ;
 	}
 

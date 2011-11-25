@@ -224,7 +224,7 @@ class interceptDB extends JDatabaseMySQLi
 	{
 		if ($this->skipjf) return parent::query();
 		$jfmCount = 0;
-		// NEW SYSTEM
+		// NEW SYSTEM disabled for now - the query handling for joins etc. is too complex
 		if (false && is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
 		{
 			// Do the from first

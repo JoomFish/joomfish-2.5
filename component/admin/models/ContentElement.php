@@ -151,6 +151,22 @@ class ContentElement
 
 	}
 
+	public function getPublishedField(){
+		if (isset($this->_xmlFile))
+		{
+			$xpath = new DOMXPath($this->_xmlFile);
+			$publishedfield = $xpath->query('//reference/treatment/publishedfield')->item(0);
+			if (!isset($publishedfield))
+			{
+				return 'published';
+			}
+			$result = trim($publishedfield->textContent);
+			return $result;
+		}
+		return 'published';
+		
+	}
+	
 	public function getTableClass()
 	{
 		if (isset($this->_xmlFile))

@@ -713,7 +713,11 @@ class JoomFish
 		{
 			$user = JFactory::getUser();
 			// NEW SYSTEM - check for published state of translation e.g. using mapping table!
-			$published = $user->authorise('core.publish', 'com_joomfish') ? "\n	AND published=1" : "";
+			// Need to know the published column name!!!
+			$jfm = JoomFishManager::getInstance();
+			$published = $jfm->getContentElement($reference_table)->getPublishedField();
+			$published = $user->authorise('core.publish', 'com_joomfish') ? "\n	AND $published=1" : "";
+			
 			$sql = "SELECT tab.*, tmap.reference_id FROM #__$reference_table as tab"
 					. "\n LEFT JOIN #__jf_translationmap AS tmap ON tmap.reference_table = " . $this->quote($reference_table) . "   AND tmap.translation_id = tab.$pk AND tmap.language= " . $this->quote($languages[$language]->code)
 					. "\n  WHERE tmap.reference_id IN($ids)"
@@ -731,22 +735,19 @@ class JoomFish
 					// assign by reference since not an object
 					$row_to_translate = & $rows[$key];
 					$rowTranslationExists = false;
-					if (array_key_exists($key, $translations))
-					{
-
-						if (isset($row_to_translate[$keycol]))
+					$refid = $row_to_translate[$keycol];
+					if (array_key_exists($refid, $translations))
+					{						
+						$rowTranslationExists = true;
+						$translation = $translations[$refid];
+						//  go on only it this is the matching row
+						if ($translation->reference_id == $refid)
 						{
-							$rowTranslationExists = true;
-							$translation = $translations[$key];
-							//  go on only it this is the matching row
-							if ($translation->reference_id == $row_to_translate[$keycol])
+							foreach ($fielddata[$tablealias]["fields"] as $fieldcount => $field)
 							{
-								foreach ($fielddata[$tablealias]["fields"] as $fieldcount => $field)
-								{
-									$fieldname = $field->orgname;
-									if (isset($translation->$fieldname)){
-										$row_to_translate[$fieldcount] = $translation->$fieldname;
-									}
+								$fieldname = $field->orgname;
+								if (isset($translation->$fieldname)){
+									$row_to_translate[$fieldcount] = $translation->$fieldname;
 								}
 							}
 						}

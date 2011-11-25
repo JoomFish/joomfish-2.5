@@ -23,6 +23,7 @@
 	<treatment>
 		<target>native</target>
 		<tableclass>Menu</tableclass>
+		<publishedfield>published</publishedfield>
 	</treatment>
   </reference>
   <translationfilters>

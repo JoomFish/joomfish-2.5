@@ -32,6 +32,7 @@
 	<treatment>
 		<target>native</target>
 		<tableclass>Content</tableclass>
+		<publishedfield>state</publishedfield>
 	</treatment>	
   </reference>
   <translationfilters>

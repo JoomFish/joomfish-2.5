@@ -20,6 +20,7 @@
 	<treatment>
 		<target>native</target>
 		<tableclass>Category</tableclass>
+		<publishedfield>published</publishedfield>
 	</treatment>
   </reference>
   <translationfilters>
