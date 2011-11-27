@@ -233,7 +233,7 @@ class LanguagesModelLanguages extends JFModel
 		
 		// check for published Site Languages
 		$query	= $db->getQuery(true);
-		$query->select('a.element AS lang_code, a.name AS title');
+		$query->select('a.element AS lang_code, a.name AS title, a.enabled As enabled');
 		$query->from('`#__extensions` AS a');
 		$query->where('a.type = '.$db->Quote('language'));
 		$query->where('a.client_id = 0');
@@ -246,6 +246,7 @@ class LanguagesModelLanguages extends JFModel
 			$frontlang->lang_id   		= null;
 			$frontlang->title_native 	= $frontlang->title;
 			$frontlang->sef   			= $langarr[0];
+			$frontlang->published   	= &$frontlang->enabled;
 			$frontlang->image_ext 		= '/media/com_joomfish/default/flags/' .$langarr[0]. '.gif';
 		}
 		
