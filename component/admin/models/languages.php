@@ -218,13 +218,39 @@ class LanguagesModelLanguages extends JFModel
 		// 1. read all known languages from the database
 		//$sql = "SELECT l.*"
 		//. "\nFROM #__jf_languages AS l";
-		$sql = 'select l.lang_id AS lang_id,l.lang_code AS lang_code,l.title AS title,l.title_native AS title_native,l.sef AS sef,l.description AS description,l.published AS published,l.image AS image,lext.image_ext AS image_ext,lext.fallback_code AS fallback_code,lext.params AS params,lext.ordering AS ordering from #__languages as l left join #__jf_languages_ext as lext on l.lang_id = lext.lang_id'; 
+			$sql = 'select l.lang_id AS lang_id,l.lang_code AS lang_code,l.title AS title,l.title_native AS title_native,
+				l.sef AS sef,l.description AS description,l.published AS published,l.image AS image,
+				lext.image_ext AS image_ext,lext.fallback_code AS fallback_code,lext.params AS params,
+				lext.ordering AS ordering 
+				from #__languages as l 
+				left join #__jf_languages_ext as lext on l.lang_id = lext.lang_id'; 
 
 		if ($filter_order != ''){
 			$sql .= ' ORDER BY ' .$filter_order .' '. $filter_order_Dir;
 		}
 		$db->setQuery( $sql	);
-		$languages = $db->loadObjectList('lang_id');
+		$contentlanguages = $db->loadObjectList('lang_id');
+		
+		// check for published Site Languages
+		$query	= $db->getQuery(true);
+		$query->select('a.element AS lang_code, a.name AS title');
+		$query->from('`#__extensions` AS a');
+		$query->where('a.type = '.$db->Quote('language'));
+		$query->where('a.client_id = 0');
+		
+		$db->setQuery($query);
+		$frontlanguages = $db->loadObjectList('lang_code');
+		
+		foreach ($frontlanguages AS &$frontlang) {
+			$langarr 					= explode ('-', $frontlang->lang_code);
+			$frontlang->lang_id   		= null;
+			$frontlang->title_native 	= $frontlang->title;
+			$frontlang->sef   			= $langarr[0];
+			$frontlang->image_ext 		= '/media/com_joomfish/default/flags/' .$langarr[0]. '.gif';
+		}
+		
+		$languages = array_merge($frontlanguages, $contentlanguages);
+		
 		if($languages === null) {
 			JError::raiseWarning( 400, $db->getErrorMsg());
 		}
