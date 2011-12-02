@@ -129,10 +129,16 @@ class interceptDB extends JDatabaseMySQLi
 			}
 		}
 
+		if (count($jfdata)==0){
+			return $jfdata;
+		}
+		
 		// Before joomfish manager is created since we can't translate so skip this anaylsis
 		$jfManager = JoomFishManager::getInstance();
-		if (!$jfManager)
-			return;
+		if (!$jfManager){
+			return $jfdata;
+		}
+		
 		if (isset($jfManager))
 		{
 			$this->setLanguage($language);

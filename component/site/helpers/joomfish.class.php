@@ -392,7 +392,7 @@ class JoomFish
 	 */
 	public function translateListArray(&$rows, $language, $fields)
 	{
-		if (!isset($rows) || !is_array($rows))
+		if (!isset($rows) || !is_array($rows) || count($rows)==0)
 			return $rows;
 
 		$jfManager = JoomFishManager::getInstance();
@@ -418,13 +418,26 @@ class JoomFish
 		{
 			foreach ($fielddata as $reftable => $value)
 			{
-
+				if ($reftable=="allfields") continue;
 				$table = $value["orgtable"];
+				if (!$table || count($value['fields'])==0) {
+					continue;
+				}
 
 				// If there is no translated content for this table then skip it!
 				if (!$db->translatedContentAvailable($table))
 					continue;
 
+				// get the fieldnames to see if we have any translateable fields
+				$fieldnames = array();
+				foreach ($value['fields'] as $fieldinfo){
+					if (isset($fieldinfo->orgname) && $fieldinfo->orgname!=""){
+						$fieldnames[] = $fieldinfo->orgname;
+					}
+				}
+				if (!$db->translateableFields($table,$fieldnames))
+					continue;
+				
 				// get primary key for tablename
 				$idkey = $jfManager->getPrimaryKey(trim($reftable));
 
@@ -445,7 +458,7 @@ class JoomFish
 				}
 				if (count($idlist) == 0)
 					continue;
-				$idstring = implode(",", $idlist);
+				$idstring = implode(",", array_unique($idlist));
 
 				if (!$jfManager->getContentElement($table) || $jfManager->getContentElement($table)->getTarget() == "joomfish")
 				{
@@ -473,7 +486,7 @@ class JoomFish
 			// use table instead of orgtable since orgtable could appear multiple times
 			if (isset($field->orgtable) && isset($field->orgname))
 			{
-				if (isset($field->table))
+				if (isset($field->table) && $field->table!="")
 				{
 					$table = "alias_" . $field->table;
 					$orgtable = substr($field->orgtable, strlen($db->getPrefix()));
@@ -486,9 +499,12 @@ class JoomFish
 				if (!isset($data[$table]))
 				{
 					$data[$table] = array();
-					$idkey = $jfManager->getPrimaryKey(trim($table));
+					$idkey = $jfManager->getPrimaryKey($orgtable);
 					$data[$table]['idkey'] = $idkey;
 					$data[$table]['fields'] = array();
+				}
+				else {
+					$idkey = $data[$table]['idkey'];
 				}
 				// must match the alias too!
 				if ($field->orgname == $idkey)
@@ -832,9 +848,9 @@ class JoomFish
 				$registry = JFactory::getConfig();
 				$lang = $registry->getValue("config.jflang");
 
-				include_once( JPATH_ADMINISTRATOR . DS . "components" . DS . "com_joomfish" . '/models/ContentObject.php');
-				$contentObject = new ContentObject($jfm->getLanguageID($lang), $contentElement);
-				$textFields = $contentObject->getTextFields();
+				$translationClass = $contentElement->getTranslationObjectClass();
+				$translationObject = new $translationClass( $jfManager->getLanguageID($lang), $contentElement );
+				$textFields = $translationObject->getTextFields();
 				$info[$reference_table]["textFields"] = $textFields;
 				$info[$reference_table]["fieldTypes"] = array();
 				if ($textFields !== null)
@@ -842,7 +858,7 @@ class JoomFish
 					$defaultSet = false;
 					foreach ($textFields as $field)
 					{
-						$info[$reference_table]["fieldTypes"][$field] = $contentObject->getFieldType($field);
+						$info[$reference_table]["fieldTypes"][$field] = $translationObject->getFieldType($field);
 					}
 				}
 				$cacheFileContent = serialize($info[$reference_table]);

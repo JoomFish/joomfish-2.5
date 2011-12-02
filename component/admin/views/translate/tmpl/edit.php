@@ -35,7 +35,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 /**
 	* @return void
-	* @param object $this->actContentObject
+	* @param object $this->translationObject
 	* @param array $this->langlist
 	* @param string $this->catid
 	* @desc Shows the dialog for the content translation
@@ -50,7 +50,7 @@ $task=$this->task;
 $select_language_id = $this->select_language_id;
 $user = JFactory::getUser();
 $db = JFactory::getDBO();
-$elementTable = $this->actContentObject->getTable();
+$elementTable = $this->translationObject->getTable();
 $option = JRequest::getCmd("option");
 
 ini_set('xdebug.var_display_max_children', 3000 );
@@ -223,7 +223,7 @@ else {
 		      <td align="left" valign="top" id="original_value_<?php echo $field->Name?>">
 		      <?php
 		      if (preg_match("/<form/i",$field->originalValue)){
-		      	$ovhref = JRoute::_("index3.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->actContentObject->id."&lang=".$select_language_id);
+		      	$ovhref = JRoute::_("index3.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->translationObject->id."&lang=".$select_language_id);
 		      	echo '<a class="modal" rel="{handler: \'iframe\', size: {x: 700, y: 500}}" href="'.$ovhref.'" >'.JText::_("Content contains form - click here to view in popup window").'</a>';
 		      }
 		      else {
@@ -356,7 +356,7 @@ else {
   	<table width="100%" border="0" cellpadding="4" cellspacing="2" class="adminForm">
       <tr>
         <td width="34%"><strong><?php echo JText::_('TITLE_STATE');?>:</strong></td>
-        <td width="50%"><?php echo $this->actContentObject->state > 0 ? JText::_('STATE_OK') : ($this->actContentObject->state < 0 ? JText::_('STATE_NOTEXISTING') : JText::_('STATE_CHANGED'));?></td>
+        <td width="50%"><?php echo $this->translationObject->state > 0 ? JText::_('STATE_OK') : ($this->translationObject->state < 0 ? JText::_('STATE_NOTEXISTING') : JText::_('STATE_CHANGED'));?></td>
       </tr>
       <tr>
         <td><strong><?php echo JText::_( 'LANGUAGE' );?>:</strong></td>
@@ -364,11 +364,11 @@ else {
       </tr>
       <tr>
         <td><strong><?php echo JText::_('TITLE_PUBLISHED')?>:</strong></td>
-        <td><input type="checkbox" name="published" value="1" <?php echo $this->actContentObject->published&0x0001 ? 'checked="checked"' : ''; ?> /></td>
+        <td><input type="checkbox" name="published" value="1" <?php echo $this->translationObject->published&0x0001 ? 'checked="checked"' : ''; ?> /></td>
       </tr>
       <tr>
         <td><strong><?php echo JText::_('TITLE_DATECHANGED');?>:</strong></td>
-	    <td><?php echo  $this->actContentObject->lastchanged ? JHTML::_('date',  $this->actContentObject->lastchanged, JText::_('DATE_FORMAT_LC2')):JText::_( 'NEW' );?></td>
+	    <td><?php echo  $this->translationObject->lastchanged ? JHTML::_('date',  $this->translationObject->lastchanged, JText::_('DATE_FORMAT_LC2')):JText::_( 'NEW' );?></td>
       </tr>
 	  </table>
 	  <?php
@@ -376,8 +376,8 @@ else {
 	  echo $tabs->endPane();
 		?>
 	  <input type="hidden" name="select_language_id" value="<?php echo $select_language_id;?>" />
-	  <input type="hidden" name="reference_id" value="<?php echo $this->actContentObject->id;?>" />
-	  <input type="hidden" name="translation_id" value="<?php echo $this->actContentObject->translation_id;?>" />
+	  <input type="hidden" name="reference_id" value="<?php echo $this->translationObject->id;?>" />
+	  <input type="hidden" name="translation_id" value="<?php echo $this->translationObject->translation_id;?>" />
 	  <input type="hidden" name="reference_table" value="<?php echo (isset($elementTable->name) ? $elementTable->name : '');?>" />
 	  <input type="hidden" name="catid" value="<?php echo $this->catid;?>" />
 	</td></tr>

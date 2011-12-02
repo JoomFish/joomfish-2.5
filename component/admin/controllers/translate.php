@@ -180,10 +180,10 @@ class TranslateController extends JController
 			// Manipulation of result based on further information
 			for ($i = 0; $i < count($rows); $i++)
 			{
-				JLoader::import('models.ContentObject', JOOMFISH_ADMINPATH);
-				$contentObject = new ContentObject($language_id, $contentElement);
-				$contentObject->readFromRow($rows[$i]);
-				$rows[$i] = $contentObject;
+				$translationClass = $contentElement->getTranslationObjectClass();
+				$translationObject = new $translationClass( $language_id, $contentElement );
+				$translationObject->readFromRow($rows[$i]);
+				$rows[$i] = $translationObject;
 			}
 
 			foreach ($tranFilters as $tranFilter)
@@ -250,22 +250,22 @@ class TranslateController extends JController
 		$user = JFactory::getUser();
 		$db = JFactory::getDBO();
 
-		$actContentObject = null;
+		$translationObject = null;
 
 
 		if (isset($catid) && $catid != "")
 		{
 			$contentElement = $this->_joomfishManager->getContentElement($catid);
-			JLoader::import('models.ContentObject', JOOMFISH_ADMINPATH);
-			$actContentObject = new ContentObject($language_id, $contentElement);
-			$actContentObject->loadFromContentID($contentid);
+			$translationClass = $contentElement->getTranslationObjectClass();
+			$translationObject = new $translationClass( $language_id, $contentElement );
+			$translationObject->loadFromContentID($contentid);
 		}
 
 		// fail if checked out not by 'me'
-		if ($actContentObject->checked_out && $actContentObject->checked_out <> $user->id)
+		if ($translationObject->checked_out && $translationObject->checked_out <> $user->id)
 		{
 			JFactory::getApplication()->redirect("index.php?option=option=com_joomfish&task=translate",
-					"The content item $actContentObject->title is currently being edited by another administrator");
+					"The content item $translationObject->title is currently being edited by another administrator");
 		}
 
 		// get existing filters so I can remember them!
@@ -283,15 +283,13 @@ class TranslateController extends JController
 		$lang->load('com_config');
 
 		// Assign data for view - should really do this as I go along
-		$this->view->assignRef('actContentObject', $actContentObject);
+		$this->view->assignRef('translationObject', $translationObject);
 		$this->view->assignRef('tranFilters', $tranFilters);
 		$this->view->assignRef('select_language_id', $select_language_id);
 		$filterlist = array();
 		$this->view->assignRef('filterlist', $filterlist);
 
 		$this->view->display();
-		//HTML_joomfish::showTranslation( $actContentObject, $langlist, $catid, $select_language_id , $tranFilters );
-
 	}
 
 	/** Saves the information of one translation
@@ -306,17 +304,17 @@ class TranslateController extends JController
 		$id = JRequest::getVar('reference_id', null);
 		$jfc_id = JRequest::getVar('jfc_id ', null);
 
-		$actContentObject = null;
+		$translationObject = null;
 		if (isset($catid) && $catid != "")
 		{
 			$contentElement = $this->_joomfishManager->getContentElement($catid);
-			JLoader::import('models.ContentObject', JOOMFISH_ADMINPATH);
-			$actContentObject = new ContentObject($language_id, $contentElement);
+			$translationClass = $contentElement->getTranslationObjectClass();
+			$translationObject = new $translationClass( $language_id, $contentElement );
 
 			// get's the config settings on how to store original files
 			$storeOriginalText = ($this->_joomfishManager->getCfg('storageOfOriginal') == 'md5') ? false : true;
-			$actContentObject->bind($_POST, '', '', true, $storeOriginalText);
-			$success = $actContentObject->store();
+			$translationObject->bind($_POST, '', '', true, $storeOriginalText);
+			$success = $translationObject->store();
 			if ( $success)
 			{
 				JPluginHelper::importPlugin('joomfish');
@@ -343,7 +341,7 @@ class TranslateController extends JController
 
 		if ($this->task == "translate.apply")
 		{
-			$cid = $actContentObject->id . "|" . $id . "|" . $language_id;
+			$cid = $translationObject->id . "|" . $id . "|" . $language_id;
 			JRequest::setVar('cid', array($cid));
 			$this->editTranslation();
 		}
@@ -393,14 +391,14 @@ class TranslateController extends JController
 			list($translation_id, $contentid, $language_id) = explode('|', $cid_row);
 
 			$contentElement = $this->_joomfishManager->getContentElement($catid);
-			JLoader::import('models.ContentObject', JOOMFISH_ADMINPATH);
-			$actContentObject = new ContentObject($language_id, $contentElement);
-			$actContentObject->loadFromContentID($contentid);
-			if ($actContentObject->state >= 0)
+			$translationClass = $contentElement->getTranslationObjectClass();
+			$translationObject = new $translationClass( $language_id, $contentElement );
+			$translationObject->loadFromContentID($contentid);
+			if ($translationObject->state >= 0)
 			{
-				$actContentObject->setPublished($publish);
+				$translationObject->setPublished($publish);
 				// This is not saving an updated translation so pass a false here
-				$actContentObject->store(false);
+				$translationObject->store(false);
 				$model->setState('message', $publish ? JText::_('TRANSLATION_PUBLISHED') : JText::_('TRANSLATION_PUBLISHED'));
 			}
 		}
@@ -448,14 +446,14 @@ class TranslateController extends JController
 		$user = JFactory::getUser();
 		$db = JFactory::getDBO();
 
-		$actContentObject = null;
+		$translationObject = null;
 
 		if (isset($catid) && $catid != "")
 		{
 			$contentElement = $this->_joomfishManager->getContentElement($catid);
-			JLoader::import('models.ContentObject', JOOMFISH_ADMINPATH);
-			$actContentObject = new ContentObject($language_id, $contentElement);
-			$actContentObject->loadFromContentID($contentid);
+			$translationClass = $contentElement->getTranslationObjectClass();
+			$translationObject = new $translationClass( $language_id, $contentElement );
+			$translationObject->loadFromContentID($contentid);
 		}
 
 		$fieldname = JRequest::getString('field', '');
@@ -467,7 +465,7 @@ class TranslateController extends JController
 		$this->view->setLayout('originalvalue');
 
 		// Assign data for view - should really do this as I go along
-		$this->view->assignRef('actContentObject', $actContentObject);
+		$this->view->assignRef('translationObject', $translationObject);
 		$this->view->assignRef('field', $fieldname);
 		$this->view->display();
 
@@ -510,9 +508,6 @@ class TranslateController extends JController
 
 			for ($i = 0; $i < count($rows); $i++)
 			{
-				//$contentObject = new ContentObject( $language_id, $contentElement );
-				//$contentObject->readFromRow( $row );
-				//$rows[$i] = $contentObject ;
 				$rows[$i]->state = null;
 				$rows[$i]->title = $rows[$i]->original_text;
 				if (is_null($rows[$i]->title))

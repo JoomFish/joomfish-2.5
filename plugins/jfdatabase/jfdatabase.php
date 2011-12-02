@@ -119,7 +119,8 @@ class plgSystemJFDatabase extends JPlugin
 	{
 		// NEW SYSTEM
 		// amend editing page but only for native elements
-		if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
+		//if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
+		if (!in_array(JRequest::getCmd('option'), array("com_content","com_modules", "com_categories"))) return;
 		
 		$reference_id = JRequest::getInt("id");
 		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit" && $reference_id > 0)
@@ -138,7 +139,8 @@ class plgSystemJFDatabase extends JPlugin
 			{
 				$table = "categories";
 			}
-			$db->setQuery('select * from #__jf_translationmap where reference_table="' . $table . '" AND translation_id=' . JRequest::getInt("id"));
+			$item_id = JRequest::getInt("id");
+			$db->setQuery('select * from #__jf_translationmap where reference_table="' . $table . '" AND translation_id=' . $item_id);
 			$translations = $db->loadObjectList();
 			$original = 0;
 			if (count($translations) > 0)
@@ -158,6 +160,7 @@ window.addEvent('domready', function() {
 		jflangselect.appendChild(opt);
 		if (!isTranslation){
 			opt = new Element("option",{value:0, 'text':'No'});
+			opt.selected=true;
 			jflangselect.appendChild(opt);
 		}
 		jflangselect.value= isTranslation?1:0;
@@ -178,12 +181,12 @@ window.addEvent('domready', function() {
 			
 		var jflanglabel   = new Element("label",{id:'jftranslation-lbl', for:'jftranslation'});		
 		jflanglabel.appendText("Is Translation?");
-		
+					
 		var refid = $('jform_id').value;
-		var jflanginput = new Element("input",{ type:'text', name:'jftranslation_id', id:'jftranslation_id', value:$original, readonly:'readonly'});
+		var jflanginput = new Element("input",{ type:'text', name:'jfreference_id', id:'jfreference_id', value:$original, readonly:'readonly'});
 		var jforigalinput = new Element("input",{ type:'text', name:'jforiginal_id', id:'jforiginal_id', value:refid, readonly:'readonly'});
 
-		var jftranslabel  = new Element("label", {for:"jftranslation_id"});
+		var jftranslabel  = new Element("label", {for:"jfreference_id"});
 		jftranslabel.appendText("translation of : ");
 
 		var jforiglabel  = new Element("label", {for:"jforiginal_id"});
@@ -216,7 +219,23 @@ window.addEvent('domready', function() {
 		}
 		
 		// insert it after the lang selector
-		li.inject( langselectli,'after');				
+		li.inject( langselectli,'after');			
+		
+		if(langselect.value=="*"){
+			jflangselect.getParent().style.display="none";
+		}
+		langselect.addEventListener("change", function(){
+			if(langselect.value=="*"){
+				jflangselect.set('value', 0);
+				jflangselect.getParent().style.display="none";
+			}
+			else {
+				jflangselect.set('value', 1);
+				jflangselect.getParent().style.display="block";
+			}
+			
+		});
+
 	}
 });
 SCRIPT;
@@ -227,16 +246,22 @@ SCRIPT;
 
 	public function onContentBeforeSave($context, &$article, $isNew)
 	{
-		//$this->doAfterSave($context, $article, $isNew, "content");
-
 	}
 
 	public function onContentAfterSave($context, &$article, $isNew)
 	{
-		$this->doAfterSave($context, $article, $isNew, "content");
+		// We need this plugin to respond to the native saving of content items in the backend of Joomla
+		$tablename = $article->getTableName();
+		$this->doAfterSave($context, $article, $isNew, $tableName);
 
 	}
 
+	public function onExtensionAfterSave($context, &$table, $isNew){
+		// We need this plugin to respond to the native saving of modules etc. in the backend of Joomla
+		$tablename = $table->getTableName();
+		$this->doAfterSave($context, $table, $isNew, $tablename);
+	}
+	
 	public function onMenuAfterSave($context, &$article, $isNew)
 	{
 		$this->doAfterSave($context, $article, $isNew, "menu");
@@ -322,11 +347,21 @@ SCRIPT;
 
 	}
 
-	private function doAfterSave($context, &$article, $isNew, $table)
+	private function doAfterSave($context, &$article, $isNew, $table, $elementTable=false)
 	{
-		$translationid = JRequest::getInt("jftranslation_id", JRequest::getInt("reference_id"));
-		$originalid = JRequest::getInt("jforiginal_id", JRequest::getInt("reference_id"));
-		$jftranslation = JRequest::getInt("jftranslation");
+		if (strpos($table,'#__')===0){
+			$table = str_replace('#__', '', $table);
+		}
+		// if its a new translation then jfreference_id is empy
+		$referenceid = JRequest::getInt("jfreference_id",0);
+		// originalid is the id of the item being edited  !
+		$originalid = JRequest::getInt("jforiginal_id", 0);
+		$jftranslation = JRequest::getInt("jftranslation",0);
+		$keyname = $article->getKeyName();
+		// don't do anything if not a translation
+		if (!$jftranslation){
+			return;
+		}
 		if ($originalid > 0)
 		{
 			$jform = JRequest::getVar("jform");
@@ -345,20 +380,21 @@ SCRIPT;
 			{
 				return;
 			}
-			if ($translationid > 0)
+			if ($referenceid > 0)
 			{
 				// existing translation
 				$db = JFactory::getDbo();
-				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($translationid, $article->id," . $db->quote($table) . "," . $db->quote($language) . ")";
+				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($referenceid, $originalid," . $db->quote($table) . "," . $db->quote($language) . ")";
 				$db->setQuery($sql);
 				$success = $db->query();
 				return;
 			}
 			else
 			{
-				// new translation
+				// new translation so the originalid field is the id of the item that has been translated i.e. the reference id
 				$db = JFactory::getDbo();
-				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($originalid,$article->id ," . $db->quote($table) . "," . $db->quote($language) . ")";
+				$translationid = $article->$keyname;
+				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($originalid, $translationid ," . $db->quote($table) . "," . $db->quote($language) . ")";
 				$db->setQuery($sql);
 				$success = $db->query();
 				return;

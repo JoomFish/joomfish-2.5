@@ -162,6 +162,9 @@ class JoomFishManager {
 	 */
 	public function getPrimaryKey($tablename){
 		if ($this->_primaryKeys==null) $this->_loadPrimaryKeyData();
+		if (!is_string($tablename)){
+			return false;
+		}
 		if (array_key_exists($tablename,$this->_primaryKeys)) return $this->_primaryKeys[$tablename];
 		else return "id";
 	}

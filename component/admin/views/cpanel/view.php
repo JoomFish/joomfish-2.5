@@ -193,11 +193,11 @@ class CPanelViewCPanel extends JoomfishViewDefault
 						<?php
 					}
 
-					JLoader::import( 'models.ContentObject',JOOMFISH_ADMINPATH);
-					$contentObject = new ContentObject( $ceInfo['language_id'], $contentElement );
-					$contentObject->loadFromContentID($ceInfo['reference_id']);
+					$translationClass = $contentElement->getTranslationObjectClass();
+					$translationObject = new TranslationObject( $ceInfo['language_id'], $contentElement );
+					$translationObject->loadFromContentID($ceInfo['reference_id']);
 					$link = 'index.php?option=com_joomfish&amp;task=translate.edit&amp;&amp;catid=' .$ceInfo['catid']. '&cid[]=0|' .$ceInfo['reference_id'].'|'.$ceInfo['language_id'];
-					$hrefEdit = "<a href='".$link."'>".$contentObject->title. "</a>";
+					$hrefEdit = "<a href='".$link."'>".$translationObject->title. "</a>";
 
 					$link = 'index.php?option=com_joomfish&amp;task=translate.publish&amp;catid=' .$ceInfo['catid']. '&cid[]=0|' .$ceInfo['reference_id'].'|'.$ceInfo['language_id'];
 					$hrefPublish = '<a href="'.$link.'"><img src="images/publish_x.png" width="12" height="12" border="0" alt="" /></a>';

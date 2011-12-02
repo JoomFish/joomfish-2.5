@@ -34,7 +34,7 @@
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-$elementTable = $this->actContentObject->getTable();
+$elementTable = $this->translationObject->getTable();
 $field =  $this->field;
 foreach ($elementTable->Fields as $fld) {
 	if ($fld->Name ==$this->field ){

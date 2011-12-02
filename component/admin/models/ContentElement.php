@@ -151,6 +151,27 @@ class ContentElement
 
 	}
 
+	/*
+	 * get the translation object class for the table and make sure the source file is loaded
+	 */
+	public function getTranslationObjectClass(){
+		if (isset($this->_xmlFile))
+		{
+			$xpath = new DOMXPath($this->_xmlFile);
+			$targetElement = $xpath->query('//reference/treatment/translationObjectModel')->item(0);
+			if (!isset($targetElement))
+			{
+				JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
+				return 'TranslationObject';
+			}
+			$translationObjectClass = trim($targetElement->textContent);
+			JLoader::import( "models.$translationObjectClass",JOOMFISH_ADMINPATH);
+			return $translationObjectClass;
+		}
+		JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
+		return 'TranslationObject';
+	}
+	
 	public function getPublishedField(){
 		if (isset($this->_xmlFile))
 		{
