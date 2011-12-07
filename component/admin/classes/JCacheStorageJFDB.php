@@ -63,7 +63,8 @@ class JCacheStorageJfdb extends JCacheStorage
 		static $expiredCacheCleaned;
 
 		$this->profile_db =  JFactory::getDBO();
-		$this->db = clone ($this->profile_db);		
+		//$this->db = clone ($this->profile_db);		
+		$this->db = $this->profile_db;
 
 		$this->_language	= (isset($options['language'])) ? $options['language'] : 'en-GB';
 		$this->_lifetime	= (isset($options['lifetime'])) ? $options['lifetime'] : 60;
@@ -139,13 +140,13 @@ class JCacheStorageJfdb extends JCacheStorage
 
 		$sql = "SELECT  UNCOMPRESS(value) FROM `#__dbcache` WHERE id=".$this->db->quote($hashedid)." AND groupname=".$this->db->quote($group)." AND expire>FROM_UNIXTIME(".$this->db->quote($this->_now).")";
 		
-		$keepSQL = $this->db->_sql;
+		$keepSQL = $this->db->getQuery();
 		$this->db->setQuery($sql);
 
 		// Must set false to ensure that Joomfish doesn't get involved
 		$data = $this->db->loadResult(false);
 		
-		$this->db->_sql = $keepSQL ;
+		$this->db->setQuery( $keepSQL );
 		if (is_null($data)){
 			$data = false;
 		}
@@ -202,6 +203,40 @@ class JCacheStorageJfdb extends JCacheStorage
 		$this->db->_skipSetRefTables=false;
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile($pfunc);
 		return $this->db->query();
+	}
+
+	// TODO - do we need to worry about locking the cache since the database should take care of this for us
+	/**
+	 * Lock cached item
+	 *
+	 * @param   string   $id        The cache data id
+	 * @param   string   $group     The cache data group
+	 * @param   integer  $locktime  Cached item max lock time
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   11.1
+	 */
+	public function lock($id, $group, $locktime)
+	{
+		$returning = new stdClass;
+		$returning->locklooped = false;
+		$returning->locked = false;
+		return $returning;
+	}
+
+	/**
+	 * Unlock cached item
+	 *
+	 * @param   string   $id     The cache data id
+	 * @param   string   $group  The cache data group
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 * @since   11.1
+	 */
+	public function unlock($id, $group = null)
+	{
+		return true;
 	}
 
 	/**

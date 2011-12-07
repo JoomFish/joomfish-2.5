@@ -159,9 +159,7 @@ class JFContentModelItem extends JFTempContentModelItem {
 			if ($component = @$table->linkparts['option']) {
 				$query = 'SELECT `extension_id`' .
 				' FROM `#__extensions`' .
-				' WHERE `link` <> \'\'' .
-				' AND `parent` = 0' .
-				' AND `element` = "'.$db->getEscaped($component).'"';
+				' WHERE `element` = "'.$db->getEscaped($component).'"';
 				$db->setQuery( $query );
 				$table->componentid = $db->loadResult();
 			}

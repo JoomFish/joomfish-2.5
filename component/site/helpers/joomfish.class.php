@@ -409,7 +409,7 @@ class JoomFish
 			return;
 		}
 
-		$fielddata = JoomFish::getTablesIdsAndFields($fields, $this);
+		$fielddata = JoomFish::getTablesIdsAndFields($fields);
 
 		// If I write content in non-default language then this skips the translation!
 		//if($language == $defaultLang) return $rows;
@@ -473,7 +473,7 @@ class JoomFish
 
 	}
 
-	static function getTablesIdsAndFields($fields, $db)
+	static function getTablesIdsAndFields($fields)
 	{
 		$data = array();
 		$jfManager = JoomFishManager::getInstance();
@@ -735,7 +735,7 @@ class JoomFish
 			$published = $user->authorise('core.publish', 'com_joomfish') ? "\n	AND $published=1" : "";
 			
 			$sql = "SELECT tab.*, tmap.reference_id FROM #__$reference_table as tab"
-					. "\n LEFT JOIN #__jf_translationmap AS tmap ON tmap.reference_table = " . $this->quote($reference_table) . "   AND tmap.translation_id = tab.$pk AND tmap.language= " . $this->quote($languages[$language]->code)
+					. "\n LEFT JOIN #__jf_translationmap AS tmap ON tmap.reference_table = " . $db->quote($reference_table) . "   AND tmap.translation_id = tab.$pk AND tmap.language= " . $db->quote($languages[$language]->code)
 					. "\n  WHERE tmap.reference_id IN($ids)"
 					//. "\nWHERE tab.language=" . $db->quote($languages[$language]->code)
 					. $published

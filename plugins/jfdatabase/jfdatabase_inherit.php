@@ -152,6 +152,7 @@ class JFDatabase extends interceptDB {
 	public function translateableFields($tableName,$fieldnames)
 	{
 		$jfManager = JoomFishManager::getInstance();
+		if (!$jfManager) return false;
 		$contentElement = $jfManager->getContentElement( $tableName );
 		$elementTable = $contentElement->getTable();
 		foreach ($elementTable->Fields as $field){

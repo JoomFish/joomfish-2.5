@@ -175,16 +175,19 @@ class TranslationObject implements iJFTranslatable
 			{
 
 				// Handle magic quotes compatability
+				// NB this is not done by getVar
+				/*
 				if (get_magic_quotes_gpc() && $field->Type !== 'htmltext')
 				{
-					$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "refField_" . $fieldName . $suffix]);
-					$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "origText_" . $fieldName . $suffix]);
+					//$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "refField_" . $fieldName . $suffix]);
+					//$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "origText_" . $fieldName . $suffix]);
 				}
 				else
 				{
-					$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::getVar($prefix . "refField_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
-					$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::getVar($prefix . "origText_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
-				}
+				*/
+				$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::getVar($prefix . "refField_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
+				$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::getVar($prefix . "origText_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
+				//}
 
 				$translationValue = $formArray[$prefix . "refField_" . $fieldName . $suffix];
 				$fieldContent = new jfContent($db);

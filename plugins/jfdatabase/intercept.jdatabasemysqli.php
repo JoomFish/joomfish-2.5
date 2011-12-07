@@ -146,11 +146,15 @@ class interceptDB extends JDatabaseMySQLi
 
 		if ($jfManager->getCfg("transcaching", 1))
 		{
-			// cache the results
-			$cache = $jfManager->getCache($language);
 			$this->orig_limit = $this->get("limit");
 			$this->orig_offset = $this->get("offset");
-			$jfdata = $cache->get(array("JoomFish", 'translateListArrayCached'), array($jfdata, $language, $fields));
+
+			// cache the results
+			// special Joomfish database cache
+			// $cache = $jfManager->getCache($language);			
+			// $jfdata = $cache->get(array("JoomFish", 'translateListArrayCached'), array($jfdata, $language, $fields));
+			$cache 	= JFactory::getCache('com_joomfish', 'callback');		
+			$jfdata = $cache->get("JoomFish::translateListArrayCached", array($jfdata, $language, $fields));
 			$this->orig_limit = 0;
 			$this->orig_offset = 0;
 		}
@@ -214,7 +218,12 @@ class interceptDB extends JDatabaseMySQLi
 				if (isset($field->orgtable) && $field->orgtable!="")
 				{
 					$table = substr($field->orgtable, strlen($this->tablePrefix));
-					if ($this->translatedContentAvailable($table))
+					if (!$this->translatedContentAvailable($table))
+					{
+						continue;
+					}
+					// is this field translateable 
+					if (isset($field->orgname) && $field->orgname!="" && $this->translateableFields($table,array($field->orgname)))
 					{
 						$doTranslate = true;
 						break;

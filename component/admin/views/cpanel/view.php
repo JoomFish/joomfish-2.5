@@ -131,10 +131,10 @@ class CPanelViewCPanel extends JoomfishViewDefault
 			
 			$items = array_slice($rssDoc->get_items(), 0, 3);
 			$numItems = count($items);
+            	$k = 0;
             if($numItems == 0) {
             	$output .= '<tr><th>' .JText::_( 'NO_NEWS_ITEMS_FOUND' ). '</th></tr>';
             } else {
-            	$k = 0;
                 for( $j = 0; $j < $numItems; $j++ ) {
                     $item = $items[$j];
                 	$output .= '<tr><td class="row' .$k. '">';
