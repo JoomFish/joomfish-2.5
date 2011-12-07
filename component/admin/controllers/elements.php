@@ -43,9 +43,6 @@ JLoader::import( 'helpers.controllerHelper',JOOMFISH_ADMINPATH);
  */
 class ElementsController extends JController   {
 
-	/** @var string		current used task */
-	private $task=null;
-
 	/** @var string		action within the task */
 	private $act=null;
 
@@ -173,8 +170,8 @@ class ElementsController extends JController   {
 		$limitstart = JFactory::getApplication()->getUserStateFromRequest( "view{com_joomfish}limitstart", 'limitstart', 0 );
 		$total=count($this->_joomfishManager->getContentElements());
 
-		require_once( JPATH_SITE . "/administrator/includes/pageNavigation.php");
-		$pageNav = new mosPageNav( $total, $limitstart, $limit );
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination($total, $limitstart, $limit);
 
 		// get the view
 		$view =  $this->getView("elements");

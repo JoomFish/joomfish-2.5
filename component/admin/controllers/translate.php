@@ -518,8 +518,8 @@ class TranslateController extends JController
 			}
 		}
 
-		require_once( JPATH_SITE . "/administrator/includes/pageNavigation.php");
-		$pageNav = new mosPageNav($total, $limitstart, $limit);
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination($total, $limitstart, $limit);
 
 		// get list of active languages
 		$langlist = "";
