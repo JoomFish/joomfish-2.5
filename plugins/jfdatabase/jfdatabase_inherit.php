@@ -57,18 +57,21 @@ include_once(dirname(__FILE__)."/intercept.".strtolower(get_class(JFactory::getD
 class JFDatabase extends interceptDB {
 
 	/** @var array list of multi lingual tables */
-	var $mlTableList=null;
+	public $mlTableList=null;
 	/** @var Internal variable to hold array of unique tablenames and mapping data*/
-	var $refTables=null;
+	public $refTables=null;
 
 	/** @var Internal variable to hold flag about whether setRefTables is needed - JF queries don't need it */
-	var $skipSetRefTables = false;
+	public $skipSetRefTables = false;
 
-	var $orig_limit	= 0;
-	var $orig_offset	= 0;
+	public $orig_limit	= 0;
+	public $orig_offset	= 0;
 
-	var $skipjf = 0;
+	public $skipjf = 0;
 	
+	private $tableFields = null;
+
+
 	/** Constructor
 	*/
 	function JFDatabase( $options) {
@@ -88,11 +91,11 @@ class JFDatabase extends interceptDB {
 				JError::raiseWarning( 200, JTEXT::_('No valid table list:') .$this->getErrorMsg());
 			}
 		}
-
+		
 		$pfunc = $this->profile($pfunc);
 	}
 
-	var $profileData = array();
+	public $profileData = array();
 
 	function profile($func = "", $forcestart=false){
 		if ($this->skipjf) return "";
@@ -137,9 +140,29 @@ class JFDatabase extends interceptDB {
 	 * @param string $table : tablename to test
 	 */
 	function translatedContentAvailable($table){
-		return in_array( $table, $this->mlTableList) || $table=="content";
+		// mltable is a union of joomfish and native translations!
+		return in_array( $table, $this->mlTableList) ;
 	}
 
+	/**
+	 *Public function to test if table and field names are translatable - not point trying to translate ids etc.
+	 * @param type $table
+	 * @param type $fieldnames 
+	 */
+	public function translateableFields($tableName,$fieldnames)
+	{
+		$jfManager = JoomFishManager::getInstance();
+		if (!$jfManager) return false;
+		$contentElement = $jfManager->getContentElement( $tableName );
+		$elementTable = $contentElement->getTable();
+		foreach ($elementTable->Fields as $field){
+			if ($field->Translate && in_array($field->Name, $fieldnames)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Description
 	 *
@@ -429,39 +452,45 @@ class JFDatabase extends interceptDB {
 		if( !$passthru && isset($jfManager)) {
 			//Must insert parent first to get reference id !
 			$parentInsertReturn = parent::insertObject( $table, $object, $keyName, $verbose);
-
+			
 			$pfunc = $this->profile();
-
-			$actContentObject=null;
+			
+			$translationObject=null;
 			if( isset($table) && $table!="" ) {
 				$tableName = preg_replace( '/^#__/', '', $table);
 				if ($table != "#__jf_content" ){
 					$contentElement = $jfManager->getContentElement( $tableName );
 					if( isset( $contentElement ) ) {
-						include_once(JPATH_ADMINISTRATOR."/components/com_joomfish/models/ContentObject.php");
-						$actContentObject = new ContentObject( $jfManager->getLanguageID($language), $contentElement );
-						if( isset( $object->$keyName ) ) {
-							$actContentObject->loadFromContentID( $object->$keyName );
-							$actContentObject->updateMLContent( $object );
-							if( isset( $object->state ) ) {
-								$actContentObject->published = ($object->state == 1) ? true : false;
-							} else if ( isset( $object->published ) ) {
-								$actContentObject->published = ($object->published == 1) ? true : false;
-							}
-							if ($actContentObject->published){
-								if ( $jfManager->getCfg("frontEndPublish")){
-									$user = JFactory::getUser();
-									$access = new stdClass();
-									$access->canPublish =  $user->authorize('com_content', 'publish', 'content', 'all');
-									if ($access->canPublish) $actContentObject->setPublished($actContentObject->published);
+						if ($contentElement->getTarget() == "native"){
+							// TODO need to know if this is an update calling an insert or a raw insert!
+							// if a raw insert then we may nee to do something extra here ??
+						}
+						else {
+							$translationClass = $contentElement->getTranslationObjectClass();
+							$translationObject = new $translationClass( $jfManager->getLanguageID($language), $contentElement );
+							if( isset( $object->$keyName ) ) {
+								$translationObject->loadFromContentID( $object->$keyName );
+								$translationObject->updateMLContent( $object );
+								if( isset( $object->state ) ) {
+									$translationObject->published = ($object->state == 1) ? true : false;
+								} else if ( isset( $object->published ) ) {
+									$translationObject->published = ($object->published == 1) ? true : false;
 								}
-							}
-							$actContentObject->store();
+								if ($translationObject->published){
+									if ( $jfManager->getCfg("frontEndPublish")){
+										$user = JFactory::getUser();
+										$access = new stdClass();
+										$access->canPublish =  $user->authorize('com_content', 'publish', 'content', 'all');
+										if ($access->canPublish) $translationObject->setPublished($translationObject->published);
+									}
+								}
+								$translationObject->store();
 
-							if ($jfManager->getCfg("transcaching",1)){
-								// clean the cache!
-								$cache = $jfManager->getCache($language);
-								$cache->clean();
+								if ($jfManager->getCfg("transcaching",1)){
+									// clean the cache!
+									$cache = $jfManager->getCache($language);
+									$cache->clean();
+								}
 							}
 						}
 					}
@@ -509,30 +538,35 @@ class JFDatabase extends interceptDB {
 		$passthru = $language == $default_lang;
 
 		if( !$passthru && isset($jfManager)) {
-			$actContentObject=null;
+						
+			$translationObject=null;
 			if( isset($table) && $table!="") {
 				$tableName = preg_replace( '/^#__/', '', $table);
 				if ($table != "#__jf_content" ){
 					$contentElement = $jfManager->getContentElement( $tableName );
 					if( isset( $contentElement ) ) {
-						include_once(JPATH_ADMINISTRATOR."/components/com_joomfish/models/ContentObject.php");
-						$actContentObject = new ContentObject( $jfManager->getLanguageID($language), $contentElement );
+						$translationClass = $contentElement->getTranslationObjectClass();
+						$translationObject = new $translationClass( $jfManager->getLanguageID($language), $contentElement );
 						if( isset( $object->$keyName ) ) {
-							$actContentObject->loadFromContentID( $object->$keyName );
-							$actContentObject->updateMLContent( $object );
+							// load the native language version
+							$translationObject->loadFromContentID( $object->$keyName );							
+							// update the translation object with the transalation and the status of any changes etc.
+							$translationObject->updateMLContent( $object , $language);
+											
+							// TODO move this to translation object class
 							if( isset( $object->state ) ) {
-								$actContentObject->published = ($object->state == 1) ? true : false;
+								$translationObject->published = ($object->state == 1) ? true : false;
 							} else if ( isset( $object->published ) ) {
-								$actContentObject->published = ($object->published == 1) ? true : false;
+								$translationObject->published = ($object->published == 1) ? true : false;
 							}
 							if ( $jfManager->getCfg("frontEndPublish")){
 								$user = JFactory::getUser();
 								$access = new stdClass();
 								$access->canPublish =  $user->authorize('com_content', 'publish', 'content', 'all');
-								if ($access->canPublish) $actContentObject->setPublished($actContentObject->published);
+								if ($access->canPublish) $translationObject->setPublished($translationObject->published);
 							}
 
-							$actContentObject->store();
+							$success = $translationObject->store();
 
 							if ($jfManager->getCfg("transcaching",1)){
 								// clean the cache!

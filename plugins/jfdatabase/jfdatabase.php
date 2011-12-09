@@ -26,7 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfdatabase.php 246 2011-07-19 11:15:13Z geraint $
+ * $Id: jfdatabase.php 241 2011-06-22 15:42:55Z geraint $
  * @package joomfish
  * @subpackage jfdatabase
  * @version 2.0
@@ -117,11 +117,11 @@ class plgSystemJFDatabase extends JPlugin
 
 	function onAfterRoute()
 	{
-		// disable Joomla based translations for now
-		return;
+		// NEW SYSTEM
+		// amend editing page but only for native elements
+		//if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
+		if (!in_array(JRequest::getCmd('option'), array("com_content","com_modules", "com_categories"))) return;
 		
-		// amend editing page 
-		// TODO make sure reference id is "id" 
 		$reference_id = JRequest::getInt("id");
 		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit" && $reference_id > 0)
 		{
@@ -131,12 +131,16 @@ class plgSystemJFDatabase extends JPlugin
 			{
 				$table = "menu";
 			}
+			else if (JRequest::getCmd('option') == "com_modules")
+			{
+				$table = "modules";
+			}
 			else if (JRequest::getCmd('option') == "com_categories")
 			{
 				$table = "categories";
 			}
-
-			$db->setQuery('select * from #__jf_translationmap where reference_table="' . $table . '" AND translation_id=' . JRequest::getInt("id"));
+			$item_id = JRequest::getInt("id");
+			$db->setQuery('select * from #__jf_translationmap where reference_table="' . $table . '" AND translation_id=' . $item_id);
 			$translations = $db->loadObjectList();
 			$original = 0;
 			if (count($translations) > 0)
@@ -156,6 +160,7 @@ window.addEvent('domready', function() {
 		jflangselect.appendChild(opt);
 		if (!isTranslation){
 			opt = new Element("option",{value:0, 'text':'No'});
+			opt.selected=true;
 			jflangselect.appendChild(opt);
 		}
 		jflangselect.value= isTranslation?1:0;
@@ -176,24 +181,24 @@ window.addEvent('domready', function() {
 			
 		var jflanglabel   = new Element("label",{id:'jftranslation-lbl', for:'jftranslation'});		
 		jflanglabel.appendText("Is Translation?");
-		
+					
 		var refid = $('jform_id').value;
-		var jflanginput = new Element("input",{ type:'text', name:'jftranslation_id', id:'jftranslation_id', value:$original});
-		var jforigalinput = new Element("input",{ type:'text', name:'jforiginal_id', id:'jforiginal_id', value:refid});
+		var jflanginput = new Element("input",{ type:'text', name:'jfreference_id', id:'jfreference_id', value:$original, readonly:'readonly'});
+		var jforigalinput = new Element("input",{ type:'text', name:'jforiginal_id', id:'jforiginal_id', value:refid, readonly:'readonly'});
 
-		var jftranslabel  = new Element("label", {for:"jftranslation_id"});
-		jftranslabel.appendChild(document.createTextNode("Translation id : "));
+		var jftranslabel  = new Element("label", {for:"jfreference_id"});
+		jftranslabel.appendText("translation of : ");
 
 		var jforiglabel  = new Element("label", {for:"jforiginal_id"});
-		jforiglabel.appendChild(document.createTextNode("Original id : "));
+		jforiglabel.appendText("original id : ");
 
 		var newid = false;
 		if (!$('id')){
 			// must also have a new pseudo  id to make sure replaces anything in the URL!
 			// editing existing elements don't have this 
-			var newid = new Element("input",{ type:'text', name:'id', id:'jfid', value:refid});		
-			var jfnewidlabel  = new Element("label", {for:"id"});
-			jfnewidlabel.appendChild(document.createTextNode("New id : "));
+			var newid = new Element("input",{ type:'text', name:'id', id:'jfid', value:refid, readonly:'readonly'});		
+			var jfnewidlabel  = new Element("label", {for:"jfid"});
+			jfnewidlabel.appendText("new id : ");
 		}
 
 
@@ -214,7 +219,23 @@ window.addEvent('domready', function() {
 		}
 		
 		// insert it after the lang selector
-		li.inject( langselectli,'after');				
+		li.inject( langselectli,'after');			
+		
+		if(langselect.value=="*"){
+			jflangselect.getParent().style.display="none";
+		}
+		langselect.addEventListener("change", function(){
+			if(langselect.value=="*"){
+				jflangselect.set('value', 0);
+				jflangselect.getParent().style.display="none";
+			}
+			else {
+				jflangselect.set('value', 1);
+				jflangselect.getParent().style.display="block";
+			}
+			
+		});
+
 	}
 });
 SCRIPT;
@@ -225,57 +246,155 @@ SCRIPT;
 
 	public function onContentBeforeSave($context, &$article, $isNew)
 	{
-		//$this->doAfterSave($context, $article, $isNew, "content");
-
 	}
 
 	public function onContentAfterSave($context, &$article, $isNew)
 	{
-		if ($context == "com_categories.category"){
-			$this->doAfterSave($context, $article, $isNew, "categories");
-		}
-		else {
-			$this->doAfterSave($context, $article, $isNew, "content");
-		}
+		// We need this plugin to respond to the native saving of content items in the backend of Joomla
+		$tablename = $article->getTableName();
+		$this->doAfterSave($context, $article, $isNew, $tableName);
 
 	}
 
+	public function onExtensionAfterSave($context, &$table, $isNew){
+		// We need this plugin to respond to the native saving of modules etc. in the backend of Joomla
+		$tablename = $table->getTableName();
+		$this->doAfterSave($context, $table, $isNew, $tablename);
+	}
+	
 	public function onMenuAfterSave($context, &$article, $isNew)
 	{
 		$this->doAfterSave($context, $article, $isNew, "menu");
 
 	}
 
-	private function doAfterSave($context, &$article, $isNew, $table)
+	public function onModuleAfterSave($context, &$table, $isNew)
 	{
-		$translationid = JRequest::getInt("jftranslation_id");
-		$originalid = JRequest::getInt("jforiginal_id");
-		$jftranslation = JRequest::getInt("jftranslation");
-		if ($jftranslation > 0)
+		$this->doAfterSave($context, $article, $isNew, "modules");
+
+		// For modules must also save module/menu assignments
+
+		$data = JRequest::getVar("jform", array());
+		if (isset($data['assignment']))
+		{
+			//
+			// Process the menu link mappings.
+			//
+
+			$assignment = isset($data['assignment']) ? $data['assignment'] : 0;
+
+			$db = JFactory::getDbo();
+
+			$query = $db->getQuery(true);
+			$query->delete();
+			$query->from('#__modules_menu');
+			$query->where('moduleid = ' . (int) $table->id);
+			$db->setQuery((string) $query);
+			$db->query();
+
+			// If the assignment is numeric, then something is selected (otherwise it's none).
+			if (is_numeric($assignment))
+			{
+				// Variable is numeric, but could be a string.
+				$assignment = (int) $assignment;
+
+				// Logic check: if no module excluded then convert to display on all.
+				if ($assignment == -1 && empty($data['assigned']))
+				{
+					$assignment = 0;
+				}
+
+				// Check needed to stop a module being assigned to `All`
+				// and other menu items resulting in a module being displayed twice.
+				if ($assignment === 0)
+				{
+					$query->clear();
+					$query->insert('#__modules_menu');
+					$query->set('moduleid=' . (int) $table->id);
+					$query->set('menuid=0');
+					$db->setQuery((string) $query);
+					if (!$db->query())
+					{
+						$this->setError($db->getErrorMsg());
+						return false;
+					}
+				}
+				elseif (!empty($data['assigned']))
+				{
+					// Get the sign of the number.
+					$sign = $assignment < 0 ? -1 : +1;
+
+					// Preprocess the assigned array.
+					$tuples = array();
+					foreach ($data['assigned'] as &$pk)
+					{
+						$tuples[] = '(' . (int) $table->id . ',' . (int) $pk * $sign . ')';
+					}
+
+					$db->setQuery(
+							'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ' .
+							implode(',', $tuples)
+					);
+
+					if (!$db->query())
+					{
+						$this->setError($db->getErrorMsg());
+						return false;
+					}
+				}
+			}
+		}
+
+	}
+
+	private function doAfterSave($context, &$article, $isNew, $table, $elementTable=false)
+	{
+		if (strpos($table,'#__')===0){
+			$table = str_replace('#__', '', $table);
+		}
+		// if its a new translation then jfreference_id is empy
+		$referenceid = JRequest::getInt("jfreference_id",0);
+		// originalid is the id of the item being edited  !
+		$originalid = JRequest::getInt("jforiginal_id", 0);
+		$jftranslation = JRequest::getInt("jftranslation",0);
+		$keyname = $article->getKeyName();
+		// don't do anything if not a translation
+		if (!$jftranslation){
+			return;
+		}
+		if ($originalid > 0)
 		{
 			$jform = JRequest::getVar("jform");
 			if ($jform && isset($jform['language']))
 			{
 				$language = $jform['language'];
 			}
+			else if (JRequest::getInt("select_language_id"))
+			{
+				$language = JRequest::getInt("select_language_id");
+				$jfm = JoomFishManager::getInstance();
+				$languages = $jfm->getLanguagesIndexedById();
+				$language = $languages[$language]->code;
+			}
 			else
 			{
 				return;
 			}
-			if ($translationid > 0)
+			if ($referenceid > 0)
 			{
 				// existing translation
 				$db = JFactory::getDbo();
-				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($translationid, $article->id," . $db->quote($table) . "," . $db->quote($language) . ")";
+				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($referenceid, $originalid," . $db->quote($table) . "," . $db->quote($language) . ")";
 				$db->setQuery($sql);
 				$success = $db->query();
 				return;
 			}
 			else
 			{
-				// new translation
+				// new translation so the originalid field is the id of the item that has been translated i.e. the reference id
 				$db = JFactory::getDbo();
-				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($originalid,$article->id ," . $db->quote($table) . "," . $db->quote($language) . ")";
+				$translationid = $article->$keyname;
+				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($originalid, $translationid ," . $db->quote($table) . "," . $db->quote($language) . ")";
 				$db->setQuery($sql);
 				$success = $db->query();
 				return;
@@ -334,7 +453,7 @@ SCRIPT;
 
 			// make sure jfManager is initialised before we switch db handler
 			$jfManager = JoomFishManager::getInstance();
-			
+
 			$conf = JFactory::getConfig();
 
 			$host = $conf->getValue('config.host');
@@ -378,21 +497,5 @@ SCRIPT;
 		
 	}
 
-	
-	/* 
-	 * SQL to create view
-	 */
-	/*
-CREATE OR REPLACE VIEW  joomla17.jos_jf_categories_de AS
-SELECT tm.reference_id , CASE WHEN tm.reference_id IS NULL THEN c.id ELSE tm.reference_id END as newid , c.* FROM joomla17.jos_categories as c
-LEFT JOIN joomla17.jos_jf_translationmap as tm ON c.id=tm.translation_id AND tm.reference_table='categories' AND tm.language='de-DE'
-WHERE c.extension='com_content' 
-AND c.id IN (
-SELECT c2.id FROM joomla17.jos_categories as c2
-LEFT JOIN joomla17.jos_jf_translationmap as tm2 ON c2.id=tm2.reference_id AND tm2.reference_table='categories' AND tm2.language='de-DE'
-WHERE c.extension='com_content' AND (tm2.reference_id is null OR c2.language ='*' OR c2.language='de-DE')
-)
-	 * 
-	 */
 }
-	 
+

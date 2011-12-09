@@ -193,12 +193,15 @@ if (!defined('JFMODULE_CLASS'))
 			}
 
 			$params = JComponentHelper::getParams("com_joomfish");
-			if ($modparams->get("cache_href", 1) && $params->get("transcaching", 1))
+			if ($modparams->get("cache_href", 1))
 			{
-				$jfm = JoomFishManager::getInstance();
-				$cache = $jfm->getCache($language->code);
-
-				$url = $cache->get(array("JFModuleHTML", '_createHRef2'), array($currenturl, $href, $code));
+				// special Joomfish database cache
+				//$jfm = JoomFishManager::getInstance();
+				//$cache = $jfm->getCache($language->code);
+				//$url = $cache->get(array("JFModuleHTML", '_createHRef2'), array($currenturl, $href, $code));
+				$cache 	= JFactory::getCache('com_joomfish', 'callback');
+				$url = $cache->get("JFModuleHTML::_createHRef2", array($currenturl, $href, $code));
+				
 			}
 			else
 			{

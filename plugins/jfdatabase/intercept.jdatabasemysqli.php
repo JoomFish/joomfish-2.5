@@ -129,10 +129,16 @@ class interceptDB extends JDatabaseMySQLi
 			}
 		}
 
+		if (count($jfdata)==0){
+			return $jfdata;
+		}
+		
 		// Before joomfish manager is created since we can't translate so skip this anaylsis
 		$jfManager = JoomFishManager::getInstance();
-		if (!$jfManager)
-			return;
+		if (!$jfManager){
+			return $jfdata;
+		}
+		
 		if (isset($jfManager))
 		{
 			$this->setLanguage($language);
@@ -140,11 +146,15 @@ class interceptDB extends JDatabaseMySQLi
 
 		if ($jfManager->getCfg("transcaching", 1))
 		{
-			// cache the results
-			$cache = $jfManager->getCache($language);
 			$this->orig_limit = $this->get("limit");
 			$this->orig_offset = $this->get("offset");
-			$jfdata = $cache->get(array("JoomFish", 'translateListArrayCached'), array($jfdata, $language, $fields));
+
+			// cache the results
+			// special Joomfish database cache
+			// $cache = $jfManager->getCache($language);			
+			// $jfdata = $cache->get(array("JoomFish", 'translateListArrayCached'), array($jfdata, $language, $fields));
+			$cache 	= JFactory::getCache('com_joomfish', 'callback');		
+			$jfdata = $cache->get("JoomFish::translateListArrayCached", array($jfdata, $language, $fields));
 			$this->orig_limit = 0;
 			$this->orig_offset = 0;
 		}
@@ -205,10 +215,15 @@ class interceptDB extends JDatabaseMySQLi
 			$fields = mysqli_fetch_fields($cur);
 			foreach ($fields as $field)
 			{
-				if (isset($field->orgtable))
+				if (isset($field->orgtable) && $field->orgtable!="")
 				{
 					$table = substr($field->orgtable, strlen($this->tablePrefix));
-					if ($this->translatedContentAvailable($table))
+					if (!$this->translatedContentAvailable($table))
+					{
+						continue;
+					}
+					// is this field translateable 
+					if (isset($field->orgname) && $field->orgname!="" && $this->translateableFields($table,array($field->orgname)))
 					{
 						$doTranslate = true;
 						break;
@@ -223,7 +238,9 @@ class interceptDB extends JDatabaseMySQLi
 	public function query()
 	{
 		if ($this->skipjf) return parent::query();
-		if (is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
+		$jfmCount = 0;
+		// NEW SYSTEM disabled for now - the query handling for joins etc. is too complex
+		if (false && is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
 		{
 			// Do the from first
 			$sql = $this->replacePrefix((string) $this->sql);
@@ -240,11 +257,16 @@ class interceptDB extends JDatabaseMySQLi
 			{
 				$this->setLanguage($language);
 			}
-			$jfmCount = 0;
-			// Annoying that _from is protected in databasequery object and no get method!
 			$from = $this->sql->from;
-			if ($from)
+			$joins = $this->sql->join;
+			if ($from || $join)
 			{
+				$joinElements = array();
+				if ($joins){
+					foreach ($joins as $join) {
+						 $joinElements = array_merge($joinElements, $join->getElements() );
+					}
+				}
 				$fromElements = $from->getElements();
 				if ($fromElements)
 				{
@@ -258,7 +280,10 @@ class interceptDB extends JDatabaseMySQLi
 						$table = trim($parts[0]);
 						//if ($this->translatedContentAvailable($table))
 						// TODO need new translatedContentAvailable method !
-						if (in_array($table,array("menu", "content",  "categories")))
+						// This is the mapping table method!!
+						// NEW SYSTEM
+						if (in_array($table,array("menu", "content", "modules",  "categories")))
+						//if (in_array($table,array("content",  "categories")))
 						{
 							$alias = trim($parts[count($parts) - 1]);
 							$jfalias = 'jftm' . $jfmCount;
@@ -270,7 +295,9 @@ class interceptDB extends JDatabaseMySQLi
 					}
 				}
 			}
-			$this->sql->jfprocessed = true;
+			if ($jfmCount>0){
+				$this->sql->jfprocessed = true;
+			}
 		}
 		return parent::query();
 

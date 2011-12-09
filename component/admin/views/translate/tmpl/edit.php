@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: edit.php 226 2011-05-27 07:29:41Z alex $
+ * $Id: edit.php 225M 2011-05-26 16:40:14Z (local) $
  * @package joomfish
  * @subpackage Views
  *
@@ -35,7 +35,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 /**
 	* @return void
-	* @param object $this->actContentObject
+	* @param object $this->translationObject
 	* @param array $this->langlist
 	* @param string $this->catid
 	* @desc Shows the dialog for the content translation
@@ -50,7 +50,11 @@ $task=$this->task;
 $select_language_id = $this->select_language_id;
 $user = JFactory::getUser();
 $db = JFactory::getDBO();
-$elementTable = $this->actContentObject->getTable();
+$elementTable = $this->translationObject->getTable();
+$option = JRequest::getCmd("option");
+
+ini_set('xdebug.var_display_max_children', 3000 );
+ini_set('xdebug.var_display_max_depth', 3000 );
 
 // Should use CSS for image waps - in the meantime to this.
 //$jsfile = '<script language="javascript" type="text/javascript" src="'.JURI::root().'/includes/js/mambojavascript.js" ></script>';
@@ -191,9 +195,9 @@ else {
 				if( $field->Translate ) {
 					$translationContent = $field->translationContent;
 
-					// This causes problems in Japanese/Russian etc. ??
-					jimport('joomla.filter.output');
-					JFilterOutput::objectHTMLSafe( $translationContent );
+					// This causes problems in Japanese/Russian and params fields
+					//jimport('joomla.filter.output');
+					//JFilterOutput::objectHTMLSafe( $translationContent );
 
 
 					if( strtolower($field->Type)=='hiddentext') {
@@ -219,7 +223,7 @@ else {
 		      <td align="left" valign="top" id="original_value_<?php echo $field->Name?>">
 		      <?php
 		      if (preg_match("/<form/i",$field->originalValue)){
-		      	$ovhref = JRoute::_("index3.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->actContentObject->id."&lang=".$select_language_id);
+		      	$ovhref = JRoute::_("index3.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->translationObject->id."&lang=".$select_language_id);
 		      	echo '<a class="modal" rel="{handler: \'iframe\', size: {x: 700, y: 500}}" href="'.$ovhref.'" >'.JText::_("Content contains form - click here to view in popup window").'</a>';
 		      }
 		      else {
@@ -230,7 +234,11 @@ else {
 			  <td valign="top" class="button">
 				<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
 				<textarea  name="origText_<?php echo $field->Name;?>" style="display:none"><?php echo $field->originalValue;?></textarea>
-				<?php if( strtolower($field->Type)!='htmltext' ) {?>
+				<?php 
+				 if( strtolower($field->Type)=='readonlytext'){
+					 
+				 }
+				else if( strtolower($field->Type)!='htmltext' ) {?>
 					<a class="toolbar" onclick="document.adminForm.refField_<?php echo $field->Name;?>.value = document.adminForm.origText_<?php echo $field->Name;?>.value;"><span class="icon-32-copy"></span><?php echo JText::_( 'COPY' ); ?></a>
 				<?php }	else { ?>
 					<div id='googlebranding'>
@@ -270,7 +278,7 @@ else {
 							$maxLength = ($field->MaxLength>0)?$field->MaxLength:60;
 							$value =  strlen($translationContent->value)>0? $translationContent->value:$field->originalValue;
 							?>
-							<input class="inputbox" readonly="yes" type="text" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $value; ?>" maxlength="<?php echo $maxLength;?>"/>
+							<input class="inputbox" type="text" readonly="readonly" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $value; ?>" maxlength="<?php echo $maxLength;?>"/>
 							<?php
 						}
 						?>
@@ -300,21 +308,11 @@ else {
 	      	?>
 		    <tr class="<?php echo "row$k"; ?>">
 		      <td colspan="3">
-		      <table class='translateparams'>
-			      <tr>
-				      <td valign="top" style="text-align:center!important"><?php echo JText::_( 'ORIGINAL' );?></td>
-				      <td valign="top" style="text-align:center!important"><?php echo JText::_( 'TRANSLATION' );?></td>
-				      <td valign="top" align="right">
-						<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
-						<!--<input type="hidden" name="origText_<?php echo $field->Name;?>" value='<?php echo $field->originalValue;?>' />//-->
+				<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
 					    <textarea  name="origText_<?php echo $field->Name;?>" style="display:none"><?php echo $field->originalValue;?></textarea>
-						<a class="toolbar" onclick="copyParams('orig', '<?php echo $field->Name;?>');"><span class="icon-32-copy"></span><?php echo JText::_( 'COPY' ); ?></a>
-						<a class="toolbar" onclick="copyParams('defaultvalue', '<?php echo $field->Name;?>');"><span class="icon-32-delete"></span><?php echo JText::_( 'DELETE' ); ?></a>
-					   </td>
-			     </tr>
-			     <tr>
-			      <td align="left" valign="top" class="origparams" id="original_value_<?php echo $field->Name?>">
+				<input type="hidden" name="id_<?php echo $field->Name;?>" value="<?php echo $translationContent->id;?>" />
 			      <!--
+				  // We will have to use this method for JForm originals and defaults!
 			      <iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=orig&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>
 			      <iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=default&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>
 			      //-->
@@ -326,22 +324,15 @@ else {
 			      }
 			      $transparams = new $tpclass($field->originalValue,$translationContent->value, $field->Name,$elementTable->Fields);
 			      // comment lut if using iframes above
-			      $transparams->showOriginal();
-			      $transparams->showDefault();
-			      ?>
-			      </td>
-			      <td align="left" valign="top" class="translateparams">
-						  <input type="hidden" name="id_<?php echo $field->Name;?>" value="<?php echo $translationContent->id;?>" />
-							<?php
-							// TODO sort out default value for author in params when editing new translation
-							$retval = $transparams->editTranslation();
-							if ($retval){
-								$editorFields[] = $retval;
-							}
-							?>
-					</td>
-			      </tr>
-		      </table>
+			      //$transparams->showOriginal();
+			      //$transparams->showDefault();
+				  
+				// TODO sort out default value for author in params when editing new translation
+				$retval = $transparams->editTranslation();
+				if ($retval){
+					$editorFields[] = $retval;
+				}
+				?>
 		      </td>
 		    </tr>
 	      	<?php
@@ -365,7 +356,7 @@ else {
   	<table width="100%" border="0" cellpadding="4" cellspacing="2" class="adminForm">
       <tr>
         <td width="34%"><strong><?php echo JText::_('TITLE_STATE');?>:</strong></td>
-        <td width="50%"><?php echo $this->actContentObject->state > 0 ? JText::_('STATE_OK') : ($this->actContentObject->state < 0 ? JText::_('STATE_NOTEXISTING') : JText::_('STATE_CHANGED'));?></td>
+        <td width="50%"><?php echo $this->translationObject->state > 0 ? JText::_('STATE_OK') : ($this->translationObject->state < 0 ? JText::_('STATE_NOTEXISTING') : JText::_('STATE_CHANGED'));?></td>
       </tr>
       <tr>
         <td><strong><?php echo JText::_( 'LANGUAGE' );?>:</strong></td>
@@ -373,11 +364,11 @@ else {
       </tr>
       <tr>
         <td><strong><?php echo JText::_('TITLE_PUBLISHED')?>:</strong></td>
-        <td><input type="checkbox" name="published" value="1" <?php echo $this->actContentObject->published&0x0001 ? 'checked="checked"' : ''; ?> /></td>
+        <td><input type="checkbox" name="published" value="1" <?php echo $this->translationObject->published&0x0001 ? 'checked="checked"' : ''; ?> /></td>
       </tr>
       <tr>
         <td><strong><?php echo JText::_('TITLE_DATECHANGED');?>:</strong></td>
-	    <td><?php echo  $this->actContentObject->lastchanged ? JHTML::_('date',  $this->actContentObject->lastchanged, JText::_('DATE_FORMAT_LC2')):JText::_( 'NEW' );?></td>
+	    <td><?php echo  $this->translationObject->lastchanged ? JHTML::_('date',  $this->translationObject->lastchanged, JText::_('DATE_FORMAT_LC2')):JText::_( 'NEW' );?></td>
       </tr>
 	  </table>
 	  <?php
@@ -385,7 +376,8 @@ else {
 	  echo $tabs->endPane();
 		?>
 	  <input type="hidden" name="select_language_id" value="<?php echo $select_language_id;?>" />
-	  <input type="hidden" name="reference_id" value="<?php echo $this->actContentObject->id;?>" />
+	  <input type="hidden" name="reference_id" value="<?php echo $this->translationObject->id;?>" />
+	  <input type="hidden" name="translation_id" value="<?php echo $this->translationObject->translation_id;?>" />
 	  <input type="hidden" name="reference_table" value="<?php echo (isset($elementTable->name) ? $elementTable->name : '');?>" />
 	  <input type="hidden" name="catid" value="<?php echo $this->catid;?>" />
 	</td></tr>

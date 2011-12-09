@@ -73,12 +73,9 @@ $curLanguage = JFactory::getLanguage();
 if (!array_key_exists($curLanguage->getTag(),$langActive)){
 	reset($langActive);
 	//$currentlang = current($langActive);
-	//global $mainframe;
-	//$mainframe->redirect(JRoute::_("index.php?lang=".$currentlang->iso));
 	$registry = JFactory::getConfig();
 	$deflang = $registry->getValue("config.defaultlang");
-	global $mainframe;
-	$mainframe->redirect(JRoute::_("index.php?lang=".$deflang));
+	JFactory::getApplication()->redirect(JRoute::_("index.php?lang=".$deflang));
 	JError::raiseError('0', JText::_('NOT AUTHORISED').' '.$curLanguage->getTag());
 	exit();
 }

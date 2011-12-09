@@ -35,8 +35,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 jimport('joomla.application.component.controller');
 
-JLoader::import( 'models.ContentObject',JOOMFISH_ADMINPATH);
-
 /**
  * The JoomFish Tasker manages the general tasks within the Joom!Fish admin interface
  *

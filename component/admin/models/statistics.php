@@ -165,11 +165,11 @@ class StatisticsModelStatistics extends JModel
 							$stateRow['state_missing'] = 0;
 
 							for( $i=0; $i<count($rows); $i++ ) {
-								$contentObject = new ContentObject( $stateRow['language_id'], $contentElement );
-								$contentObject->readFromRow( $rows[$i] );
-								$rows[$i] = $contentObject;
+								$translationClass = $contentElement->getTranslationObjectClass();
+								$translationObject = new $translationClass( $stateRow['language_id'], $contentElement );
+								$rows[$i] = $translationObject;
 
-								switch( $contentObject->state ) {
+								switch( $translationObject->state ) {
 									case 1:
 										$stateRow['state_valid'] ++;
 										break;

@@ -9,7 +9,6 @@
   	<table name="categories">
   		<field type="referenceid" name="id" translate="0">ID</field>
   		<field type="titletext" name="title" translate="1" >Title</field>
-  		<field type="text" name="name" translate="0">Name</field>
   		<field type="text" name="alias" translate="1" posthandler="filterTitle">Alias</field>
   		<field type="htmltext" name="description" translate="1" ebuttons="readmore,pagebreak">Description</field>
   		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
@@ -18,9 +17,14 @@
   	<component>
   		<form>com_categories#categories#cid#task#!edit</form>
   	</component>
+	<treatment>
+		<target>native</target>
+		<tableclass>Category</tableclass>
+		<publishedfield>published</publishedfield>
+	</treatment>
   </reference>
   <translationfilters>
-	  <section>section</section>
+  	  <keyword>title</keyword>
   	  <published>published</published>
   </translationfilters>
 </joomfish>
