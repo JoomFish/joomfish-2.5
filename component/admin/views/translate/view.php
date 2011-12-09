@@ -169,7 +169,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		JToolBarHelper::custom( 'cpanel.show', 'joomfish', 'joomfish', 'COM_JOOMFISH_CONTROL_PANEL', false );
 		JToolBarHelper::help( 'screen.translate.orphans', true);
 
-		JSubMenuHelper::addEntry(JText::_( 'CONTROL_PANEL' ), 'index.php?option=com_joomfish', false);
+		JSubMenuHelper::addEntry(JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ), 'index.php?option=com_joomfish', false);
 		JSubMenuHelper::addEntry(JText::_( 'TRANSLATION' ), 'index.php?option=com_joomfish&amp;task=translate.overview', false);
 		JSubMenuHelper::addEntry(JText::_( 'ORPHANS' ), 'index.php?option=com_joomfish&amp;task=translate.orphans', true);
 		JSubMenuHelper::addEntry(JText::_( 'MANAGE_TRANSLATIONS' ), 'index.php?option=com_joomfish&amp;task=manage.overview', false);
