@@ -79,7 +79,6 @@ class JFTempContentModelItem extends ContentModelArticle {
 		{
 			$options['control']	= JArrayHelper::getValue($options, 'control', false);
 		}
-
 		// Create a signature hash.
 		$hash = md5($source.serialize($options));
 
@@ -98,7 +97,7 @@ class JFTempContentModelItem extends ContentModelArticle {
 			}
 			$componentpath = JPATH_BASE."/components/".$component;
 			JForm::addFormPath($componentpath.'/models/forms');
-			JForm::addFieldPath($componentpath.'/models/fields');			
+			JForm::addFieldPath($componentpath.'/models/fields');
 		}
 		else {
 			JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
@@ -106,15 +105,45 @@ class JFTempContentModelItem extends ContentModelArticle {
 		}
 
 		try {
-			$form = JForm::getInstance($name, $source, $options, false, $xpath);
+			/*
+			if(isset($this->control) && $this->control <> 'jform')
+			{
+				$replace = false;
+				$source = trim($source);
+				if (empty($source)) {
+					throw new Exception(JText::_('JLIB_FORM_ERROR_NO_DATA'));
+				}
 
+				// Instantiate the form.
+				$form = new JForm($name, $options);
+
+				// Load the data.
+				if (substr(trim($source), 0, 1) == '<') {
+					if ($form->load($source, $replace, $xpath) == false) {
+						throw new Exception(JText::_('JLIB_FORM_ERROR_XML_FILE_DID_NOT_LOAD'));
+					}
+				}
+				else {
+				if ($form->loadFile($source, $replace, $xpath) == false) {
+					throw new Exception(JText::_('JLIB_FORM_ERROR_XML_FILE_DID_NOT_LOAD'));
+				}
+			}
+			}
+			else
+			{
+				$form = JForm::getInstance($name, $source, $options, false, $xpath);
+			}
+			*/
+			$form = JForm::getInstance($name.(isset($this->control) && $this->control <> 'jform' ? '_orig' : ''), $source, $options, false, $xpath);
+			
+			
 			if (isset($options['load_data']) && $options['load_data']) {
 				// Get the data for the form.
 				$data = $this->loadFormData();
 			} else {
 				$data = array();
 			}
-
+			//FB::dump($data);
 			// Allow for additional modification of the form, and events to be triggered.
 			// We pass the data because plugins may require it.
 			$this->preprocessForm($form, $data);

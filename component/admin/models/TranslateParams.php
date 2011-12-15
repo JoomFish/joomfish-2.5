@@ -178,10 +178,10 @@ SCRIPT;
 
 	function editTranslation()
 	{
-		echo $this->transparams->render("refField_" . $this->fieldname);
 		
-		$fieldname = 'orig_' . $this->fieldname;
-		echo $this->origparams->render($fieldname);
+		echo $this->transparams->render("refField_" . $this->fieldname,'jform');
+
+		echo $this->origparams->render('orig_' . $this->fieldname,'orig_jform');
 		
 		return false;
 
@@ -203,7 +203,6 @@ class JFMenuParams extends JObject
 	function render($type)
 	{
 		$this->menuform = $this->form;
-//		var_dump($this->menuform );
 		$sliders = & JPane::getInstance('sliders');
 		echo $sliders->startPane('params');
 		
@@ -646,10 +645,15 @@ class JFContentParams extends JObject
 
 	}
 
-	function render($type)
+	function render($type,$formControl = 'jform')
 	{
-		$sliders = & JPane::getInstance('sliders');
-		echo $sliders->startPane('params');
+		//$formControl = $this->form->getFormControl();
+		
+		$class = ($formControl == 'orig_jform') ? 'fltrt' : 'fltlft';
+		echo '<div class="width-40 fltlft">'; //'.$class.'">';
+		echo JHtml::_('sliders.start','params-sliders-'.$formControl, array('useCookie'=>1,'formControl'=>$formControl));
+		//$sliders = & JPane::getInstance('sliders',array('startOffset'=>0,'startTransition'=>0));
+		//echo $sliders->startPane('params'.$formControl);
 		
 		$paramsfieldSets = $this->form->getFieldsets('attribs');
 		if ($paramsfieldSets)
@@ -657,7 +661,9 @@ class JFContentParams extends JObject
 			foreach ($paramsfieldSets as $name => $fieldSet)
 			{
 				$label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_CONTENT_' . $name . '_FIELDSET_LABEL';
-				echo $sliders->startPanel(JText::_($label), $name . '-options');
+				
+				echo JHtml::_('sliders.panel',JText::_($label), $name . '-options'.$formControl);
+				//echo $sliders->startPanel(JText::_($label), $name . '-options'.$formControl);
 
 				if (isset($fieldSet->description) && trim($fieldSet->description)) :
 					echo '<p class="tip">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
@@ -674,10 +680,12 @@ class JFContentParams extends JObject
 				</fieldset>
 
 				<?php
-				echo $sliders->endPanel();
+				//echo $sliders->endPanel();
 			}
 		}
-		echo $sliders->endPane();
+		echo JHtml::_('sliders.end');
+		//echo $sliders->endPane();
+		echo '</div>';
 		return;
 
 	}
@@ -721,10 +729,22 @@ class TranslateParams_content extends TranslateParams_xml
 		$this->orig_contentModelItem->setFormControl('orig_jform');
 		$this->orig_contentModelItem->setState('article.id',$contentid);
 		$jfcontentModelForm = $this->orig_contentModelItem->getForm();
+		if ($original != "")
+		{
+			$original = json_decode($original);
+		}
+		if (isset($original->jfrequest)){
+			$jfcontentModelForm->bind(array("attribs" => $original, "request" =>$original->jfrequest));
+		}
+		else {
+			$jfcontentModelForm->bind(array("attribs" => $original));
+		}
+		//FB::dump($original);
+		//FB::dump($translation);
 
 		// NOW GET THE TRANSLATION - IF AVAILABLE
 		$this->trans_contentModelItem = new JFContentModelItem();
-		
+		//$this->trans_contentModelItem->setFormControl('jform');
 		$this->trans_contentModelItem->setState('article.id', $contentid);
 		if ($translation != "")
 		{
@@ -742,10 +762,10 @@ class TranslateParams_content extends TranslateParams_xml
 		$cid = $oldcid;
 		JRequest::setVar('cid', $cid);
 		JRequest::setVar("article_id", $oldid);
-
 		$this->origparams = new JFContentParams( $jfcontentModelForm);
 		$this->transparams = new JFContentParams($translationcontentModelForm);
-
+		//FB::dump($this->origparams);
+		//FB::dump($this->transparams);
 
 	}
 
