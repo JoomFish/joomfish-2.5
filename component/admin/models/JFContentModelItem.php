@@ -38,6 +38,21 @@ include_once(JPATH_ADMINISTRATOR."/components/com_content/models/article.php");
 
 class JFTempContentModelItem extends ContentModelArticle {
 	
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		// Set the JForm control
+		if (array_key_exists('control', $config)) {
+			$this->control = $config['control'];
+		}
+	}
+	
+	//alternative:
+	public function setFormControl($control)
+	{
+		// Set the JForm control
+		$this->control = $control;
+	}
 	
 	/**
 	 * Overload Method to get a form object - we MUST NOT use JPATH_COMPONENT
@@ -56,7 +71,14 @@ class JFTempContentModelItem extends ContentModelArticle {
 	protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
 	{
 		// Handle the optional arguments.
-		$options['control']	= JArrayHelper::getValue($options, 'control', false);
+		if(isset($this->control))
+		{
+			$options['control'] = $this->control;
+		}
+		else
+		{
+			$options['control']	= JArrayHelper::getValue($options, 'control', false);
+		}
 
 		// Create a signature hash.
 		$hash = md5($source.serialize($options));

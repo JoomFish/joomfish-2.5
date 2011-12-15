@@ -179,7 +179,10 @@ SCRIPT;
 	function editTranslation()
 	{
 		echo $this->transparams->render("refField_" . $this->fieldname);
-
+		
+		$fieldname = 'orig_' . $this->fieldname;
+		echo $this->origparams->render($fieldname);
+		
 		return false;
 
 	}
@@ -314,6 +317,8 @@ class TranslateParams_menu extends TranslateParams_xml
 		JRequest::setVar("id", $contentid);
 		// JRequest does this for us!
 		//$this->orig_modelItem->setState('item.id',$contentid);
+		
+		$this->orig_modelItem->setFormControl('orig_jform');
 		$jfMenuModelForm = $this->orig_modelItem->getForm();
 
 		// NOW GET THE TRANSLATION - IF AVAILABLE
@@ -335,7 +340,7 @@ class TranslateParams_menu extends TranslateParams_xml
 		JRequest::setVar('cid', $cid);
 		JRequest::setVar("id", $oldid);
 
-		//	$this->origparams = new JFMenuParams( $jfMenuModelForm);
+		$this->origparams = new JFMenuParams( $jfMenuModelForm);
 		$this->transparams = new JFMenuParams($translationMenuModelForm);
 
 	}
@@ -568,7 +573,12 @@ class TranslateParams_modules extends TranslateParams_xml
 		// model's populate state method assumes the id is in the request object!
 		$oldid = JRequest::getInt("id", 0);
 		JRequest::setVar("id", $contentid);
-
+		
+		
+		$this->orig_modelItem = new JFModuleModelItem();
+		$this->orig_modelItem->setFormControl('orig_jform');
+		$jfModuleModelForm = $this->orig_modelItem->getForm();
+		
 		// NOW GET THE TRANSLATION - IF AVAILABLE
 		$this->trans_modelItem = new JFModuleModelItem();
 		$this->trans_modelItem->setState('module.id', $contentid);
@@ -589,7 +599,7 @@ class TranslateParams_modules extends TranslateParams_xml
 		JRequest::setVar("id", $oldid);
 
 		$this->transparams = new JFModuleParams($translationModuleModelForm, $this->trans_modelItem->getItem());
-
+		$this->transparams = new JFModuleParams($jfModuleModelForm);
 	}
 
 	function showOriginal()
@@ -708,11 +718,13 @@ class TranslateParams_content extends TranslateParams_xml
 
 		// Get The Original form 
 		// JRequest does NOT this for us in articles!!
+		$this->orig_contentModelItem->setFormControl('orig_jform');
 		$this->orig_contentModelItem->setState('article.id',$contentid);
 		$jfcontentModelForm = $this->orig_contentModelItem->getForm();
 
 		// NOW GET THE TRANSLATION - IF AVAILABLE
 		$this->trans_contentModelItem = new JFContentModelItem();
+		
 		$this->trans_contentModelItem->setState('article.id', $contentid);
 		if ($translation != "")
 		{
@@ -731,7 +743,7 @@ class TranslateParams_content extends TranslateParams_xml
 		JRequest::setVar('cid', $cid);
 		JRequest::setVar("article_id", $oldid);
 
-		//	$this->origparams = new JFContentParams( $jfcontentModelForm);
+		$this->origparams = new JFContentParams( $jfcontentModelForm);
 		$this->transparams = new JFContentParams($translationcontentModelForm);
 
 
