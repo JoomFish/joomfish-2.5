@@ -174,9 +174,9 @@ class JFContentModelItem extends JFTempContentModelItem {
 		return parent::__construct($config);
 	}
 
-	function &getItem($translation=null)
+	function &getItem($translation=null,$pk = null)
 	{
-		$item = parent::getItem();
+		$item = parent::getItem($pk);
 		return $item;
 		
 		$table = clone(parent::getItem());

@@ -178,10 +178,9 @@ SCRIPT;
 
 	function editTranslation()
 	{
-		
+		//
 		echo $this->transparams->render("refField_" . $this->fieldname,'jform');
-
-		echo $this->origparams->render('orig_' . $this->fieldname,'orig_jform');
+		//echo $this->origparams->render('orig_' . $this->fieldname,'orig_jform');
 		
 		return false;
 
@@ -638,11 +637,16 @@ class JFContentParams extends JObject
 {
 
 	var $form = null;
+	
+	//var $translateForm=null;
+	var $originalForm = null;
 
-	function __construct($form=null, $item=null)
+	//function __construct($translateForm=null, $translateItem=null,$originalForm=null, $originalItem=null)
+	function __construct($form=null, $item=null,$originalForm=null, $originalItem=null)
 	{
 		$this->form = $form;
-
+		//$this->translateForm = $translateForm;
+		$this->originalForm = $originalForm;
 	}
 
 	function render($type,$formControl = 'jform')
@@ -650,8 +654,9 @@ class JFContentParams extends JObject
 		//$formControl = $this->form->getFormControl();
 		
 		$class = ($formControl == 'orig_jform') ? 'fltrt' : 'fltlft';
-		echo '<div class="width-40 fltlft">'; //'.$class.'">';
-		echo JHtml::_('sliders.start','params-sliders-'.$formControl, array('useCookie'=>1,'formControl'=>$formControl));
+		//echo '<div class="width-40 fltlft">'; //'.$class.'">';
+		//translated Params and original Params in one Slider
+		echo JHtml::_('sliders.start','params-sliders-'.$formControl, array('useCookie'=>1)); //,'formControl'=>$formControl));
 		//$sliders = & JPane::getInstance('sliders',array('startOffset'=>0,'startTransition'=>0));
 		//echo $sliders->startPane('params'.$formControl);
 		
@@ -669,23 +674,59 @@ class JFContentParams extends JObject
 					echo '<p class="tip">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
 				endif;
 				?>
+				<style>
+					div.panel fieldset.joomfish_panelform {border: 1px solid #CCCCCC;}
+				</style>
 				<div class="clr"></div>
-				<fieldset class="panelform">
+				<div class="width-40 fltlft">
+				<fieldset class="panelform joomfish_panelform">
+				<legend>transparams</legend>
 					<ul class="adminformlist">
 						<?php foreach ($this->form->getFieldset($name) as $field) : ?>
 							<li><?php echo $field->label; ?>
-								<?php echo $field->input; ?></li>
+								<?php echo $field->input; ?>
+							</li>
 						<?php endforeach; ?>
 					</ul>
 				</fieldset>
-
+				</div>
+				
 				<?php
+				/*
+				$org_paramsfieldSets = $this->originalForm->getFieldsets('attribs');
+				if ($org_paramsfieldSets)
+				{
+					foreach ($org_paramsfieldSets as $org_name => $org_fieldSet)
+					{
+					if($org_name == $name)
+					{
+				*/
+				?>
+				<div class="width-40 fltrt">
+				<fieldset class="panelform joomfish_panelform">
+				<legend>origparams</legend>
+					<ul class="adminformlist">
+						<?php foreach ($this->originalForm->getFieldset($name) as $field) : ?>
+							<li><?php echo $field->label; ?>
+								<?php echo $field->input; ?>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</fieldset>
+				</div>
+				
+				<?php
+				/*
+						}
+					}
+				}
+				*/
 				//echo $sliders->endPanel();
 			}
 		}
 		echo JHtml::_('sliders.end');
 		//echo $sliders->endPane();
-		echo '</div>';
+		//echo '</div>';
 		return;
 
 	}
@@ -712,7 +753,8 @@ class TranslateParams_content extends TranslateParams_xml
 		{
 			list($translation_id, $contentid, $language_id) = explode('|', $cid[0]);
 		}
-
+		//FB::dump($cid);
+		//FB::dump($contentid);
 		JRequest::setVar("cid", array($contentid));
 		JRequest::setVar("edit", true);
 
@@ -728,7 +770,15 @@ class TranslateParams_content extends TranslateParams_xml
 		// JRequest does NOT this for us in articles!!
 		$this->orig_contentModelItem->setFormControl('orig_jform');
 		$this->orig_contentModelItem->setState('article.id',$contentid);
+		/*
+		$data = JFactory::getApplication()->getUserState('com_content.edit.article.data', array());
+		
+		*/
+		
 		$jfcontentModelForm = $this->orig_contentModelItem->getForm();
+		//in class JFContentModelItem function &getItem($translation=null,$pk = null)
+		$originalItem = $this->orig_contentModelItem->getItem(null,$contentid);
+		
 		if ($original != "")
 		{
 			$original = json_decode($original);
@@ -739,6 +789,32 @@ class TranslateParams_content extends TranslateParams_xml
 		else {
 			$jfcontentModelForm->bind(array("attribs" => $original));
 		}
+		/*
+		TODO all fields readonly
+		*/
+		$fieldSets = $jfcontentModelForm->getFieldsets('attribs');
+		foreach ($fieldSets as $name => $fieldSet)
+		{
+			foreach ($jfcontentModelForm->getFieldset($name) as $field)
+			{
+				//FB::dump($field->__get('type'));
+				if(strtolower($field->__get('type')) != 'spacer')
+				{
+					$jfcontentModelForm->setFieldAttribute($field->__get('fieldname'), 'disabled', 'true', $field->__get('group'));
+					if(strtolower($field->__get('type')) == 'componentlayout' )
+					{
+						//
+						//FB::dump($field->value);
+						//FB::dump($jfcontentModelForm->getValue($field->__get('fieldname'), $field->__get('group')));
+					}
+					//$jfcontentModelForm->setFieldAttribute($field->__get('fieldname'), 'readonly', 'true', $field->__get('group'));
+					//$jfcontentModelForm->setFieldAttribute($field->__get('fieldname'), 'class','readonly', $field->__get('group'));
+					//$jfcontentModelForm->setFieldAttribute($field->__get('fieldname'), 'type','text', $field->__get('group'));
+				}
+			}
+		}
+
+		
 		//FB::dump($original);
 		//FB::dump($translation);
 
@@ -762,8 +838,10 @@ class TranslateParams_content extends TranslateParams_xml
 		$cid = $oldcid;
 		JRequest::setVar('cid', $cid);
 		JRequest::setVar("article_id", $oldid);
-		$this->origparams = new JFContentParams( $jfcontentModelForm);
-		$this->transparams = new JFContentParams($translationcontentModelForm);
+		//$this->origparams = new JFContentParams( $jfcontentModelForm);
+
+		//
+		$this->transparams = new JFContentParams($translationcontentModelForm,null,$jfcontentModelForm,null);
 		//FB::dump($this->origparams);
 		//FB::dump($this->transparams);
 
