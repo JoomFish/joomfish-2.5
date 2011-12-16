@@ -19,11 +19,15 @@
   	<component>
   		<form>com_modules#modules#cid#task#!edit#client#!1</form>
   	</component>
+	<treatment>
+		<target>native</target>
+		<tableclass>Module</tableclass>
+		<publishedfield>published</publishedfield>
+	</treatment>
   </reference>
     <translationfilters>
   	  <keyword>title</keyword>
   	  <published>published</published>
-  	  <module>access</module>
     </translationfilters>
 
 </joomfish>

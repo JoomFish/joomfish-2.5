@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: JFMenusModelItem.php 225M 2011-05-26 16:40:14Z (local) $
+ * $Id: JFContentModelItem.php 225M 2011-05-26 16:40:14Z (local) $
  * @package joomfish
  * @subpackage Models
  *
@@ -33,10 +33,10 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-include_once(JPATH_ADMINISTRATOR."/components/com_menus/models/item.php");
+include_once(JPATH_ADMINISTRATOR."/components/com_content/models/article.php");
 
 
-class JFTempMenusModelItem extends MenusModelItem {
+class JFTempContentModelItem extends ContentModelArticle {
 	
 	
 	/**
@@ -114,10 +114,19 @@ class JFTempMenusModelItem extends MenusModelItem {
 	
 
 	
-class JFMenusModelItem extends JFTempMenusModelItem {
+class JFContentModelItem extends JFTempContentModelItem {
 	
+	public function __construct($config = array())
+	{
+		// Must set option value to override constructors attempts to find it!
+		$this->option  = "com_content";
+		return parent::__construct($config);
+	}
+
 	function &getItem($translation=null)
 	{
+		$item = parent::getItem();
+		return $item;
 		
 		$table = clone(parent::getItem());
 
@@ -161,7 +170,7 @@ class JFMenusModelItem extends JFTempMenusModelItem {
 
 	
 }
-class JFDefaultMenusModelItem extends JFTempMenusModelItem {
+class JFDefaultContentModelItem extends JFTempContentModelItem {
 
 	function &getItem()
 	{
@@ -176,7 +185,6 @@ class JFDefaultMenusModelItem extends JFTempMenusModelItem {
 		$item = clone($table);
 		$item->component_id = $clone->component_id;
 		$item->type = $clone->type;
-		$item->menutype = $clone->menutype;
 
 		//$component		= $this->getComponent();
 

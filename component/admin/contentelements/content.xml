@@ -10,6 +10,7 @@
   		<field type="referenceid" name="id" translate="0">ID</field>
   		<field type="titletext" name="title"  length="50" maxlength="250" translate="1">Title</field>
   		<field type="text" name="title_alias"  length="50" maxlength="250" translate="0">Title Alias</field>
+  		<field type="catetgory" name="catid"  scope="com_content" translate="1">Category</field>
   		<field type="text" name="alias"  length="50" maxlength="250" translate="1" posthandler="filterTitle">Alias</field>
   		<field type="htmltext" name="introtext" translate="1" prehandleroriginal="fetchArticleText" prehandlertranslation="fetchArticleTranslation" posthandler="saveArticleText" ebuttons="ignore">Article Text</field>
   		<field type="hiddentext" name="fulltext" translate="1" ebuttons="readmore">Fulltext</field>
@@ -29,13 +30,15 @@
   		<form>com_frontpage#content#cid#task#!edit</form>
   	</component>
 	<treatment>
-		<target>joomfish</target>
+		<target>native</target>
 		<tableclass>Content</tableclass>
-	</treatment>
+		<publishedfield>state</publishedfield>
+		<translationObjectModel>TranslationObjectContent</translationObjectModel>
+		<jformModel>ContentJForm</jformModel>
+	</treatment>	
   </reference>
   <translationfilters>
 	  <frontpage>id</frontpage>
-<!--	  <section>sectionid</section>//-->
   	  <category>catid</category>
   	  <author>created_by</author>
   	  <keyword>title</keyword>

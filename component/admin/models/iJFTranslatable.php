@@ -75,42 +75,12 @@ interface iJFTranslatable {
 	 * @param 	boolean	store original values too
 	 */
 	public function bind( $formArray, $prefix="", $suffix="", $tryBind=true, $storeOriginalText=false );
-
-	// Post handlers
-	public function filterTitle(&$alias);
-
-	public function filterName(&$alias);
-
-	public function saveUrlParams(&$link);
-
-	/**
-	 * Special pre translation handler for content text to combine intro and full text
-	 *
-	 * @param unknown_type $row
-	 */
-	public function fetchArticleText($row);
-	
-
-	/**
-	 * Special pre translation handler for content text to combine intro and full text
-	 *
-	 * @param unknown_type $row
-	 */
-	public function fetchArticleTranslation($field, &$translationFields);	
-	
-	/**
-	 * Special post translation handler for content text to split intro and full text
-	 *
-	 * @param unknown_type $row
-	 */
-	public function saveArticleText(&$introtext, $fields,&$formArray,$prefix,$suffix,$storeOriginalText);
-	
-	
-	/** Reads the information out of an existing mosDBTable object into the contentObject.
+		
+	/** Reads the information out of an existing JTable object into the translationObject.
 	 *
 	 * @param	object	instance of an mosDBTable object
 	 */
-	public function updateMLContent( &$dbObject );
+	public function updateMLContent( &$dbObject , $language);
 
 	/**
 	 * This method copies a currect database object into the translations
@@ -169,5 +139,9 @@ interface iJFTranslatable {
 	/** Returns the content element table this content is based on
 	 */
 	public function  getTable();
+	
+	/**
+	 * Only used in native storage classes - for joomfish based tables create a do-nothing method
+	 */
+	public function generateTranslationMap( &$article, $isNew, $tablename, $elementTable=false);
 }
-?>

@@ -151,6 +151,43 @@ class ContentElement
 
 	}
 
+	/*
+	 * get the translation object class for the table and make sure the source file is loaded
+	 */
+	public function getTranslationObjectClass(){
+		if (isset($this->_xmlFile))
+		{
+			$xpath = new DOMXPath($this->_xmlFile);
+			$targetElement = $xpath->query('//reference/treatment/translationObjectModel')->item(0);
+			if (!isset($targetElement))
+			{
+				JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
+				return 'TranslationObject';
+			}
+			$translationObjectClass = trim($targetElement->textContent);
+			JLoader::import( "models.$translationObjectClass",JOOMFISH_ADMINPATH);
+			return $translationObjectClass;
+		}
+		JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
+		return 'TranslationObject';
+	}
+	
+	public function getPublishedField(){
+		if (isset($this->_xmlFile))
+		{
+			$xpath = new DOMXPath($this->_xmlFile);
+			$publishedfield = $xpath->query('//reference/treatment/publishedfield')->item(0);
+			if (!isset($publishedfield))
+			{
+				return 'published';
+			}
+			$result = trim($publishedfield->textContent);
+			return $result;
+		}
+		return 'published';
+		
+	}
+	
 	public function getTableClass()
 	{
 		if (isset($this->_xmlFile))
@@ -310,7 +347,7 @@ class ContentElement
 						{
 							$sqlFields[] = 'c.' . $tableField->Name . ' as id';
 							if ($contentid_exist)
-								$where[] = 'c.' . $tableField->Name . '=' . $db->Quote($contentid);
+								$where[] = 'c.' . $tableField->Name . '=' . $db->quote($contentid);
 						}
 						else
 						{
@@ -418,7 +455,7 @@ class ContentElement
 						{
 							$sqlFields[] = 'c.' . $tableField->Name . ' as id';
 							if ($contentid_exist)
-								$where[] = 'c.' . $tableField->Name . '=' . $db->Quote($contentid);
+								$where[] = 'c.' . $tableField->Name . '=' . $db->quote($contentid);
 						}
 						else
 						{
@@ -446,18 +483,11 @@ class ContentElement
 			}
 
 			$sqlFields[] = "ct.id as jfc_id";
-			// TODO make sure published is a valid field!
-			$db->setQuery("Show columns from #__".$contentTable->Name. " where field like 'published' OR field like 'state'");
-			$cols = $db->loadObjectList('Field');
-			if (array_key_exists('published',$cols)){
-				$sqlFields[] = 'ct.published as published';
-			}
-			else if (array_key_exists('state',$cols)){
-				$sqlFields[] = 'ct.state as published';
-			}
-
+			// NEW SYSTEM make sure published is a valid field!
+			$publishedField = $this->getPublishedField();
+			$sqlFields[] = 'ct.'.$publishedField.' as published';
 			$sqlFields[] = "ct." . $referencefield . " as jfc_refid";
-			// TODO get the last changed from the translation map table - ALSO keep a record of the ORIGINAL record
+			// NEW SYSTEM TODO get the last changed from the translation map table - ALSO keep a record of the ORIGINAL record
 			//$sqlFields[] = "tm.lastchanged  as lastchanged";
 			$sqlFields[] = "'2010-06-11 05:30:30' as lastchanged";
 

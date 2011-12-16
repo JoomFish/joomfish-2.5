@@ -122,6 +122,33 @@ class ContentElementTablefield {
 	public function checkUrlType($element){
 		if ($element->IndexedFields["type"]->originalValue=="url") $this->Type="text";
 	}
-}
+	
+	public function fetchUrlRequest(&$element)
+	{
+		// pre-populate special 'request' entry.
+		if (isset($element->IndexedFields) && isset($element->IndexedFields["link"]) && isset($this->translationContent)) {
+			$field = $element->IndexedFields["link"];
+			$args = array();
+			if ($field->Name=="link" && isset($field->translationContent)){
+				$value =$field->translationContent->value;
+				parse_str(parse_url($value, PHP_URL_QUERY), $args);
+			}
+			$translation = json_decode($this->translationContent->value);
+			if(count($args)>0){
+				$translation->jfrequest=$args;
+				$this->translationContent->value  = json_encode($translation);
+			} 
+			else {
+				$translation->jfrequest =array();
+				$this->translationContent->value  = json_encode($translation);
+			}
+				
+			
 
-?>
+		}
+
+
+	}
+	
+	
+}

@@ -167,14 +167,14 @@ class ManageModelManage extends JModel
 								return false;
 							} else {
 								for( $i=0; $i<count($rows); $i++ ) {
-									$contentObject = new ContentObject( $language_id, $contentElement );
-									$contentObject->readFromRow($rows[$i]);
-									if( $overwrite || $contentObject->translation_id == 0) {
-										$contentObject->copyContentToTranslation( $rows[$i], $rows[$i] );
-										$contentObject->store();
+									$translationClass = $contentElement->getTranslationObjectClass();
+									$translationObject = new $translationClass( $language_id, $contentElement );
+									if( $overwrite || $translationObject->translation_id == 0) {
+										$translationObject->copyContentToTranslation( $rows[$i], $rows[$i] );
+										$translationObject->store();
 										$ceInfo['copied'] += 1;
 									}
-									$rows[$i] = $contentObject;
+									$rows[$i] = $translationObject;
 								}
 								$ceInfo['processed'] += $i;
 								if($ceInfo['processed'] >= $ceInfo['total']) {

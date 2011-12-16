@@ -46,6 +46,7 @@
 			<option value="1">JF_YES</option>
 		</field>
 		<field name="cachelife" type="text" cols="50" default="180" label='CACHE_LIFE_IN_MINUTES'  description="TRANS_CACHELIFE_HELP" />
+		<!--
 		<field name="@spacer" type="spacer" default='CACHING_OPTIONS_MYSQL'  label='CACHING_OPTIONS_FOR_MYSQL_ONLY'  />
 		<field name="qacaching" type="radio" default="1" label='ENABLE_QUERY_ANALYSIS_CACHING'  description="QA_CACHING_HELP">
 			<option value="0">JF_NO</option>
@@ -55,6 +56,7 @@
 			<option value="0">JF_NO</option>
 			<option value="1">JF_YES</option>
 		</field>
+		//-->
 		<field name="@spacer" type="spacer" default='USER_SUPPORT'  label='USER_SUPPORT'  />
 		<field name="usersplash" type="radio" default="1" label='SHOW_SPLASH_SCREEN'  description="USER_SPLASH_HELP">
 			<option value="0">JF_NO</option>

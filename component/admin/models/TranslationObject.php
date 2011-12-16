@@ -26,7 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: ContentObject.php 247 2011-07-19 11:16:55Z geraint $
+ * $Id: TranslationObject.php 239M 2011-06-22 06:28:53Z (local) $
  * @package joomfish
  * @subpackage Models
  *
@@ -50,41 +50,58 @@ JLoader::register('iJFTranslatable', JOOMFISH_ADMINPATH . DS . 'models' . DS . '
  * @version $Revision: 1543 $
  * @author Alex Kempkens
  */
-class ContentObject implements iJFTranslatable
+class TranslationObject implements iJFTranslatable
 {
 
-	/** @var _contentElement Reference to the ContentElement definition of the instance */
-	private $_contentElement;
+	/** @var contentElement Reference to the ContentElement definition of the instance */
+	protected  $contentElement;
+
 	/** @var id ID of the based content */
 	public $id;
+
 	/** @var translation_id 	translation id value */
 	public $translation_id = 0;
+
+	/** @var reference_id 	id of item being translated  value */
+	public $reference_id = 0;
+	
 	/** @var checked_out User who checked out this content if any */
 	public $checked_out;
+
 	/** @var title Title of the object; used from the field configured as titletext */
 	public $title;
+
 	/** @var titleTranslation the actual translation of the title */
 	public $titleTranslation;
+
 	/** @var language_id language for the translation */
 	public $language_id;
+
 	/** @var language Language name of the content */
 	public $language;
+
 	/** @var lastchanged Date when the translation was last modified */
 	public $lastchanged;
+
 	/** @var modified_date Date of the last modification of the content - if existing */
 	public $modified_date;
+
 	/** @var state State of the translation
 	 * -1 := for at least one field of the content the translation is missing
 	 *  0 := the translation exists but the original content was changed
 	 *  1 := the translation is valid
 	 */
 	public $state = -1;
+
 	/** @var int Number of changed fields */
-	private $_numChangedFields = 0;
+	protected $_numChangedFields = 0;
+
 	/** @var int Number of new fields, with an original other than NULL */
-	private $_numNewAndNotNullFields = 0;
+	protected $_numNewAndNotNullFields = 0;
+
 	/** @var int Number for fields unchanged */
-	private $_numUnchangedFields = 0;
+	protected $_numUnchangedFields = 0;
+
 	/** published Flag if the translation is published or not */
 	public $published = false;
 
@@ -104,7 +121,7 @@ class ContentObject implements iJFTranslatable
 		$lang = $jfManager->getLanguageByID($languageID);
 
 		$this->language = $lang->name;
-		$this->_contentElement = $contentElement;
+		$this->contentElement = $contentElement;
 
 	}
 
@@ -113,11 +130,12 @@ class ContentObject implements iJFTranslatable
 	public function loadFromContentID($id=null)
 	{
 		$db = JFactory::getDBO();
-		if ($id != null && isset($this->_contentElement) && $this->_contentElement !== false)
+		if ($id != null && isset($this->contentElement) && $this->contentElement !== false)
 		{
-			$db->setQuery($this->_contentElement->createContentSQL($this->language_id, $id));
+			$db->setQuery($this->contentElement->createContentSQL($this->language_id, $id));
 			$row = null;
-			$row = $db->loadObject();
+			$x = (string) $db->getQuery();
+			$row = $db->loadObject("stdClass", false);
 			$this->id = $id;
 			$this->readFromRow($row);
 		}
@@ -147,7 +165,7 @@ class ContentObject implements iJFTranslatable
 			$this->published = 0;
 
 		// Go thru all the fields of the element and try to copy the content values
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
 		{
@@ -157,16 +175,19 @@ class ContentObject implements iJFTranslatable
 			{
 
 				// Handle magic quotes compatability
+				// NB this is not done by getVar
+				/*
 				if (get_magic_quotes_gpc() && $field->Type !== 'htmltext')
 				{
-					$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "refField_" . $fieldName . $suffix]);
-					$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "origText_" . $fieldName . $suffix]);
+					//$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "refField_" . $fieldName . $suffix]);
+					//$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::_stripSlashesRecursive($formArray[$prefix . "origText_" . $fieldName . $suffix]);
 				}
 				else
 				{
-					$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::getVar($prefix . "refField_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
-					$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::getVar($prefix . "origText_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
-				}
+				*/
+				$formArray[$prefix . "refField_" . $fieldName . $suffix] = JRequest::getVar($prefix . "refField_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
+				$formArray[$prefix . "origText_" . $fieldName . $suffix] = JRequest::getVar($prefix . "origText_" . $fieldName . $suffix, '', 'post', 'string', JREQUEST_ALLOWRAW);
+				//}
 
 				$translationValue = $formArray[$prefix . "refField_" . $fieldName . $suffix];
 				$fieldContent = new jfContent($db);
@@ -188,12 +209,6 @@ class ContentObject implements iJFTranslatable
 					{
 						$translationValue = NULL;
 					}
-				}
-				if ($field->Type == "params" && is_array($translationValue))
-				{
-					$registry = new JRegistry();
-					$registry->loadArray($translationValue);
-					$translationValue = $registry->toString();
 				}
 				if ($field->posthandler != "")
 				{
@@ -224,249 +239,53 @@ class ContentObject implements iJFTranslatable
 				$fieldContent->published = $this->published;
 				$field->translationContent = $fieldContent;
 			}
-		}
-
-	}
-
-	// Post handlers
-	public function filterTitle(&$alias)
-	{
-		if ($alias == "")
-		{
-			$alias = JRequest::getString("refField_title");
-		}
-		$alias = JFilterOutput::stringURLSafe($alias);
-
-	}
-
-	public function filterName(&$alias)
-	{
-		if ($alias == "")
-		{
-			$alias = JRequest::getString("refField_name");
-		}
-		$alias = JFilterOutput::stringURLSafe($alias);
-
-	}
-
-	public function saveUrlParams(&$link)
-	{
-		$urlparams = JRequest::getVar("urlparams", array(), 'post', "array");
-		if (is_array($urlparams) && count($urlparams) > 0)
-		{
-			$pos = strpos($link, '?');
-			if ($pos !== false)
+			else if ($field->Type == "params" && isset($formArray["jform"][$field->Name]))
 			{
-				$prefix = substr($link, 0, $pos);
-				$query = substr($link, $pos + 1);
+				$translationValue = $formArray["jform"][$field->Name];
 
-				$temp = array();
-				if (strpos($query, '&amp;') !== false)
+				if ($field->posthandler != "")
 				{
-					$query = str_replace('&amp;', '&', $query);
-				}
-				parse_str($query, $temp);
-				$temp2 = array_merge($temp, $urlparams);
-
-				$temp3 = array();
-				foreach ($temp2 as $k => $v)
-				{
-					$temp3[] = $k . '=' . $v;
-				}
-				$url = null;
-				$link = $prefix . '?' . implode('&', $temp3);
-			}
-		}
-		else
-		{
-			$menuid = JRequest::getInt("reference_id", 0);
-			if ($menuid == 0)
-				return;
-			include_once( JPATH_SITE . DS . 'includes' . DS . 'application.php');
-			$menu = JSite::getMenu();
-			$item = $menu->getItem($menuid);
-			if ($item->type == "menulink")
-			{
-				$urlparams = JRequest::getVar("refField_params", array(), 'post', "array");
-				if (is_array($urlparams) && count($urlparams) > 0 && array_key_exists("menu_item", $urlparams))
-				{
-					$pos = strpos($link, '?');
-					if ($pos !== false)
+					if (method_exists($this, $field->posthandler))
 					{
-						$prefix = substr($link, 0, $pos);
-						$link = $prefix . '?Itemid=' . $urlparams["menu_item"];
+						$handler = $field->posthandler;
+						$this->$handler($translationValue, $elementTable->Fields, $formArray, $prefix, $suffix, $storeOriginalText);
 					}
 				}
+
+				$registry = new JRegistry();
+				$registry->loadArray($translationValue);
+				$translationValue = $registry->toString();
+
+				$fieldContent = new jfContent($db);
+				$fieldContent->id = $formArray[$prefix . "id_" . $fieldName . $suffix];
+				$fieldContent->reference_id = (intval($formArray[$prefix . "reference_id" . $suffix]) > 0) ? intval($formArray[$prefix . "reference_id" . $suffix]) : $this->id;
+				$fieldContent->language_id = $this->language_id;
+				$fieldContent->reference_table = $db->getEscaped($elementTable->Name);
+				$fieldContent->reference_field = $db->getEscaped($fieldName);
+				$fieldContent->value = $translationValue;
+				$fieldContent->original_value = "";
+				$fieldContent->original_text = "";
+
+				$datenow = & JFactory::getDate();
+				$fieldContent->modified = $datenow->toMySQL();
+
+				$fieldContent->modified_by = $user->id;
+				$fieldContent->published = $this->published;
+				$field->translationContent = $fieldContent;
+
+				// TODO must also save 'request' object for Menu items - this should be moved to a separate 'post translation save' handler
+				// Joomla STILL treats this as a special case in menu items see administrator/omponnets/com_menus/controllers/item.php line 167
+				// its not even in the model or table class!
 			}
 		}
 
 	}
 
-	public function saveMenuPath(&$path, $fields, $formArray, $prefix, $suffix, $storeOriginalText)
-	{
-		$pathfield = false;
-		$alias = false;
-		$ref = false;
-		foreach ($fields as $field)
-		{
-			if ($field->Name == "path")
-			{
-				$pathfield = $field;
-			}
-			if ($field->Name == "alias")
-			{
-				$alias = $field;
-			}
-			if ($field->Name == "id")
-			{
-				$ref = $field;
-			}
-		}
-		if (!$pathfield || !$ref || !$alias)
-		{
-			return;
-		}
-		//$path = $alias->translationContent->value;
-		//return;
-
-		$table = JTable::getInstance("Menu");
-		// TODO get this from the translation!
-		$pk = (intval($formArray[$prefix . "reference_id" . $suffix]) > 0) ? intval($formArray[$prefix . "reference_id" . $suffix]) : $this->id;
-
-		$table->load($pk);
-		$langid = $alias->translationContent->language_id;
-		// Get the path from the node to the root (translated)
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$select = 'p.*, jfc.value as jfcvalue';
-		$query->select($select);
-		$query->from('#__menu AS n, #__menu AS p');
-		$query->join('left', "#__jf_content as jfc ON jfc.reference_table='menu' AND jfc.reference_id=p.id AND jfc.language_id='$langid' and jfc.reference_field='alias' ");
-		$query->where('n.lft BETWEEN p.lft AND p.rgt');
-		$query->where('n.id = ' . (int) $pk);
-		$query->order('p.lft');
-
-		$db->setQuery($query);
-		$sql = (string) $db->getQuery();
-		$pathNodes = $db->loadObjectList('', 'stdClass', false);
-
-		$segments = array();
-		foreach ($pathNodes as $node)
-		{
-			// Don't include root in path
-			if ($node->alias != 'root')
-			{
-				if (isset($node->jfcvalue))
-				{
-					$segments[] = $node->jfcvalue;
-				}
-				else
-				{
-					$segments[] = $node->alias;
-				}
-			}
-		}
-		$newPath = trim(implode('/', $segments), ' /\\');
-		$path = $newPath;
-
-		// Also need to rebuild children - translated or not!!!
-		// 
-		// Use new path for partial rebuild of table
-		// rebuild will return positive integer on success, false on failure
-		//$path = $table->rebuild($table->id,  $table->lft, $table->level, $newPath);;
-
-	}
-
-	/**
-	 * Special pre translation handler for content text to combine intro and full text
-	 *
-	 * @param unknown_type $row
-	 */
-	public function fetchArticleText($row)
-	{
-
-		/*
-		 * We need to unify the introtext and fulltext fields and have the
-		 * fields separated by the {readmore} tag, so lets do that now.
-		 */
-		if (JString::strlen($row->fulltext) > 1)
-		{
-			return $row->introtext . "<hr id=\"system-readmore\" />" . $row->fulltext;
-		}
-		else
-		{
-			return $row->introtext;
-		}
-
-	}
-
-	/**
-	 * Special pre translation handler for content text to combine intro and full text
-	 *
-	 * @param unknown_type $row
-	 */
-	public function fetchArticleTranslation($field, &$translationFields)
-	{
-
-		if (is_null($translationFields))
-			return;
-		/*
-		 * We need to unify the introtext and fulltext fields and have the
-		 * fields separated by the {readmore} tag, so lets do that now.
-		 */
-		if (array_key_exists("fulltext", $translationFields))
-		{
-			if (isset($translationFields["introtext"]))
-			{
-				$fulltext = $translationFields["fulltext"]->value;
-				$introtext = $translationFields["introtext"]->value;
-			}
-			else
-			{
-				$translationFields["introtext"] = clone $translationFields["fulltext"];
-				$translationFields["fulltext"]->value = "";
-				$fulltext = "";
-			}
-			if (JString::strlen($fulltext) > 1)
-			{
-				$translationFields["introtext"]->value = $introtext . "<hr id=\"system-readmore\" />" . $fulltext;
-				$translationFields["fulltext"]->value = "";
-			}
-		}
-
-	}
-
-	/**
-	 * Special post translation handler for content text to split intro and full text
-	 *
-	 * @param unknown_type $row
-	 */
-	public function saveArticleText(&$introtext, $fields, &$formArray, $prefix, $suffix, $storeOriginalText)
-	{
-
-		// Search for the {readmore} tag and split the text up accordingly.
-		$pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
-		$tagPos = preg_match($pattern, $introtext);
-
-		if ($tagPos > 0)
-		{
-			list($introtext, $fulltext) = preg_split($pattern, $introtext, 2);
-			JRequest::setVar($prefix . "refField_fulltext" . $suffix, $fulltext, "post");
-			$formArray[$prefix . "refField_fulltext" . $suffix] = $fulltext;
-		}
-		else
-		{
-			JRequest::setVar($prefix . "refField_fulltext" . $suffix, "", "post");
-			$formArray[$prefix . "refField_fulltext" . $suffix] = "";
-		}
-
-	}
-
-	/** Reads the information out of an existing mosDBTable object into the contentObject.
+	/** Reads the information out of an existing JTable object into the translationObject.
 	 *
 	 * @param	object	instance of an mosDBTable object
 	 */
-	public function updateMLContent(&$dbObject)
+	public function updateMLContent(&$dbObject,$language)
 	{
 		$db = JFactory::getDBO();
 		if ($dbObject === null)
@@ -482,6 +301,22 @@ class ContentObject implements iJFTranslatable
 		$db->setQuery("SELECT * FROM " . $dbObject->get('_tbl') . " WHERE " . $key . "='" . $dbObject->$key . "'");
 		$origObject = $db->loadObject('stdClass', false);
 
+		if ($this->contentElement->getTarget() == "native"){
+			// We must reset the primary key and language fields for new translations
+			// If we don't then joomla validity checks on aliases not being unique will fail etc.
+			$isnew = false;
+			if (isset($origObject->language)  && $origObject->language!=$language){
+				$origObject->language = $language;
+				$isnew = true;
+			}
+			// We must reset the primary key and language fields for new translations
+			if ($isnew && isset($dbObject->$key)){
+				$dbObject->$key = 0;	
+				$this->translation_id=0;
+				$this->id=0;
+			}			
+		}
+		
 		$this->copyContentToTranslation($dbObject, $origObject);
 
 	}
@@ -499,7 +334,7 @@ class ContentObject implements iJFTranslatable
 		$user = JFactory::getUser();
 
 		// Go thru all the fields of the element and try to copy the content values
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
 		{
@@ -519,6 +354,12 @@ class ContentObject implements iJFTranslatable
 				$fieldContent->modified = $datenow->toMySQL();
 
 				$fieldContent->modified_by = $user->id;
+				
+				// make sure reference_id is set if not already set
+				if ((!isset($fieldContent->reference_id) || is_null($fieldContent->reference_id) ||  $fieldContent->reference_id==0)  && (isset($origObject->id) && $origObject->id>0)){
+					$fieldContent->reference_id = $origObject->id;
+				}
+				
 			}
 		}
 
@@ -545,7 +386,7 @@ class ContentObject implements iJFTranslatable
 			$this->checked_out = $row->checked_out;
 
 		// Go thru all the fields of the element and try to copy the content values
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 		$db = JFactory::getDBO();
 		$fieldContent = new jfContent($db);
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
@@ -581,7 +422,7 @@ class ContentObject implements iJFTranslatable
 
 		$elementTable = $this->getTable();
 
-		if (!$this->_contentElement->Storage == "joomfish")
+		if ($this->contentElement->getTarget() == "joomfish")
 		{
 			$sql = "select * "
 					. "\n  from #__jf_content"
@@ -603,10 +444,10 @@ class ContentObject implements iJFTranslatable
 			$translationFields = null;
 			if (count($rows) > 0)
 			{
-				foreach ($rows as $row)
+				foreach ($rows as $trow)
 				{
 					$fieldContent = new jfContent($db);
-					if (!$fieldContent->bind($row))
+					if (!$fieldContent->bind($trow))
 					{
 						JError::raiseWarning(200, JText::_('Problems binding object to fields: ' . $fieldContent->getError()));
 					}
@@ -707,7 +548,7 @@ class ContentObject implements iJFTranslatable
 						// id for translation
 						$fieldContent->id = $row->id;
 						$fieldContent->language_id = $this->language_id;
-						$fieldContent->reference_id = $row->jfc_id;
+						$fieldContent->reference_id = intval($row->jfc_id);
 						$fieldContent->reference_table = $elementTable->Name;
 						$fieldContent->reference_field = $fieldname;
 						if (isset($row->$transfieldname))
@@ -755,7 +596,7 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function getTextFields($translation = true)
 	{
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 		$textFields = null;
 
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
@@ -779,7 +620,7 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function getFieldType($fieldname)
 	{
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 		$textFields = null;
 
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
@@ -795,12 +636,19 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function setPublished($published)
 	{
-		$elementTable = $this->_contentElement->getTable();
-		for ($i = 0; $i < count($elementTable->Fields); $i++)
+		if ($this->contentElement->getTarget() == "native")
 		{
-			$field = $elementTable->Fields[$i];
-			$fieldContent = $field->translationContent;
-			$fieldContent->published = $published;
+			$this->published = $published;
+		}
+		else
+		{
+			$elementTable = $this->contentElement->getTable();
+			for ($i = 0; $i < count($elementTable->Fields); $i++)
+			{
+				$field = $elementTable->Fields[$i];
+				$fieldContent = $field->translationContent;
+				$fieldContent->published = $published;
+			}
 		}
 
 	}
@@ -815,7 +663,7 @@ class ContentObject implements iJFTranslatable
 		if (intval($referenceID) <= 0)
 			return;
 
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
 		{
 			$field = $elementTable->Fields[$i];
@@ -825,18 +673,18 @@ class ContentObject implements iJFTranslatable
 
 	}
 
-	/** Stores all fields of the content element
+	/** 
+	 * Stores all fields of the content element
 	 */
 	public function store()
 	{
-		$elementTable = $this->_contentElement->getTable();
-		$referenceField = $this->_contentElement->getReferenceId();
-		// different route based on target for saving data
-		if ($this->_contentElement->getTarget() == "joomla")
-		{
+		$elementTable = $this->contentElement->getTable();
 
+		// different route based on target for saving data
+		if ($this->contentElement->getTarget() == "native")
+		{
 			$db = JFactory::getDbo();
-			$tableclass = $this->_contentElement->getTableClass();
+			$tableclass = $this->contentElement->getTableClass();
 			if ($tableclass)
 			{
 				// find the reference id and translation id
@@ -853,8 +701,17 @@ class ContentObject implements iJFTranslatable
 						// must have the original id
 						if (isset($fieldContent->reference_id) && intval($fieldContent->reference_id) > 0)
 						{
+							//// NEW SYSTEM - Split the store method into 2  methods store and store Translation or override the bind method
 							$reference_id = intval($fieldContent->reference_id);
+							$translation_id = $this->translation_id;
+							
+							$this->reference_id = $reference_id;
+							
 							$language_id = intval($fieldContent->language_id);
+							$jfm = JoomFishManager::getInstance();
+							$languages = $jfm->getLanguagesIndexedById();
+							$language_id = $languages[$language_id]->code;
+
 							break;
 						}
 					}
@@ -864,24 +721,13 @@ class ContentObject implements iJFTranslatable
 					return false;
 				}
 
-				$jf = JoomFishManager::getInstance();
-				$lang = $jf->getLanguageByID($language_id);
-				
-				// Find the active translation id from the translation map table
-				$translation_id =0;
-				$db = JFactory::getDbo();
-				$db->setQuery("SELECT * FROM #__jf_translationmap WHERE language=".$db->Quote("$lang->code"). " AND reference_id=$reference_id AND reference_table=" . $db->Quote($elementTable->Name));
-				$translation = $db->loadObject();
-				if ($translation) {
-					$translation_id = $translation->translation_id;
-				}
-								
-				// Now do the translation				
+				// Now do the translation
 				if (intval($translation_id) > 0)
 				{
 					// load the translation and amend
 					$table = JTable::getInstance($tableclass);
 					$table->load(intval($translation_id));
+					$isNew = false;
 				}
 				else
 				{
@@ -890,46 +736,68 @@ class ContentObject implements iJFTranslatable
 					$table->load(intval($reference_id));
 					$key = $table->getKeyName();
 					$table->$key = 0;
+					if (is_callable(array($table, "setLocation")))
+					{
+						//$table->setLocation($table->parent_id, 'last-child');
+						$table->setLocation(intval($reference_id), 'after');
+					}
+					$isNew = true;
 				}
-				if (isset($table->lft))
-				{
-					//$table->lft = $table->rgt = 0;
-				}
-								
-				$table->language = $lang->code;
+				$table->language = $language_id;
 				for ($i = 0; $i < count($elementTable->Fields); $i++)
 				{
 					$field = $elementTable->Fields[$i];
-					$fieldContent = $field->translationContent;
 
-					if ($field->Translate)
+					if ($field->Translate && isset($field->translationContent))
 					{
+						$fieldContent = $field->translationContent;
 						$fieldname = $field->Name;
 						$table->$fieldname = $fieldContent->value;
 					}
 				}
 
+				// Is the translation published
+				$publishfield = $this->contentElement->getPublishedField();
+				if (isset($table->$publishfield))
+				{
+					$table->$publishfield = $this->published;
+				}
+
 				// Check the data.
 				if (!$table->check())
 				{
-					JError::raiseError(101,$table->getError());
+					//$this->setError($table->getError());
 					return false;
 				}
 
 				// Store the data.
 				if (!$table->store())
 				{
-					JError::raiseError(101,$table->getError());
+					//$this->setError($table->getError());
 					return false;
 				}
-
-				// Save the translation map - should be moved to table class!
-				$translation_id = $table->$referenceField;
 				
-				$db = JFactory::getDbo();
-				$db->setQuery("REPLACE INTO #__jf_translationmap (language, reference_id, translation_id, reference_table) VALUES (".$db->Quote("$lang->code"). ", $reference_id, $translation_id ," . $db->Quote($elementTable->Name).")");
-				$db->query(); 
-
+				// Save the translation map 
+				$this->generateTranslationMap($table, $isNew, $this->contentElement->getTableName(), $elementTable);
+				/*
+				// contient has its own plugin!
+				if ($tableclass == "Menu")
+				{
+					$dispatcher = JDispatcher::getInstance();
+					$dispatcher->trigger("onMenuAfterJFSave", array("com_menu,menu", &$table, $isNew, $elementTable));
+				}
+				else if ($tableclass == "Module")
+				{
+					$dispatcher = JDispatcher::getInstance();
+					$dispatcher->trigger("onModuleAfterJFSave", array("com_modules,module", &$table, $isNew, $elementTable));
+				}
+				else if ($tableclass == "Content")
+				{
+					$dispatcher = JDispatcher::getInstance();
+					$dispatcher->trigger("onContentAfterJFSave", array("com_content.content", &$table, $isNew, $elementTable));
+				}
+				 */
+				
 				return true;
 			}
 			else
@@ -937,6 +805,7 @@ class ContentObject implements iJFTranslatable
 		}
 		else
 		{
+			$success = true;
 			for ($i = 0; $i < count($elementTable->Fields); $i++)
 			{
 				$field = $elementTable->Fields[$i];
@@ -948,20 +817,21 @@ class ContentObject implements iJFTranslatable
 					{
 						if (isset($fieldContent->value) && $fieldContent->value != '')
 						{
-							$fieldContent->store(true);
+							$success = $success && $fieldContent->store(true);
 						}
 						// special case to handle readmore in original when there is none in the translation
 						else if (isset($fieldContent->value) && $fieldContent->reference_table == "content" && $fieldContent->reference_field == "fulltext")
 						{
-							$fieldContent->store(true);
+							$success = $success && $fieldContent->store(true);
 						}
 						else
 						{
-							$fieldContent->delete();
+							$success = $success && $fieldContent->delete();
 						}
 					}
 				}
 			}
+			return $success;
 		}
 
 	}
@@ -970,7 +840,7 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function checkout($who, $oid=null)
 	{
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
 		{
 			$field = $elementTable->Fields[$i];
@@ -992,7 +862,7 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function checkin($oid=null)
 	{
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
 		{
 			$field = $elementTable->Fields[$i];
@@ -1014,7 +884,7 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function delete($oid=null)
 	{
-		$elementTable = $this->_contentElement->getTable();
+		$elementTable = $this->contentElement->getTable();
 		for ($i = 0; $i < count($elementTable->Fields); $i++)
 		{
 			$field = $elementTable->Fields[$i];
@@ -1037,7 +907,7 @@ class ContentObject implements iJFTranslatable
 	 */
 	public function getTable()
 	{
-		return $this->_contentElement->getTable();
+		return $this->contentElement->getTable();
 
 	}
 
@@ -1084,6 +954,23 @@ class ContentObject implements iJFTranslatable
 
 	}
 
-}
+	public function generateTranslationMap( &$article, $isNew, $tablename, $elementTable=false){
+		$keyname = $article->getKeyName();
+		$translationid = $article->$keyname;
+		$originalid = $this->reference_id;
+		if ($originalid > 0)
+		{
+			$language = $article->language;
 
-?>
+			$db = JFactory::getDbo();
+			$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($originalid, $translationid," . $db->quote($tablename) . "," . $db->quote($language) . ")";
+			$db->setQuery($sql);
+			$success = $db->query();
+			return;
+		}
+		else
+		{
+			
+		}
+	}
+}

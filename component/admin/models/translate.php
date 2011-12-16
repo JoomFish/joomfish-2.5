@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
  * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
@@ -29,11 +30,11 @@
  * @package joomfish
  * @subpackage Models
  *
-*/
+ */
 // Check to ensure this file is included in Joomla!
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined('_JEXEC') or die('Restricted access');
 
-JLoader::register('JFModel', JOOMFISH_ADMINPATH .DS. 'models' .DS. 'JFModel.php' );
+JLoader::register('JFModel', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'JFModel.php');
 
 /**
  * This is the corresponding module for translation management
@@ -42,13 +43,16 @@ JLoader::register('JFModel', JOOMFISH_ADMINPATH .DS. 'models' .DS. 'JFModel.php'
  */
 class TranslateModelTranslate extends JFModel
 {
+
 	protected $_modelName = 'translate';
 
 	/**
 	 * return the model name
 	 */
-	public function getName() {
+	public function getName()
+	{
 		return $this->_modelName;
+
 	}
 
 	/**
@@ -57,58 +61,93 @@ class TranslateModelTranslate extends JFModel
 	 * if defined in the config.
 	 * @return array of languages
 	 */
-	public function getLanguages() {
+	public function getLanguages()
+	{
 		$jfManager = JoomFishManager::getInstance();
 		return $jfManager->getLanguages(false);
+
 	}
 
 	/**
 	 * Deletes the selected translations (only the translations of course)
 	 * @return string	message
 	 */
-	public function removeTranslation( $catid, $cid ) {
+	public function removeTranslation($catid, $cid)
+	{
 		$message = '';
 		$db = JFactory::getDBO();
-		foreach( $cid as $cid_row ) {
+		foreach ($cid as $cid_row)
+		{
 			list($translationid, $contentid, $language_id) = explode('|', $cid_row);
 
 			$jfManager = JoomFishManager::getInstance();
-			$contentElement = $jfManager->getContentElement( $catid );
-			$contentTable = $contentElement->getTableName();
-			$contentid= intval($contentid);
-			$translationid = intval($translationid);
+			$contentElement = $jfManager->getContentElement($catid);
+			if ($contentElement->getTarget() == "joomfish")
+			{
+				$contentTable = $contentElement->getTableName();
+				$contentid = intval($contentid);
+				$translationid = intval($translationid);
 
-			// safety check -- complete overkill but better to be safe than sorry
+				// safety check -- complete overkill but better to be safe than sorry
+				// get the translation details
+				JLoader::import('models.JFContent', JOOMFISH_ADMINPATH);
+				$translation = new jfContent($db);
+				$translation->load($translationid);
 
-			// get the translation details
-			JLoader::import( 'models.JFContent',JOOMFISH_ADMINPATH);
-			$translation = new jfContent($db);
-			$translation->load($translationid);
+				if (!isset($translation) || $translation->id == 0)
+				{
+					$this->setState('message', JText::sprintf('NO_SUCH_TRANSLATION', $translationid));
+					continue;
+				}
 
-			if (!isset($translation) || $translation->id == 0)		{
-				$this->setState('message', JText::sprintf('NO_SUCH_TRANSLATION', $translationid));
-				continue;
+				// make sure translation matches the one we wanted
+				if ($contentid != $translation->reference_id)
+				{
+					$this->setState('message', JText::_('SOMETHING_DODGY_GOING_ON_HERE'));
+					continue;
+				}
+
+				$sql = "DELETE from #__jf_content WHERE reference_table='$catid' and language_id=$language_id and reference_id=$contentid";
+				$db->setQuery($sql);
+				$db->query();
+				if ($db->getErrorNum() != 0)
+				{
+					$this->setError(JText::_('SOMETHING_DODGY_GOING_ON_HERE'));
+					JError::raiseWarning(400, JTEXT::_('No valid table information: ') . $db->getErrorMsg());
+					continue;
+				}
+				else
+				{
+					$this->setState('message', JText::_('TRANSLATION_SUCCESSFULLY_DELETED'));
+				}
 			}
-
-			// make sure translation matches the one we wanted
-			if ($contentid != $translation->reference_id){
-				$this->setState('message', JText::_( 'SOMETHING_DODGY_GOING_ON_HERE' ));
-				continue;
-			}
-
-			$sql= "DELETE from #__jf_content WHERE reference_table='$catid' and language_id=$language_id and reference_id=$contentid";
-			$db->setQuery($sql);
-			$db->query();
-			if( $db->getErrorNum() != 0 ) {
-				$this->setError(JText::_( 'SOMETHING_DODGY_GOING_ON_HERE' ));
-				JError::raiseWarning( 400,JTEXT::_('No valid table information: ') .$db->getErrorMsg());
-				continue;
-			} else {
-				$this->setState('message', JText::_( 'TRANSLATION_SUCCESSFULLY_DELETED' ));
+			else
+			{
+				$db = JFactory::getDbo();
+				$contentElement = $jfManager->getContentElement($catid);
+				$tableclass = $contentElement->getTableClass();
+				if ($tableclass && intval($translationid) > 0)
+				{
+					// load the translation and amend
+					$table = JTable::getInstance($tableclass);
+					$table->load(intval($translationid));
+					if (!$table->delete())
+					{
+						$this->setError(JText::_('SOMETHING_DODGY_GOING_ON_HERE'));
+						JError::raiseWarning(400, JTEXT::_('No valid table information: ') . $db->getErrorMsg());
+						continue;
+					}
+					else
+					{
+						$this->setState('message', JText::_('TRANSLATION_SUCCESSFULLY_DELETED'));
+					}
+				}
 			}
 		}
 		return $message;
+
 	}
 
 }
+
 ?>
