@@ -170,10 +170,10 @@ if (isset($this->filterlist) && count($this->filterlist)>0){
     <td> <?php echo JText::_('TRANSLATION_NOT_EXISTING');?></td>
   </tr>
   <tr align="center">
-    <td> <img src="images/publish_g.png" width="12" height="12" border=0 alt="<?php echo JText::_( 'TRANSLATION_VISIBLE' );?>" />
+    <td> <?php echo JHTML::_('image','admin/publish_g.png', JText::_( 'TRANSLATION_PUBLISHED' ), NULL, true);?>
     </td>
     <td> <?php echo JText::_('TRANSLATION_PUBLISHED');?> |</td>
-    <td> <img src="images/publish_x.png" width="12" height="12" border=0 alt="<?php echo JText::_( 'FINISHED' );?>" />
+    <td> <?php echo JHTML::_('image','admin/publish_x.png', JText::_( 'TRANSLATION_UNPUBLISHED' ), NULL, true);?>
     </td>
     <td> <?php echo JText::_('TRANSLATION_NOT_PUBLISHED');?> </td>
     <td> &nbsp;
