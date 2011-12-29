@@ -20,10 +20,31 @@
   		<field type="text" name="telephone" translate="1">Telefon</field>
   		<field type="text" name="fax" translate="1">Fax</field>
   		<field type="textarea" name="misc" translate="1">Miscellaneous Info</field>
-  		<field type="textarea" name="params" translate="1">Parameters</field>
+  		
+  		<field type="params" name="params" translate="1">Parameters</field>
+  		
   		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
   		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
   	</table>
+	<treatment>
+		<!--<target>native</target>
+		<tableclass>Content</tableclass>
+		<publishedfield>state</publishedfield>
+		<translationObjectModel>TranslationObjectContent</translationObjectModel>
+		<jformModel>ContentJForm</jformModel>
+		-->
+		<form>contact</form>
+		<modelName>ContactModelContact</modelName>
+		<model>contact</model>
+		<component>com_contact</component>
+		<!-- TEST -->
+		<!--
+		<contentElement>contact</contentElement>
+		<contentElementPath>administrator/components/com_contact/joomfish</contentElementPath>
+		-->
+		<!-- TEST END-->
+		
+	</treatment>
   </reference>
   <translationfilters>
   	  <category>catid</category>

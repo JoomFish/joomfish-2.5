@@ -55,6 +55,7 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 	 */
 	public function display($tpl = null)
 	{
+		JHTML::_('behavior.modal');
 
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JOOMFISH_TITLE') . ' :: ' .JText::_( 'LANGUAGE_TITLE' ));

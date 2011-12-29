@@ -43,6 +43,7 @@ class  TranslationObjectMenu extends TranslationObject
 	{
 		// Check for the special 'request' entry.
 		$data = $formarray["jform"];
+		
 		if (isset($formarray['refField_link']) && isset($data['request']) && is_array($data['request']) && !empty($data['request']))
 		{
 			// Parse the submitted link arguments.

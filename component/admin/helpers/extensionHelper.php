@@ -119,6 +119,7 @@ class  JoomfishExtensionHelper  {
 				self::$imagePath[$path] = $path;
 			}
 		}
+		self::$imagePath[$path] = str_replace(DS,'/',self::$imagePath[$path]);
 		return self::$imagePath[$path];
 	}	
 }

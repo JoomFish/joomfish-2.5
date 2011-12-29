@@ -22,6 +22,7 @@
 	<treatment>
 		<target>native</target>
 		<tableclass>Module</tableclass>
+		<!--<translationObjectModel>TranslationObjectModul</translationObjectModel>-->
 		<publishedfield>published</publishedfield>
 	</treatment>
   </reference>

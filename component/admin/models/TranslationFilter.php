@@ -45,7 +45,34 @@ function getTranslationFilters($catid, $contentElement)
 	$filters = array();
 	foreach ($filterNames as $key => $value)
 	{
+		//MS: add includePaths
+		
 		$filterType = "translation" . ucfirst(strtolower($key)) . "Filter";
+		if (!class_exists($filterType))
+		{
+			if (isset(JoomFishManager::$includePaths['translationfilter']) && count(JoomFishManager::$includePaths['translationfilter']))
+			{
+				foreach(JoomFishManager::$includePaths['translationfilter'] as $includePath)
+				{
+					$classFile = $includePath . "/$filterType.php";
+					if (!class_exists($filterType))
+					{
+						if (file_exists($classFile))
+						{
+							include_once($classFile);
+							break;
+						}
+						if (!class_exists($filterType))
+						{
+							continue;
+						}
+					}
+				}
+			}
+		}
+
+		
+		//$filterType = "translation" . ucfirst(strtolower($key)) . "Filter";
 		$classFile = JPATH_SITE . "/administrator/components/com_joomfish/contentelements/$filterType.php";
 		if (!class_exists($filterType))
 		{
@@ -725,6 +752,60 @@ class translationPublishedFilter extends translationFilter
 		$publishedList["html"] = JHTML::_('select.genericlist', $PublishedOptions, 'published_filter_value', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value);
 
 		return $publishedList;
+
+	}
+
+}
+
+
+class translationExtensionFilter extends translationFilter
+{
+
+	public function __construct($contentElement)
+	{
+		$this->filterNullValue = "-1";
+		$this->filterType = "extension";
+		$this->filterField = $contentElement->getFilter("extension");
+		parent::__construct($contentElement);
+
+	}
+
+	public function createFilter()
+	{
+		if (!$this->filterField)
+			return "";
+		$filter = "";
+		if ($this->filter_value != $this->filterNullValue)
+		{
+			$filter = "c." . $this->filterField . "='" . $this->filter_value . "'";
+		}
+		return $filter;
+
+	}
+
+	public function createFilterHTML()
+	{
+		$db = JFactory::getDBO();
+
+		if (!$this->filterField)
+			return "";
+		$ExtensionOptions = array();
+		$ExtensionOptions[] = JHTML::_('select.option', $this->filterNullValue, JText::_('ALL_EXTENSIONS'));
+
+		$sql = "SELECT DISTINCT cat.extension FROM #__categories as cat";
+		$db->setQuery($sql);
+		$cats = $db->loadObjectList();
+		$catcount = 0;
+		foreach ($cats as $cat)
+		{
+			$ExtensionOptions[] = JHTML::_('select.option', $cat->extension, $cat->extension);
+			$catcount++;
+		}
+		$Extensionlist = array();
+		$Extensionlist["title"] = JText::_('EXTENSION_FILTER');
+		$Extensionlist["html"] = JHTML::_('select.genericlist', $ExtensionOptions, 'extension_filter_value', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value);
+
+		return $Extensionlist;
 
 	}
 

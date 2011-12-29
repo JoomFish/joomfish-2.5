@@ -142,13 +142,6 @@ class ContentElementTablefield {
 				$translation->jfrequest =array();
 				$this->translationContent->value  = json_encode($translation);
 			}
-				
-			
-
 		}
-
-
 	}
-	
-	
 }

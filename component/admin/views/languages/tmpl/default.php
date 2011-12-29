@@ -30,7 +30,9 @@
  * @subpackage Views
  *
 */
-defined('_JEXEC') or die('Restricted access'); ?>
+defined('_JEXEC') or die('Restricted access'); 
+
+?>
 <script type="text/javascript">
 	//<![CDATA[
 function showImageBrowser(fieldNum){
@@ -47,7 +49,8 @@ function showConfigEditor(fieldId, lang_id) {
 	var field = document.getElementById(fieldId);
 	
 	SqueezeBox.initialize();
-	SqueezeBox.fromElement(this, {
+	//SqueezeBox.fromElement(this, {
+	SqueezeBox.fromElement(field, {
 		handler: 'iframe',
 		url: '<?php echo JURI::base()?>index.php?option=com_joomfish&task=languages.translateconfig&layout=translateconfig&tmpl=component&paramsField='+fieldId+'&lang_id='+lang_id+'&current='+encodeURI(field.value),
 		size: {x: 760, y: 550}
@@ -144,7 +147,7 @@ function showConfigEditor(fieldId, lang_id) {
 				      		<?php
 							$src = JoomfishExtensionHelper::getLanguageImageSource($language);
 							?>
-							<img src="<?php echo $src != '' ? $src : JURI::base().'images/blank.png';?>" alt="<?php echo html_entity_decode( $src );?>" title="<?php echo $language->title?>" class="flag" id="flagImage<?php echo $i;?>" />
+							<img src="<?php echo $src != '' ? JURI::root(true).$src : JURI::base().'images/blank.png';?>" alt="<?php echo html_entity_decode( $src );?>" title="<?php echo $language->title?>" class="flag" id="flagImage<?php echo $i;?>" />
 				      		<input id="flagValue<?php echo $i;?>" type="text" name="image[]" value="<?php echo $src ?>" style="width: 100px;" readonly="readonly" />
 				      		<input id="browseLanguageImage" class="button" type="button" value="<?php echo JText::_( 'BROWSE' );?>" onClick="showImageBrowser('<?php echo $i;?>');"/>
 						</td>

@@ -52,10 +52,13 @@ class ContentElementTable {
 	public $Name;
 	public $Fields;
 	public $Filter;
+	
+	//public $Form;
+	public $Treatment = array();
 
 	/** Standard constructor
 	*/
-	public function __construct( $tableElement ) {
+	public function __construct( $tableElement,$xmlFile ) {
 		$this->Name = trim( $tableElement->getAttribute( 'name' ) );
 
 		$tableFields = $tableElement->getElementsByTagName( 'field' );
@@ -71,6 +74,23 @@ class ContentElementTable {
 		if( $filterElement && $filterElement->length>0 ) {
 			$this->Filter = $filterElement->item(0)->textContent;
 		}
+		
+		
+		
+		/*
+		$xml = simplexml_import_dom($xmlFile);
+		$result = $xml->xpath('//reference/treatment');
+		
+		foreach ((array)$result as $node)
+		{
+			foreach ((array)$node as $key => $value)
+			{
+				$this->Treatment[$key] = $value;
+			}
+		}
+		*/
+		
+		
 	}
 
 	/** Retrieves one field based on the name

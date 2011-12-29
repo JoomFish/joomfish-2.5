@@ -40,24 +40,22 @@ class JFTempMenusModelItem extends MenusModelItem {
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+		/*
 		// Set the JForm control
 		if (array_key_exists('control', $config)) {
 			$this->control = $config['control'];
 		}
-		/*
-		else {
-			$this->control = 'jform';
-		}
 		*/
-	
 	}
 	
+	/*
 	//alternative:
 	public function setFormControl($control)
 	{
 		// Set the JForm control
 		$this->control = $control;
 	}
+	*/
 	
 	/**
 	 * Overload Method to get a form object - we MUST NOT use JPATH_COMPONENT
@@ -76,6 +74,7 @@ class JFTempMenusModelItem extends MenusModelItem {
 	protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
 	{
 		// Handle the optional arguments.
+		/*
 		if(isset($this->control))
 		{
 			$options['control'] = $this->control;
@@ -84,7 +83,8 @@ class JFTempMenusModelItem extends MenusModelItem {
 		{
 			$options['control']	= JArrayHelper::getValue($options, 'control', false);
 		}
-
+		*/
+		$options['control']	= JArrayHelper::getValue($options, 'control', false);
 		// Create a signature hash.
 		$hash = md5($source.serialize($options));
 
@@ -103,7 +103,7 @@ class JFTempMenusModelItem extends MenusModelItem {
 			}
 			$componentpath = JPATH_BASE."/components/".$component;
 			JForm::addFormPath($componentpath.'/models/forms');
-			JForm::addFieldPath($componentpath.'/models/fields');			
+			JForm::addFieldPath($componentpath.'/models/fields');
 		}
 		else {
 			JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
@@ -112,7 +112,7 @@ class JFTempMenusModelItem extends MenusModelItem {
 
 		try {
 			$form = JForm::getInstance($name, $source, $options, false, $xpath);
-
+			//$form = JForm::getInstance($name.(isset($this->control) && $this->control <> 'jform' ? '_orig' : ''), $source, $options, false, $xpath);
 			if (isset($options['load_data']) && $options['load_data']) {
 				// Get the data for the form.
 				$data = $this->loadFormData();

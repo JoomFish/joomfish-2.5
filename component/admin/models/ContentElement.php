@@ -4,7 +4,7 @@
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
  * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -16,12 +16,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -130,9 +130,48 @@ class ContentElement
 
 	}
 
+
+	public function getTreatment()
+	{
+		if (isset($this->_xmlFile))
+		{
+			$treatment = array();
+			
+			//DOMDOcument way
+			$xpath = new DOMXPath($this->_xmlFile);
+			$treatments = $xpath->query('//reference/treatment')->item(0);
+			if($treatments->hasChildNodes())
+			{
+				foreach ($treatments->childNodes as $node)
+				{
+					if($node->nodeType == XML_ELEMENT_NODE)
+					{
+						$treatment[$node->nodeName] = $node->nodeValue;
+					}
+				}
+			}
+			/*
+			//SimpleXML way
+			$xml = simplexml_import_dom($this->_xmlFile);
+			$result = $xml->xpath('//reference/treatment');
+			foreach ((array)$result as $node)
+			{
+				foreach ((array)$node as $key => $value)
+				{
+					if(is_string($value))
+					$treatment[$key] = $value;
+				}
+			}
+			*/
+			return $treatment;
+		}
+		return null;
+	}
 	/**
 	 * function that returns target that is used to decide where the translation is saved - choices are joomfish (default) or joomla
 	 *
+	 
+	MS: allways use from the xml? Or in future we can select?
 	 */
 	public function getTarget()
 	{
@@ -155,18 +194,82 @@ class ContentElement
 	 * get the translation object class for the table and make sure the source file is loaded
 	 */
 	public function getTranslationObjectClass(){
+		
+		
 		if (isset($this->_xmlFile))
 		{
+			/*
 			$xpath = new DOMXPath($this->_xmlFile);
 			$targetElement = $xpath->query('//reference/treatment/translationObjectModel')->item(0);
-			if (!isset($targetElement))
+			if (isset($targetElement))
 			{
-				JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
-				return 'TranslationObject';
+				$translationObjectClass = trim($targetElement->textContent);
+				
+				JLoader::import( "models.$translationObjectClass",JOOMFISH_ADMINPATH);
+				return $translationObjectClass;
 			}
-			$translationObjectClass = trim($targetElement->textContent);
-			JLoader::import( "models.$translationObjectClass",JOOMFISH_ADMINPATH);
-			return $translationObjectClass;
+			*/
+			/*
+			if (isset(JoomFishManager::$includePaths['translationobject']) && count(JoomFishManager::$includePaths['translationobject'])
+			{
+				foreach(JoomFishManager::$includePaths['translationobject'] as $includePath)
+				{
+					$translationObjectClass = trim($targetElement->textContent);
+					$classFile = $includePath . "/$translationObjectClass.php";
+					if (!class_exists($translationObjectClass))
+					{
+						if (file_exists($classFile))
+						{
+							include_once($classFile);
+							if (class_exists($translationObjectClass))
+							{
+								return $translationObjectClass;
+							}
+						}
+						if (!class_exists($translationObjectClass))
+						{
+							continue;
+						}
+					}
+					else
+					{
+						return $translationObjectClass;
+					}
+				}
+			}
+			*/
+			
+			$treatment = JoomFishManager::getTreatment($this->_xmlFile);
+			if(count($treatment) > 0)
+			{
+				if(isset($treatment['translationObjectModel']))
+				{
+					$className = $treatment['translationObjectModel'];
+				}
+				if(isset($treatment['translationObjectModelPath']) && isset($className))
+				{
+					if($file = JPath::find(JPATH_ROOT.DS.$treatment['translationObjectModel'], $className.'.php'))
+					{
+						include_once($file);
+					}
+				}
+				elseif(isset($className))
+				{
+					if($file = JPath::find(JOOMFISH_ADMINPATH.DS.'models', $className.'.php'))
+					{
+						include_once($file);
+					}
+				}
+				if(isset($className) && class_exists($className))
+				{
+					return $className;
+				}
+			}
+			
+			
+			
+			JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
+			return 'TranslationObject';
 		}
 		JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
 		return 'TranslationObject';
@@ -237,7 +340,7 @@ class ContentElement
 	}
 
 	/**
-	 *  returns category filter fieldname (if any)
+	 * returns category filter fieldname (if any)
 	 */
 	public function getCategoryFilter()
 	{
@@ -246,7 +349,7 @@ class ContentElement
 	}
 
 	/**
-	 *  returns author filter fieldname (if any)
+	 * returns author filter fieldname (if any)
 	 */
 	public function getAuthorFilter()
 	{
@@ -308,7 +411,7 @@ class ContentElement
 			$xpath = new DOMXPath($this->_xmlFile);
 			$tableElement = $xpath->query('//reference/table')->item(0);
 
-			$this->referenceInformation["table"] = new ContentElementTable($tableElement);
+			$this->referenceInformation["table"] = new ContentElementTable($tableElement,$this->_xmlFile);
 		}
 
 		return $this->referenceInformation["table"];
@@ -325,14 +428,17 @@ class ContentElement
 		$db = JFactory::getDBO();
 		$sqlFields = null;
 		$where = array();
+		$whereFilter = array();
 		$order = null;
 		$join = null;
 		$contentTable = $this->getTable();
+		
 		foreach ($filters as $filter)
 		{
 			$sqlFilter = $filter->createFilter($this);
 			if ($sqlFilter != ""){
 				$where[] = $sqlFilter;
+				$whereFilter[] = $sqlFilter;
 			}
 		}
 		if ($this->Storage == "joomfish")
@@ -391,12 +497,15 @@ class ContentElement
 			$sqlFields[] = 'jfc.language_id';
 			$sqlFields[] = 'jfl.title as language';
 			$sqlFields[] = "jfc.reference_id as jfc_refid";
+			
+			$sqlFields[] = "jfl.title_native as org_language";
+			
 			$join[] = "jfc.reference_table='$contentTable->Name'";
 			// Now redundant
 			/*
-			  if( isset($contentid) && $contentid!=-1 ) {
-			  $where[] = 'c.id=' .$contentid;
-			  }
+			if( isset($contentid) && $contentid!=-1 ) {
+			$where[] = 'c.id=' .$contentid;
+			}
 			 */
 			if (isset($idLanguage) && $idLanguage != "" && $idLanguage != -1)
 			{
@@ -438,12 +547,10 @@ class ContentElement
 				if ($tableField->Type == "referenceid")
 				{
 					$referencefield = $tableField->Name;
+					
 					break;
 				}
 			}
-
-			// TODO set source language
-			$where[] = 'c.language="*"';
 
 			foreach ($contentTable->Fields as $tableField)
 			{
@@ -474,13 +581,13 @@ class ContentElement
 						$sqlFields[] = 'c.' . $tableField->Name . ' as checked_out';
 						break;
 				}
-
 				// I want to have each field with his original name in the select
 				// so the special fields will be only addon's!
 				// Reason: To grap the data later it's more easy to refer to the original names of the XML file
 				$sqlFields[] = 'c.' . $tableField->Name . '';
 				$sqlFields[] = 'ct.' . $tableField->Name . ' AS jfc_'.$tableField->Name;
 			}
+			
 
 			$sqlFields[] = "ct.id as jfc_id";
 			// NEW SYSTEM make sure published is a valid field!
@@ -488,30 +595,66 @@ class ContentElement
 			$sqlFields[] = 'ct.'.$publishedField.' as published';
 			$sqlFields[] = "ct." . $referencefield . " as jfc_refid";
 			// NEW SYSTEM TODO get the last changed from the translation map table - ALSO keep a record of the ORIGINAL record
-			//$sqlFields[] = "tm.lastchanged  as lastchanged";
+			//$sqlFields[] = "tm.lastchanged as lastchanged";
 			$sqlFields[] = "'2010-06-11 05:30:30' as lastchanged";
-
+			
+			
+			$sqlFields[] = "l.title_native as org_language";
 			if ($contentTable->Filter != '')
 			{
 				$where[] = $contentTable->Filter;
 			}
-
 			$transmap = "";
 			if (isset($idLanguage) && $idLanguage != "" && $idLanguage != -1)
 			{
-				$transmap = "\nLEFT JOIN #__jf_translationmap as tm ON  tm.reference_id=c." . $referencefield. " AND tm.reference_table=".$db->quote($contentTable->Name);
+				$transmap = "\nLEFT JOIN #__jf_translationmap as tm ON tm.reference_id=c." . $referencefield. " AND tm.reference_table=".$db->quote($contentTable->Name);
 				$transmap .= " AND tm.language=" . $db->quote($lang->code);
+				
+				$wheretransmap = '';
+				if($contentid_exist)
+				{
+					//ms: only single row for edit hope we have the id
+					$more = "";
+				}
+				else
+				{
+					// TODO set source language?
+					$where[] = "c.language='*'";
+					
+					$more1 = "\nSELECT tm4.reference_id from #__jf_translationmap as tm4 WHERE tm4.reference_table=".$db->quote($contentTable->Name);
+					$more2 = "\nSELECT tm5.translation_id from #__jf_translationmap as tm5 WHERE tm5.reference_table=".$db->quote($contentTable->Name);
+					$moreFilter = '';
+					if ($contentTable->Filter != '')
+					{
+						$whereFilter[] = $contentTable->Filter;
+					}
+					
+					$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND '  : '');
+					if(JoomfishManager::getDefaultLanguage() == $lang->code )
+					{
+						$more = " OR (".$moreFilter." c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." ) ) ";
+					}
+					else
+					{
+						$more = " OR (".$moreFilter." c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." )) ";
+					}
+
+					$wheretransmap = " OR (tm.reference_id=c." . $referencefield. " AND tm.reference_table=".$db->quote($contentTable->Name);
+					$wheretransmap .= " AND tm.language=" . $db->quote($lang->code).") ";
+				}
 
 				$join[] = "tm.translation_id=ct.".$referencefield;
 				$sql = "SELECT " . implode(', ', $sqlFields)
 						. "\nFROM #__" . $contentTable->Name . ' as c'
 						. $transmap
 						. "\nLEFT JOIN #__" . $contentTable->Name . " as ct ON " . implode(' AND ', $join)
+						//get the org language
+						. "\nLEFT JOIN #__languages as l ON c.language=l.lang_code "
 						. (count($where) ? "\nWHERE " . implode(' AND ', $where) : "")
-						. (count($order) ? "\nORDER BY " . implode(', ', $order) : "");
+						. $wheretransmap
+						. $more
+						. (count($order) ? "\nORDER BY " . implode(', ', $order) : "\nORDER BY c." . $referencefield);
 			}
-
-
 
 			if ($limitStart != -1 && $maxRows > 0)
 			{
@@ -547,7 +690,9 @@ class ContentElement
 		{
 			$sqlFilter = $filter->createFilter($this);
 			if ($sqlFilter != "")
+			{
 				$where[] = $sqlFilter;
+			}
 		}
 		foreach ($contentTable->Fields as $tableField)
 		{
@@ -619,7 +764,7 @@ class ContentElement
 		if ($this->Storage == "joomfish")
 		{
 			/* Try to simplify the count queries.
-			  Check only on original table including the standard filters as we assume that */
+			Check only on original table including the standard filters as we assume that */
 
 			$join = null;
 			$where = null;
@@ -675,6 +820,7 @@ class ContentElement
 
 			$join = null;
 			$where = null;
+			$whereFilter = array();
 			$referencefield = "";
 
 			foreach ($contentTable->Fields as $tableField)
@@ -685,39 +831,66 @@ class ContentElement
 					$referencefield = $tableField->Name;
 				}
 			}
-
-			$sqlFields[] = "COUNT(distinct $referencefield)";
+			
+			$db = JFactory::getDbo();
+			
+			$sqlFields[] = "COUNT(distinct c.$referencefield)";
 			if (isset($idLanguage) && $idLanguage != -1)
 			{
 				// TODO we need a source language for the count!
-				//$where[] = "language_id='*'";
+				$where[] = "c.language='*'";
 			}
 			else
 			{
 				// TODO we need a source language for the count!
-				$where[] = "language_id='*'";
+				$where[] = "c.language='*'";
 			}
 
 			foreach ($filters as $filter)
 			{
 				$sqlFilter = $filter->createFilter($this);
 				if ($sqlFilter != "")
+				{
 					$where[] = $sqlFilter;
+					$whereFilter[] = $sqlFilter;
+				}
 			}
 			if ($contentTable->Filter != '')
 			{
 				$where[] = $contentTable->Filter;
 			}
 
-			$db = JFactory::getDbo();
-			$transmap = "\nLEFT JOIN #__jf_translationmap as tm ON  tm.reference_id=c." . $referencefield. " AND tm.reference_table=".$db->quote($contentTable->Name);
+			
+			$transmap = "\nLEFT JOIN #__jf_translationmap as tm ON tm.reference_id=c." . $referencefield. " AND tm.reference_table=".$db->quote($contentTable->Name);
 			$transmap .= " AND tm.language=" . $db->quote($lang->code);
 			
-			$sql = "SELECT " . implode(', ', $sqlFields)
-					. "\nFROM #__" . $contentTable->Name . ' as c'
-					. $transmap
-					. (count($where) ? "\nWHERE " . implode(' AND ', $where) : "");
-
+			$more1 = "\nSELECT tm4.reference_id from #__jf_translationmap as tm4 WHERE tm4.reference_table=".$db->quote($contentTable->Name);
+			$more2 = "\nSELECT tm5.translation_id from #__jf_translationmap as tm5 WHERE tm5.reference_table=".$db->quote($contentTable->Name);
+			$moreFilter = '';
+			if ($contentTable->Filter != '')
+			{
+				$whereFilter[] = $contentTable->Filter;
+			}
+			$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND '  : '');
+			if(JoomfishManager::getDefaultLanguage() == $lang->code )
+			{
+				$more = " OR (".$moreFilter." c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." ) ) ";
+			}
+			else
+			{
+				$more = " OR (".$moreFilter." c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." )) ";
+			}
+			$wheretransmap = " OR (tm.reference_id=c." . $referencefield. " AND tm.reference_table=".$db->quote($contentTable->Name);
+			$wheretransmap .= " AND tm.language=" . $db->quote($lang->code).") ";
+			$join[] = "tm.translation_id=ct.".$referencefield;
+				$sql = "SELECT " . implode(', ', $sqlFields)
+						. "\nFROM #__" . $contentTable->Name . ' as c'
+						. $transmap
+						. "\nLEFT JOIN #__" . $contentTable->Name . " as ct ON " . implode(' AND ', $join)
+						. (count($where) ? "\nWHERE " . implode(' AND ', $where) : "")
+						. $wheretransmap
+						. $more
+						;
 			//echo "<pre>count-sql = $sql</pre><br />";
 			return $sql;
 		}
@@ -733,12 +906,11 @@ class ContentElement
 		$db = JFactory::getDBO();
 
 		/*
-		  $db->setQuery( $this->countContentSQL($idLanguage, $filters) );
-		  $result = $db->loadObjectList();
-		  echo $db->getErrorMsg();
-		  return count( $result );
+		$db->setQuery( $this->countContentSQL($idLanguage, $filters) );
+		$result = $db->loadObjectList();
+		echo $db->getErrorMsg();
+		return count( $result );
 		 */
-
 		$db->setQuery($this->countContentSQL($idLanguage, $filters));
 		$count = $db->loadResult();
 		//echo "count = $count<br/>";

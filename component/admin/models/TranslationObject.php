@@ -79,6 +79,8 @@ class TranslationObject implements iJFTranslatable
 
 	/** @var language Language name of the content */
 	public $language;
+	
+	public $org_language;
 
 	/** @var lastchanged Date when the translation was last modified */
 	public $lastchanged;
@@ -239,7 +241,7 @@ class TranslationObject implements iJFTranslatable
 				$fieldContent->published = $this->published;
 				$field->translationContent = $fieldContent;
 			}
-			else if ($field->Type == "params" && isset($formArray["jform"][$field->Name]))
+			else if ( ($field->Type == "params" || strtolower($field->Type) == "paramschilds" ) && isset($formArray["jform"][$field->Name]))
 			{
 				$translationValue = $formArray["jform"][$field->Name];
 
@@ -251,11 +253,13 @@ class TranslationObject implements iJFTranslatable
 						$this->$handler($translationValue, $elementTable->Fields, $formArray, $prefix, $suffix, $storeOriginalText);
 					}
 				}
-
-				$registry = new JRegistry();
-				$registry->loadArray($translationValue);
-				$translationValue = $registry->toString();
-
+				
+				if ( $field->Type == "params" )
+				{
+					$registry = new JRegistry();
+					$registry->loadArray($translationValue);
+					$translationValue = $registry->toString();
+				}
 				$fieldContent = new jfContent($db);
 				$fieldContent->id = $formArray[$prefix . "id_" . $fieldName . $suffix];
 				$fieldContent->reference_id = (intval($formArray[$prefix . "reference_id" . $suffix]) > 0) ? intval($formArray[$prefix . "reference_id" . $suffix]) : $this->id;
@@ -378,6 +382,11 @@ class TranslationObject implements iJFTranslatable
 			$this->language_id = $row->language_id;
 			$this->language = $row->language;
 		}
+		if(isset($row->org_language))
+		{
+			$this->org_language = $row->org_language;
+		}
+		
 		$this->lastchanged = $row->lastchanged;
 		$this->published = $row->published;
 		if (isset($row->modified_date))
@@ -767,6 +776,8 @@ class TranslationObject implements iJFTranslatable
 				if (!$table->check())
 				{
 					//$this->setError($table->getError());
+					$app = &JFactory::getApplication();
+					$app->enqueueMessage($table->getError());
 					return false;
 				}
 
@@ -774,6 +785,8 @@ class TranslationObject implements iJFTranslatable
 				if (!$table->store())
 				{
 					//$this->setError($table->getError());
+					$app = &JFactory::getApplication();
+					$app->enqueueMessage($table->getError());
 					return false;
 				}
 				

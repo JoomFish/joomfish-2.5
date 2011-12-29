@@ -41,18 +41,34 @@ class JFTempContentModelItem extends ContentModelArticle {
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+		/*
 		// Set the JForm control
 		if (array_key_exists('control', $config)) {
 			$this->control = $config['control'];
 		}
+		*/
 	}
-	
+	/*
 	//alternative:
 	public function setFormControl($control)
 	{
 		// Set the JForm control
 		$this->control = $control;
 	}
+	*/
+	
+	protected function populateState()
+	{
+		parent::populateState();
+		
+		/*
+		// Get the pk of the record from the request.
+		$key = 
+		$pk = JRequest::getInt($key);
+		$this->setState($this->getName().'.id', $pk);
+		*/
+	}
+	
 	
 	/**
 	 * Overload Method to get a form object - we MUST NOT use JPATH_COMPONENT
@@ -71,6 +87,7 @@ class JFTempContentModelItem extends ContentModelArticle {
 	protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
 	{
 		// Handle the optional arguments.
+		/*
 		if(isset($this->control))
 		{
 			$options['control'] = $this->control;
@@ -79,6 +96,8 @@ class JFTempContentModelItem extends ContentModelArticle {
 		{
 			$options['control']	= JArrayHelper::getValue($options, 'control', false);
 		}
+		*/
+		$options['control']	= JArrayHelper::getValue($options, 'control', false);
 		// Create a signature hash.
 		$hash = md5($source.serialize($options));
 
@@ -106,48 +125,22 @@ class JFTempContentModelItem extends ContentModelArticle {
 
 		try {
 			/*
-			if(isset($this->control) && $this->control <> 'jform')
-			{
-				$replace = false;
-				$source = trim($source);
-				if (empty($source)) {
-					throw new Exception(JText::_('JLIB_FORM_ERROR_NO_DATA'));
-				}
-
-				// Instantiate the form.
-				$form = new JForm($name, $options);
-
-				// Load the data.
-				if (substr(trim($source), 0, 1) == '<') {
-					if ($form->load($source, $replace, $xpath) == false) {
-						throw new Exception(JText::_('JLIB_FORM_ERROR_XML_FILE_DID_NOT_LOAD'));
-					}
-				}
-				else {
-				if ($form->loadFile($source, $replace, $xpath) == false) {
-					throw new Exception(JText::_('JLIB_FORM_ERROR_XML_FILE_DID_NOT_LOAD'));
-				}
-			}
-			}
-			else
-			{
-				$form = JForm::getInstance($name, $source, $options, false, $xpath);
-			}
-			*/
+			THIS is not more need
+			//we must change the name if we want more than one model
+			//like translated and orginal
 			$form = JForm::getInstance($name.(isset($this->control) && $this->control <> 'jform' ? '_orig' : ''), $source, $options, false, $xpath);
 			
-			
+			*/
+			$form = JForm::getInstance($name, $source, $options, false, $xpath);
 			if (isset($options['load_data']) && $options['load_data']) {
 				// Get the data for the form.
 				$data = $this->loadFormData();
 			} else {
 				$data = array();
 			}
-			//FB::dump($data);
 			// Allow for additional modification of the form, and events to be triggered.
 			// We pass the data because plugins may require it.
 			$this->preprocessForm($form, $data);
-
 			// Load the data into the form after the plugins have operated.
 			$form->bind($data);
 

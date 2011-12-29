@@ -3,7 +3,7 @@
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
  * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -75,7 +75,19 @@ class TranslateController extends JController
 			$this->cid = array(0);
 		}
 		$this->fileCode = JRequest::getVar('fileCode', '');
+
 		$this->_joomfishManager = JoomFishManager::getInstance();
+
+		$includePath = JRequest::getVar('includePath', '');
+		
+		$includePath = json_decode(base64_decode($includePath));
+		if($includePath)
+		foreach($includePath as $include)
+		{
+			if(isset($include->path))
+			$this->_joomfishManager->addIncludePath($include->path ,(isset($include->type) ? $include->type : null ));
+		
+		}
 
 		$this->registerTask('overview', 'showTranslate');
 		$this->registerTask('edit', 'editTranslation');
@@ -104,6 +116,9 @@ class TranslateController extends JController
 		$this->view->setModel($model, true);
 
 		// Assign data for view
+		$includePath = JRequest::getVar('includePath', '');
+		$this->view->assignRef('includePath', $includePath);
+		
 		$this->view->assignRef('catid', $this->_catid);
 		$this->view->assignRef('select_language_id', $this->_select_language_id);
 		$this->view->assignRef('task', $this->task);
@@ -158,16 +173,16 @@ class TranslateController extends JController
 				$catid = "content";
 				$contentElement = $this->_joomfishManager->getContentElement($catid);
 			}
+			
 			JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
 			$tranFilters = getTranslationFilters($catid, $contentElement);
-
+			
 			$total = $contentElement->countReferences($language_id, $tranFilters);
 
 			if ($total < $limitstart)
 			{
 				$limitstart = 0;
 			}
-
 			$db->setQuery($contentElement->createContentSQL($language_id, null, $limitstart, $limit, $tranFilters));
 			$rows = $db->loadObjectList();
 			if ($db->getErrorNum())
@@ -176,7 +191,6 @@ class TranslateController extends JController
 				// should not stop the page here otherwise there is no way for the user to recover
 				$rows = array();
 			}
-
 			// Manipulation of result based on further information
 			for ($i = 0; $i < count($rows); $i++)
 			{
@@ -185,7 +199,6 @@ class TranslateController extends JController
 				$translationObject->readFromRow($rows[$i]);
 				$rows[$i] = $translationObject;
 			}
-
 			foreach ($tranFilters as $tranFilter)
 			{
 				$afilterHTML = $tranFilter->createFilterHTML();
@@ -193,14 +206,13 @@ class TranslateController extends JController
 					$filterHTML[$tranFilter->filterType] = $afilterHTML;
 			}
 		}
-
 		// Create the pagination object
 		jimport('joomla.html.pagination');
 		$pageNav = new JPagination($total, $limitstart, $limit);
 
 		// get list of element names
 		$elementNames[] = JHTML::_('select.option', '', JText::_('PLEASE_SELECT'));
-		//$elementNames[] = JHTML::_('select.option',  '-1', '- All Content elements' );
+		//$elementNames[] = JHTML::_('select.option', '-1', '- All Content elements' );
 		// force reload to make sure we get them all
 		$elements = $this->_joomfishManager->getContentElements(true);
 		foreach ($elements as $key => $element)
@@ -252,7 +264,7 @@ class TranslateController extends JController
 
 		$translationObject = null;
 
-
+		$contentElement = null;
 		if (isset($catid) && $catid != "")
 		{
 			$contentElement = $this->_joomfishManager->getContentElement($catid);
@@ -283,6 +295,7 @@ class TranslateController extends JController
 		$lang->load('com_config');
 
 		// Assign data for view - should really do this as I go along
+		$this->view->assignRef('contentElement', $contentElement);
 		$this->view->assignRef('translationObject', $translationObject);
 		$this->view->assignRef('tranFilters', $tranFilters);
 		$this->view->assignRef('select_language_id', $select_language_id);
@@ -339,7 +352,7 @@ class TranslateController extends JController
 			$this->view->message = JText::_('Cannot save - invalid catid');
 		}
 
-		if ($this->task == "translate.apply")
+		if ($this->task == "apply")
 		{
 			$cid = $translationObject->id . "|" . $id . "|" . $language_id;
 			JRequest::setVar('cid', array($cid));
@@ -421,7 +434,7 @@ class TranslateController extends JController
 		$this->view->setLayout('preview');
 
 		// Assign data for view - should really do this as I go along
-		//$this->view->assignRef('rows'   , $rows);
+		//$this->view->assignRef('rows'  , $rows);
 		$this->view->display();
 
 	}
@@ -525,9 +538,9 @@ class TranslateController extends JController
 		$langlist = "";
 
 		$langOptions[] = JHTML::_('select.option', '-1', JText::_('SELECT_LANGUAGE'));
-		//$langOptions[] = JHTML::_('select.option',  '-2', JText::_('SELECT_NOTRANSLATION') );
+		//$langOptions[] = JHTML::_('select.option', '-2', JText::_('SELECT_NOTRANSLATION') );
 
-		$langActive = $this->_joomfishManager->getLanguages(false);  // all languages even non active once
+		$langActive = $this->_joomfishManager->getLanguages(false); // all languages even non active once
 
 		if (count($langActive) > 0)
 		{
@@ -540,7 +553,7 @@ class TranslateController extends JController
 
 		// get list of element names
 		$elementNames[] = JHTML::_('select.option', '', JText::_('PLEASE_SELECT'));
-		//$elementNames[] = JHTML::_('select.option',  '-1', '- All Content elements' );
+		//$elementNames[] = JHTML::_('select.option', '-1', '- All Content elements' );
 		$elements = $this->_joomfishManager->getContentElements(true);
 		foreach ($elements as $key => $element)
 		{
