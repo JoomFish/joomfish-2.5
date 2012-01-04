@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+	<name>Banners</name>
+	<author>R. Muilwijk</author>
+	<version>2.1.5</version>
+	<description>Definition for the core banner component</description>
+	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+	<reference>
+		<table name="banners">
+			<field type="referenceid" name="id" translate="0">ID</field>
+			<field type="titletext" name="name" translate="1">Banner Name</field>
+			<!-- <field type="text" name="imageurl" translate="1">Banner file name</field> -->
+			<field type="text" name="clickurl" translate="1">Click URL</field>
+			<field type="textarea" name="custombannercode" translate="1">Custom banner code</field>
+		</table>
+		<component>
+			<form>com_banners#banner#cid#task#!edit</form>
+		</component>
+	</reference>
+</joomfish>

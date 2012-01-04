@@ -34,17 +34,55 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
+//jimport('joomla.application.component.modeladmin');
 JLoader::register('JFModel', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'JFModel.php');
+
+	
+
 
 /**
  * This is the corresponding module for translation management
  * @package		Joom!Fish
  * @subpackage	Translate
  */
-class TranslateModelTranslate extends JFModel
+class TranslateModelTranslate extends JFModel //JModelAdmin
 {
+	/**
+	 * @var		string	The prefix to use with controller messages.
+	 * @since	1.6
+	 */
+	protected $text_prefix = 'COM_JOOMFISH';
 
 	protected $_modelName = 'translate';
+
+	/*
+	public function getTable($type = 'JFContent', $prefix = '', $config = array())
+	{
+		JTable::addIncludePath(JOOMFISH_ADMINPATH.DS.'tables');
+		$table = JTable::getInstance($type, $prefix, $config);
+		return $table;
+	}
+
+	public function getForm($data = array(), $loadData = false)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_joomfish.translate', 'translate', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+		return $form;
+	}
+	*/
+	/**
+	 * returns the default language of the frontend
+	 * @return object	instance of the default language
+	 */
+	/*
+	public function getDefaultLanguage() {
+		return JoomfishManager::getDefaultLanguage();
+	}
+
+	*/
 
 	/**
 	 * return the model name
@@ -54,6 +92,8 @@ class TranslateModelTranslate extends JFModel
 		return $this->_modelName;
 
 	}
+
+	
 
 	/**
 	 * Method to prepare the language list for the translation backend
@@ -90,7 +130,9 @@ class TranslateModelTranslate extends JFModel
 
 				// safety check -- complete overkill but better to be safe than sorry
 				// get the translation details
-				JLoader::import('models.JFContent', JOOMFISH_ADMINPATH);
+				//TODO from folder tables
+				JLoader::import('tables.JFContent', JOOMFISH_ADMINPATH);
+				//JLoader::import('models.JFContent', JOOMFISH_ADMINPATH);
 				$translation = new jfContent($db);
 				$translation->load($translationid);
 

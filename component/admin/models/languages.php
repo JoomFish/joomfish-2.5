@@ -103,7 +103,8 @@ class LanguagesModelLanguages extends JFModel
 			$this->loadLanguages();
 		}
 		
-		$jfLanguage = $this->getTable('JFLanguage');
+		//MS: changed $jfLanguage = $this->getTable('JFLanguage');
+		$jfLanguage = $this->getTable('JFLanguage','Table');
 		$this->_languages['new'] = $jfLanguage;
 	}
 
@@ -113,7 +114,7 @@ class LanguagesModelLanguages extends JFModel
 	public function store($cid, $data) {
 		if( is_array($cid) && count($cid)>0 ) {
 			for ($i=0; $i<count($cid); $i++) {
-				$jfLang = $this->getTable('JFLanguage');
+				$jfLang = $this->getTable('JFLanguage','Table');
 				$jfLang->set('lang_id', $cid[$i]);
 				$jfLang->set('title', $data['title'][$i]);
 				$jfLang->set('title_native', $data['title_native'][$i]);
@@ -156,7 +157,7 @@ class LanguagesModelLanguages extends JFModel
 	public function remove($cid, $data) {
 		if( is_array($cid) && count($cid)>0 ) {
 			for ($i=0; $i<count($cid); $i++) {
-				$jfLang = $this->getTable('JFLanguage');
+				$jfLang = $this->getTable('JFLanguage','Table');
 				if( !$jfLang->delete($cid[$i]) ) {
 					$this->setError($jfLang->getError());
 					return false;
@@ -176,7 +177,7 @@ class LanguagesModelLanguages extends JFModel
 	 */
 	public function setDefault($lang_id) {
 		
-		$jfLang = $this->getTable('JFLanguage');
+		$jfLang = $this->getTable('JFLanguage','Table');
 		$jfLang->load($lang_id);
 		
 		// We define that the default language can only be changed for the Joomla Client - not the admin
@@ -259,7 +260,7 @@ class LanguagesModelLanguages extends JFModel
 		// We convert any language of the table into a JFLanguage object. As within the language list the key will be the language code
 		$this->_languages = array();
 		foreach($languages as $language) {
-			$jfLanguage = $this->getTable('JFLanguage');
+			$jfLanguage = $this->getTable('JFLanguage','Table');
 			$jfLanguage->bind($language);
 
 			$this->_languages[$jfLanguage->lang_code] = $jfLanguage;

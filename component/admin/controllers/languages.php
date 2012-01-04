@@ -53,6 +53,7 @@ class LanguagesController extends JController  {
 	 */
 	public function display( )
 	{
+		//JHTML::_('behavior.framework');
 		$this->view =  $this->getView("languages");
 		parent::display();
 	}
@@ -246,8 +247,11 @@ class LanguagesController extends JController  {
 		$this->view->trans_defaulttext = $this->view->translations->get("defaulttext","");
 		
 		// Set the config detials for translation in the view
-		$elementfolder =JPath::clean( JPATH_ADMINISTRATOR . '/components/com_joomfish/contentelements' );
-		include($elementfolder.DS."language.config.php");
+		//$elementfolder =JPath::clean( JPATH_ADMINISTRATOR . '/components/com_joomfish/contentelements' );
+		//include($elementfolder.DS."language.config.php");
+		//$jfFolder =JPath::clean( JPATH_ADMINISTRATOR . '/components/com_joomfish/models/jf' );
+		include(JoomfishExtensionHelper::getExtraPath('base').DS."language.config.php");
+		
 		$this->view->jf_siteconfig=$jf_siteconfig;
 
 		// Need to load com_config language strings!

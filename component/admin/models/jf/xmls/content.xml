@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+	<name>Contents</name>
+	<author>A. Kempkens</author>
+	<version>2.1.5</version>
+	<description>Definition for the core content component</description>
+	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+	<reference type="content">
+		<table name="content">
+			<field type="referenceid" name="id" translate="0">ID</field>
+			<field type="titletext" name="title" length="50" maxlength="250" translate="1">Title</field>
+			<field type="text" name="title_alias" length="50" maxlength="250" translate="0">Title Alias</field>
+			<field type="text" name="alias" length="50" maxlength="250" translate="1" posthandler="filterTitle">Alias</field>
+			
+			<!-- jformtype="Category" -->
+			<!-- jform="1" mean in the translateform we use jform -->
+			<field 
+				type="category" 
+	
+				name="catid" 
+				
+				jform="1"
+				extension="com_content" 
+				scope="com_content" 
+				
+				translate="1">Category</field>
+			
+			<field 
+				type="htmltext" 
+				name="introtext" 
+				
+				jformtype="editor"
+				jformname="articletext"
+				
+				
+				translate="1" 
+				prehandleroriginal="fetchArticleText" 
+				prehandlertranslation="fetchArticleTranslation" 
+				posthandler="saveArticleText" 
+				ebuttons="ignore">Article Text</field>
+			
+			<field type="hiddentext" name="fulltext" translate="1" ebuttons="readmore">Fulltext</field>
+			
+			<!-- images are not in com_content view -->
+			<!-- <field type="textarea" name="images" rows="10" columns="80" translate="1">Images</field> -->
+			
+			<!--
+			<field type="text" name="metakey" length="50" maxlength="250" translate="1">Metakey</field>
+			<field type="textarea" name="metadesc" rows="5" columns="80" translate="1">Metadesc</field>
+
+			<field type="text" name="publish_up" translate="1">Start Publishing</field>
+			<field type="text" name="publish_down" translate="1">Finish Publishing</field>
+			<field type="created_date" name="created" translate="0">Created</field>
+			<field type="modified_date" name="modified" translate="0">Modified</field>
+			<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
+			<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+			-->
+
+			<!-- 
+			an idea to get output near com_content
+			we make an new type: type="paramsChilds" so all we need in sliders have this type and render with the params
+			-->
+		
+			<!-- meta fields -->
+			<field type="paramsChilds" name="metakey" translate="1"></field>
+			<field type="paramsChilds" name="metadesc" translate="1"></field>
+			<field type="paramsChilds" name="metadata" translate="1"></field>
+		
+			<!-- publishing fields -->
+			<field type="paramsChilds" name="publish_up" translate="1"></field>
+			<field type="paramsChilds" name="publish_down" translate="1"></field>
+			<field type="paramsChilds" name="created" translate="1"></field>
+			<field type="paramsChilds" name="created_by" translate="1"></field>
+			<field type="paramsChilds" name="created_by_alias" translate="1"></field>
+			<field type="paramsChilds" name="modified_by" translate="1"></field>
+			<field type="paramsChilds" name="modified" translate="1"></field>
+			<field type="paramsChilds" name="checked_out" translate="1"></field>
+			<field type="paramsChilds" name="checked_out_time" translate="1"></field>
+			<field type="paramsChilds" name="version" translate="1"></field>
+			<field type="paramsChilds" name="hits" translate="1"></field>
+		
+			<!-- 
+			images and urls both in j1.6/1.7 and j2.5
+			only used in com_content view article in j2.5
+			-->
+		
+			<field type="paramsChilds" name="images" rows="10" columns="80" translate="1">Images</field>
+			<field type="paramsChilds" name="urls" rows="10" columns="80" translate="1">Urls</field>
+
+			<field type="params" name="attribs" translate="1">Attributes</field>
+		</table>
+		<component>
+			<form>com_content#content#cid#task#!edit</form>
+			<form>com_frontpage#content#cid#task#!edit</form>
+		</component>
+		<treatment>
+			<target>native</target>
+			<tableclass>Content</tableclass>
+			<publishedfield>state</publishedfield>
+			
+			<jformModel>ContentJForm</jformModel>
+			
+			<!-- 
+			MS:
+			
+			is not needed if use in ContentElement.php getTranslationObjectClass
+			<translationObject>TranslationObjectContent</translationObject>
+			
+			is not needed if use in ContentElement.php getTranslateFormsClass
+			<translateForms>TranslateFormsContent</translateForms>
+			
+			see also comment in ContentElement.php
+			
+			for other paths we can add in the treatment
+			
+			<includePath>relative to JPATH_ROOT</includePath>
+			or 
+			<includePath extension="1" site="0">jf</includePath>
+			<extension>com_content</extension>
+			-->
+
+			
+		</treatment>
+	</reference>
+	<translationfilters>
+		<frontpage>id</frontpage>
+		<category>catid</category>
+		<author>created_by</author>
+		<keyword>title</keyword>
+		<!--<published>published</published>-->
+		<published>state</published>
+		<changed>created|modified</changed>
+		<trash>state</trash>
+		<archive>state</archive>
+		<!--
+		MS: add
+		-->
+		<language>language</language>
+		
+		<id>id</id>
+	</translationfilters>
+</joomfish>

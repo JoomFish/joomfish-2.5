@@ -31,6 +31,14 @@
  *
 */
 
+/*
+TODO MS:
+
+includePaths:
+	search JOOMFISH_ADMINPATH if need add includePaths
+*/
+
+
 
 /** ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
@@ -80,7 +88,8 @@ class JoomFishManager {
 
 	/** @var array for all active languages listed by ID */
 	private $activeLanguagesCacheByID=array();
-
+	
+	private $treatment = null;
 	/**
 	MS:
 	 * An array to hold included paths
@@ -142,7 +151,9 @@ class JoomFishManager {
 	/** Standard constructor */
 	public function __construct() {
 		
-		include_once(JOOMFISH_ADMINPATH .DS. "models".DS."ContentElement.php");
+		require_once( JOOMFISH_ADMINPATH .DS. 'helpers' .DS. 'extensionHelper.php' );
+		include_once(JoomfishExtensionHelper::getExtraPath('element').DS."ContentElement.php");
+		//include_once(JOOMFISH_ADMINPATH .DS. "models".DS."ContentElement.php");
 
 		// now redundant
 		$this->_loadPrimaryKeyData();
@@ -257,9 +268,13 @@ class JoomFishManager {
 		}
 		else
 		{
-			$filesindir = JFolder::files(JOOMFISH_ADMINPATH ."/contentelements" ,".xml");
+			//$filesindir = JFolder::files(JOOMFISH_ADMINPATH ."/contentelements" ,".xml");
+			$filesindir = JFolder::files(JoomfishExtensionHelper::getExtraPath('xmls') ,".xml");
 		}
 		
+		//TODO only contentelement use includePath
+		//all other path in the contentElementXML
+		/*
 		if (isset(self::$includePaths['modelcontentelement']) && count(self::$includePaths['modelcontentelement']))
 		{
 			foreach(self::$includePaths['modelcontentelement'] as $includePath)
@@ -267,6 +282,7 @@ class JoomFishManager {
 				$modelfilesindir = JFolder::files($includePath ,".php",false,true);
 			}
 		}
+		*/
 		if(count($filesindir) > 0)
 		{
 			$this->_contentElements = array();
@@ -274,7 +290,9 @@ class JoomFishManager {
 			{
 				unset($xmlDoc);
 				$xmlDoc = new DOMDocument();
-				if ($xmlDoc->load(JOOMFISH_ADMINPATH . "/contentelements/" . $file)) {
+				
+				//if ($xmlDoc->load(JOOMFISH_ADMINPATH . "/contentelements/" . $file)) {
+				if ($xmlDoc->load(JoomfishExtensionHelper::getExtraPath('xmls').DS. $file)) {
 					$element = $xmlDoc->documentElement;
 					if ($element->nodeName == 'joomfish') {
 						if ( $element->getAttribute('type')=='contentelement' ) {
@@ -282,6 +300,7 @@ class JoomFishManager {
 							$nameElement = $nameElements->item(0);
 							$name = strtolower( trim($nameElement->textContent) );
 							$contentElement = null;
+							/*
 							if(isset($modelfilesindir) && count($modelfilesindir) > 0)
 							{
 								foreach($modelfilesindir as $modelfile)
@@ -294,16 +313,18 @@ class JoomFishManager {
 									}
 								}
 							}
-							
-							if(!$contentElement)
-							{
+							*/
+							//if(!$contentElement)
+							//{
 								$treatment = self::getTreatment($xmlDoc);
 								if(count($treatment) > 0)
 								{
+									$includePath = JoomfishExtensionHelper::getTreatmentIncludePath($treatment);
 									if(isset($treatment['contentElement']))
 									{
 										$className = 'ContentElement'.$treatment['contentElement'];
 									}
+									
 									if(isset($treatment['contentElementPath']) && isset($className))
 									{
 										if($file = JPath::find(JPATH_ROOT.DS.$treatment['contentElementPath'], $className.'.php'))
@@ -311,9 +332,17 @@ class JoomFishManager {
 											include_once($file);
 										}
 									}
+									elseif(isset($includePath) && isset($className))
+									{
+										if($file = JPath::find($includePath.DS.'element', $className.'.php'))
+										{
+											include_once($file);
+										}
+									}
 									elseif(isset($className))
 									{
-										if($file = JPath::find(JOOMFISH_ADMINPATH.DS.'models', $className.'.php'))
+										//if($file = JPath::find(JOOMFISH_ADMINPATH.DS.'models', $className.'.php'))
+										if($file = JPath::find(JoomfishExtensionHelper::getExtraPath('element'), $className.'.php'))
 										{
 											include_once($file);
 										}
@@ -323,7 +352,7 @@ class JoomFishManager {
 										$contentElement = new $className( $xmlDoc );
 									}
 								}
-							}
+							//}
 							
 							if(!$contentElement)
 							$contentElement = new ContentElement( $xmlDoc );
@@ -360,8 +389,13 @@ class JoomFishManager {
 			}
 		}
 		if(!$file)
-		$file = JOOMFISH_ADMINPATH .'/contentelements/'.$tablename.".xml";
-		
+		{
+			//$file = JOOMFISH_ADMINPATH .'/contentelements/'.$tablename.".xml";
+			$file = JoomfishExtensionHelper::getExtraPath('xmls').DS.$tablename.'.xml';
+		}
+		//TODO only contentelement use includePath
+		//all other path in the contentElementXML
+		/*
 		if (isset(self::$includePaths['modelcontentelement']) && count(self::$includePaths['modelcontentelement']))
 		{
 			foreach(self::$includePaths['modelcontentelement'] as $includePath)
@@ -372,7 +406,7 @@ class JoomFishManager {
 				}
 			}
 		}
-		
+		*/
 		if (file_exists($file)){
 			unset($xmlDoc);
 			$xmlDoc = new DOMDocument();
@@ -384,6 +418,7 @@ class JoomFishManager {
 						$nameElement = $nameElements->item(0);
 						$name = strtolower( trim($nameElement->textContent) );
 						$contentElement = null;
+						/*
 						if(isset($modelfile))
 						{
 							include_once($modelfile);
@@ -392,13 +427,16 @@ class JoomFishManager {
 						}
 						else
 						{
+						*/
 							$treatment = self::getTreatment($xmlDoc);
 							if(count($treatment) > 0)
 							{
+								$includePath = JoomfishExtensionHelper::getTreatmentIncludePath($treatment);
 								if(isset($treatment['contentElement']))
 								{
 									$className = 'ContentElement'.$treatment['contentElement'];
 								}
+								/*
 								if(isset($treatment['contentElementPath']) && isset($className))
 								{
 									if($file = JPath::find(JPATH_ROOT.DS.$treatment['contentElementPath'], $className.'.php'))
@@ -406,9 +444,20 @@ class JoomFishManager {
 										include_once($file);
 									}
 								}
+								else
+								*/
+								if(isset($includePath) && isset($className))
+								{
+									if($file = JPath::find($includePath.DS.'element', $className.'.php'))
+									{
+										include_once($file);
+									}
+								}
 								elseif(isset($className))
 								{
-									if($file = JPath::find(JOOMFISH_ADMINPATH.DS.'models', $className.'.php'))
+									
+									//if($file = JPath::find(JOOMFISH_ADMINPATH.DS.'models', $className.'.php'))
+									if($file = JPath::find(JoomfishExtensionHelper::getExtraPath('element'), $className.'.php'))
 									{
 										include_once($file);
 									}
@@ -419,10 +468,11 @@ class JoomFishManager {
 									$contentElement = new $className( $xmlDoc );
 								}
 							}
-						}
+						//}
 						if(!$contentElement)
-						$contentElement = new ContentElement( $xmlDoc );
-						
+						{
+							$contentElement = new ContentElement( $xmlDoc );
+						}
 						$this->_contentElements[$contentElement->getTableName()] = $contentElement;
 						return $contentElement;
 					}
@@ -435,36 +485,46 @@ class JoomFishManager {
 
 	public function getTreatment($xmlDoc)
 	{
-			$treatment = array();
-			
-			//DOMDOcument way
-			$xpath = new DOMXPath($xmlDoc);
-			$treatments = $xpath->query('//reference/treatment')->item(0);
-			if($treatments && $treatments->hasChildNodes())
+		if(isset($this->treatment))
+		{
+			return $this->treatment;
+		}
+		
+		$treatment = array();
+		//DOMDOcument way
+		$xpath = new DOMXPath($xmlDoc);
+		$treatments = $xpath->query('//reference/treatment')->item(0);
+		if($treatments && $treatments->hasChildNodes())
+		{
+			foreach ($treatments->childNodes as $node)
 			{
-				foreach ($treatments->childNodes as $node)
+				if($node->nodeType == XML_ELEMENT_NODE)
 				{
-					if($node->nodeType == XML_ELEMENT_NODE)
+					$add = array();
+					if($node->hasAttributes())
+					{
+						$attributes = $node->attributes;
+						if(!is_null($attributes))
+						{
+							foreach ($attributes as $index => $attribute)
+							{
+								$add[$attribute->name] = $attribute->value;
+							}
+						}
+					}
+					if(count($add) > 0)
+					{
+						$treatment[$node->nodeName] = array('value'=>$node->nodeValue,'attributes'=>$add);
+					}
+					else
 					{
 						$treatment[$node->nodeName] = $node->nodeValue;
 					}
 				}
 			}
-			/*
-			//SimpleXML way
-			$xml = simplexml_import_dom($xmlDoc);
-			$result = $xml->xpath('//reference/treatment');
-			foreach ((array)$result as $node)
-			{
-				foreach ((array)$node as $key => $value)
-				{
-					if(is_string($value))
-					$treatment[$key] = $value;
-				}
-			}
-			*/
-			return $treatment;
-		
+		}
+		$this->treatment = $treatment;
+		return $this->treatment;
 	}
 
 

@@ -31,6 +31,8 @@
  *
 */
 defined('_JEXEC') or die('Restricted access'); 
+//JHTML::_('behavior.framework');
+JHTML::_('behavior.modal');
 
 ?>
 <script type="text/javascript">
@@ -38,7 +40,8 @@ defined('_JEXEC') or die('Restricted access');
 function showImageBrowser(fieldNum){
 	var imgField = document.getElementById('flagValue'+fieldNum);
 	SqueezeBox.initialize();
-	SqueezeBox.fromElement(this, {
+	//SqueezeBox.fromElement(this, {
+	SqueezeBox.fromElement(imgField, {
 		handler: 'iframe',
 		url: '<?php echo JURI::base()?>index.php?option=com_joomfish&task=languages.fileBrowser&layout=filebrowser&type=image&tmpl=component&current='+imgField.value+'&flagField='+fieldNum,
 		size: {x: 560, y: 450}

@@ -50,6 +50,7 @@ $task=$this->task;
 $select_language_id = $this->select_language_id;
 $user = JFactory::getUser();
 $db = JFactory::getDBO();
+
 $elementTable = $this->translationObject->getTable();
 $option = JRequest::getCmd("option");
 
@@ -77,6 +78,11 @@ $editor = $conf->getValue('config.editor');
 
 // Place a reference to the element Table in the config so that it can be used in translation of urlparams !!!
 $conf->setValue('joomfish.elementTable',$elementTable);
+$forms = null;
+$formClass = $this->contentElement->getTranslateFormsClass();
+$forms = new $formClass($elementTable->Fields,$this->contentElement);
+$trans_form = $forms->getForm(true);
+$orig_form = $forms->getForm(false);
 
 echo "\n<!-- editor is $editor //-->\n";
 $editorFile = JOOMFISH_ADMINPATH."/editors/".strtolower($editor).".php";
@@ -238,6 +244,7 @@ else
 					//$k=1-$k;
 					continue;
 				}
+				
 				if( $field->Translate )
 				{
 					$translationContent = $field->translationContent;
@@ -272,11 +279,44 @@ else
 						{
 						?>
 					<tr class="<?php echo "row$k"; ?>">
+					<!-- the original row -->
+						
 						<td align="left" valign="top">
 							<?php echo JText::_( 'ORIGINAL' );?>
 						</td>
 						<td align="left" valign="top" id="original_value_<?php echo $field->Name?>">
+							
 							<?php
+/*
+
+									document.id('original_value_<?php echo $field->Name; ?>').getElements('*[src]').each(function(element){
+										var root = '<?php echo JURI::root(true); ?>';
+										element.set('src',root +'/' + element.get('src'))
+									});
+*/							
+							if (preg_match("/<form/i",$field->originalValue))
+							{
+								$ovhref = JRoute::_("index3.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->translationObject->id."&lang=".$select_language_id);
+							echo '<a class="modal" rel="{handler: \'iframe\', size: {x: 700, y: 500}}" href="'.$ovhref.'" >'.JText::_("Content contains form - click here to view in popup window").'</a>';
+							}
+							//else if( strtolower($field->Type)=='category' )
+							else if( $field->Jform )
+							{
+								//TODO fill empty $translationContent with $field->originalValue?
+								/*
+									if($translationContent == '')
+									$orig_form->setValue($field->Name, null, $field->originalValue)
+								*/
+								//$orig_form->setFieldAttribute($field->Name,'disabled','true');
+								echo $orig_form->getInput($field->Name);
+							}
+							elseif(strtolower($field->Type)=='htmltext')
+							{
+								//if($field->Name == 'introtext')
+								//echo $orig_form->getInput('articletext');
+							
+							echo $field->originalValue;
+							
 							/*
 							display image on right way??
 							*/
@@ -290,17 +330,6 @@ else
 								});
 							</script>
 							<?php
-/*
-
-									document.id('original_value_<?php echo $field->Name; ?>').getElements('*[src]').each(function(element){
-										var root = '<?php echo JURI::root(true); ?>';
-										element.set('src',root +'/' + element.get('src'))
-									});
-*/							
-							if (preg_match("/<form/i",$field->originalValue))
-							{
-								$ovhref = JRoute::_("index3.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->translationObject->id."&lang=".$select_language_id);
-							echo '<a class="modal" rel="{handler: \'iframe\', size: {x: 700, y: 500}}" href="'.$ovhref.'" >'.JText::_("Content contains form - click here to view in popup window").'</a>';
 							}
 							else
 							{
@@ -315,6 +344,12 @@ else
 							if( strtolower($field->Type)=='readonlytext')
 							{
 				
+							}
+							//else if( strtolower($field->Type)=='category' )
+							else if( $field->Jform )
+							{?>
+							<a class="toolbar" onclick="document.adminForm.<?php echo $trans_form->getField($field->Name)->__get('id');?>.value = document.adminForm.origText_<?php echo $field->Name;?>.value;"><span class="icon-32-copy"></span><?php echo JText::_( 'COPY' ); ?></a>
+							<?php
 							}
 							else if( strtolower($field->Type)!='htmltext' )
 							{
@@ -335,6 +370,7 @@ else
 						</td>
 					</tr>
 					<tr class="<?php echo "row$k"; ?>">
+					<!-- the translation row -->
 						<td align="left" valign="top"><?php echo JText::_( 'TRANSLATION' );?></td>
 						<td align="left" valign="top">
 							<input type="hidden" name="id_<?php echo $field->Name;?>" value="<?php echo $translationContent->id;?>" />
@@ -357,11 +393,28 @@ else
 							</textarea>
 							<?php
 							}
+							//elseif(strtolower($field->Type)=='category')
+							elseif( $field->Jform )
+							{
+								//$trans_form->setFieldAttribute($field->Name,'disabled','false');
+								echo $trans_form->getInput($field->Name);
+								//echo $trans_form->getInput($trans_item_field);
+							}
 							else if( strtolower($field->Type)=='htmltext' )
 							{
+								/*
+								if($field->Jformname && $field->Jform)
+								{
+									echo $trans_form->getInput($field->Jformname);
+								}
+								elseif($field->Jform)
+								{
+									echo $trans_form->getInput($field->Name);
+								}
+								*/
 								$editorFields[] = array( "editor_".$field->Name, "refField_".$field->Name );
-							// parameters : areaname, content, hidden field, width, height, rows, cols
-							echo $wysiwygeditor->display( "refField_".$field->Name, $translationContent->value, '100%', '300', '70', '15',$field->ebuttons ) ;
+								// parameters : areaname, content, hidden field, width, height, rows, cols
+								echo $wysiwygeditor->display( "refField_".$field->Name, $translationContent->value, '100%', '300', '70', '15',$field->ebuttons ) ;
 							}
 							else if( strtolower($field->Type)=='readonlytext')
 							{
@@ -371,12 +424,24 @@ else
 							?>
 							<input class="inputbox" type="text" readonly="readonly" name="refField_<?php echo $field->Name;?>" size="<?php echo $length;?>" value="<?php echo $value; ?>" maxlength="<?php echo $maxLength;?>"/>
 							<?php
-							}?>
+							}
+							
+							?>
 						</td>
 						<td valign="top" class="button">
 							<?php
 							if ( strtolower($field->Type)=='readonlytext')
 							{
+							}
+							//else if( strtolower($field->Type)=='category' )
+							else if( $field->Jform )
+							{
+							//copy will do but not delete
+							
+							?>
+							<a class="toolbar" onclick="document.adminForm.<?php echo $trans_form->getField($field->Name)->__get('id');?>.value = '';"><span class="icon-32-delete"></span><?php echo JText::_( 'DELETE' ); ?></a>
+							<?php
+							
 							}
 							else if( strtolower($field->Type)!='htmltext' )
 							{?>
@@ -414,44 +479,17 @@ else
 							<iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=default&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>
 							//-->
 							<?php
-							//TODO MS: includePaths
+							
 							/*
-							$tpclass = "TranslateParams_".$elementTable->Name;
-							if (count(JoomFishManager::$includePaths['translateparams'])
-							{
-								foreach(JoomFishManager::$includePaths['translateparams'] as $includePath)
-								{
-									if(file_exists($includePath.DS.'TranslateParams_'.$elementTable->Name.'.php'))
-									{
-										$classFile = $includePath.DS.'TranslateParams_'.$elementTable->Name.'.php'
-										include_once($classFile);
-										if (!class_exists($tpclass))
-										{
-											continue;
-										}
-									}
-								}
-								if(!class_exists($tpclass))
-								{
-									JLoader::import( 'models.TranslateParams',JOOMFISH_ADMINPATH);
-								}
-							}
-							else
-							{
-								JLoader::import( 'models.TranslateParams',JOOMFISH_ADMINPATH);
-							}
-							if (!class_exists($tpclass)){
-								$tpclass = "TranslateParams";
-							}
-							*/
 							JLoader::import( 'models.TranslateParams',JOOMFISH_ADMINPATH);
 							$tpclass = "TranslateParams_".$elementTable->Name;
 							if (!class_exists($tpclass)){
 								$tpclass = "TranslateParams";
 							}
-							
-							
-							$transparams = new $tpclass($field->originalValue,$translationContent->value, $field->Name,$elementTable->Fields,$this->contentElement);
+							*/
+							//MS: other method to get the class
+							$tpclass = $this->contentElement->getTranslateParamsClass();
+							$transparams = new $tpclass($field->originalValue,$translationContent->value, $field->Name,$elementTable->Fields,$this->contentElement,$forms);
 
 							// comment lut if using iframes above
 							// TODO sort out default value for author in params when editing new translation

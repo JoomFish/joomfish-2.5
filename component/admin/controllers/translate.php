@@ -33,6 +33,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
+//jimport('joomla.application.component.controllerform');
 
 JLoader::import('helpers.controllerHelper', JOOMFISH_ADMINPATH);
 
@@ -40,7 +41,7 @@ JLoader::import('helpers.controllerHelper', JOOMFISH_ADMINPATH);
  * The JoomFish Tasker manages the general tasks within the Joom!Fish admin interface
  *
  */
-class TranslateController extends JController
+class TranslateController extends JController //extends JControllerForm
 {
 
 	/** @var string		current used task */
@@ -174,7 +175,8 @@ class TranslateController extends JController
 				$contentElement = $this->_joomfishManager->getContentElement($catid);
 			}
 			
-			JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
+			//JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
+			JLoader::import('TranslationFilter', JoomfishExtensionHelper::getExtraPath('filters'));
 			$tranFilters = getTranslationFilters($catid, $contentElement);
 			
 			$total = $contentElement->countReferences($language_id, $tranFilters);
@@ -199,6 +201,7 @@ class TranslateController extends JController
 				$translationObject->readFromRow($rows[$i]);
 				$rows[$i] = $translationObject;
 			}
+			
 			foreach ($tranFilters as $tranFilter)
 			{
 				$afilterHTML = $tranFilter->createFilterHTML();
@@ -206,6 +209,15 @@ class TranslateController extends JController
 					$filterHTML[$tranFilter->filterType] = $afilterHTML;
 			}
 		}
+		/*
+		FB::dump(count($rows));
+		FB::dump($total);
+		
+		$db->setQuery("SELECT * from #__content");
+		$totalrows = $db->loadObjectList();
+		FB::dump(count($totalrows));
+		*/
+		
 		// Create the pagination object
 		jimport('joomla.html.pagination');
 		$pageNav = new JPagination($total, $limitstart, $limit);
@@ -281,7 +293,8 @@ class TranslateController extends JController
 		}
 
 		// get existing filters so I can remember them!
-		JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
+		//JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
+		JLoader::import('TranslationFilter', JoomfishExtensionHelper::getExtraPath('filters'));
 		$tranFilters = getTranslationFilters($catid, $contentElement);
 
 		// get the view
@@ -293,7 +306,8 @@ class TranslateController extends JController
 		// Need to load com_config language strings!
 		$lang = JFactory::getLanguage();
 		$lang->load('com_config');
-
+		
+		
 		// Assign data for view - should really do this as I go along
 		$this->view->assignRef('contentElement', $contentElement);
 		$this->view->assignRef('translationObject', $translationObject);
@@ -354,7 +368,7 @@ class TranslateController extends JController
 
 		if ($this->task == "apply")
 		{
-			$cid = $translationObject->id . "|" . $id . "|" . $language_id;
+			$cid = ($translationObject->id ? $translationObject->id : $translationObject->translation_id) . "|" . $id . "|" . $language_id;
 			JRequest::setVar('cid', array($cid));
 			$this->editTranslation();
 		}

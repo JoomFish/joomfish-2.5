@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+	<name>Modules</name>
+	<author>A. Kempkens</author>
+	<version>2.1.5</version>
+	<description>Definition for general module management</description>
+	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+	<reference>
+		<table name="modules">
+			<field type="referenceid" name="id" translate="0">ID</field>
+			<field type="titletext" name="title" translate="1">Title</field>
+			<field type="htmltext" name="content" translate="1" ignoreifblank="1">Content</field>
+			<field type="text" name="module" translate="0">Module</field>
+			<field type="params" name="params" translate="1">Parameters</field>
+			<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
+			<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+			<filter>c.client_id = 0 </filter>
+		</table>
+		<component>
+			<form>com_modules#modules#cid#task#!edit#client#!1</form>
+		</component>
+		<treatment>
+			<target>native</target>
+			<tableclass>Module</tableclass>
+			<publishedfield>published</publishedfield>
+		
+			<!-- 
+			is not needed if use in ContentElement getTranslationObjectClass
+			<translationObject>TranslationObjectModules</translationObject>
+			is not needed if use in ContentElement getTranslateFormsClass
+			<translateForms>TranslateFormsModules</translateForms>
+			-->
+		</treatment>
+	</reference>
+		<translationfilters>
+			<keyword>title</keyword>
+			<published>published</published>
+		</translationfilters>
+
+</joomfish>

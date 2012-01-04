@@ -194,7 +194,8 @@ class CPanelViewCPanel extends JoomfishViewDefault
 					}
 
 					$translationClass = $contentElement->getTranslationObjectClass();
-					$translationObject = new TranslationObject( $ceInfo['language_id'], $contentElement );
+					//$translationObject = new TranslationObject( $ceInfo['language_id'], $contentElement );
+					$translationObject = new $translationClass( $ceInfo['language_id'], $contentElement );
 					$translationObject->loadFromContentID($ceInfo['reference_id']);
 					$link = 'index.php?option=com_joomfish&amp;task=translate.edit&amp;&amp;catid=' .$ceInfo['catid']. '&cid[]=0|' .$ceInfo['reference_id'].'|'.$ceInfo['language_id'];
 					$hrefEdit = "<a href='".$link."'>".$translationObject->title. "</a>";

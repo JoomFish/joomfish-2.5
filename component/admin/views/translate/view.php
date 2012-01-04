@@ -90,14 +90,19 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		JToolBarHelper::title( JText::_( 'TITLE_TRANSLATION' ), 'jftranslations' );
 
 		$layout = $this->getLayout();
-
 		$this->_initialize($layout);
 		if (method_exists($this,$layout)){
 			$this->$layout($tpl);
 		} else {
 			$this->overview($tpl);
 		}
-
+		/*
+		if($layout == 'edit')
+		{
+			$form = $this->get('Form');
+			$this->form = $form;
+		}
+		*/
 		JHTML::_('behavior.tooltip');
 		parent::display($tpl);
 	}

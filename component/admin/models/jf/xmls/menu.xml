@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+	<name>Menus</name>
+	<author>A. Kempkens</author>
+	<version>2.1.5</version>
+	<description>Definition for the core menu manager</description>
+	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+	<reference>
+		<table name="menu">
+			<field type="referenceid" name="id" translate="0">ID</field>
+			<field type="titletext" name="title" translate="1">Name</field>
+			<field type="text" name="alias" translate="1" posthandler="filterTitle">Menu Alias</field>
+			<field type="readonlytext" name="link" translate="1" posthandler="saveUrlParams" prehandler="checkUrlType">Link</field>
+			<field type="readonlytext" name="path" translate="1" posthandler="saveMenuPath" >Path</field>
+			<field type="text" name="type" translate="0">Menu Type</field>
+			<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
+			<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+			<field type="params" name="params" translate="1" prehandler="fetchUrlRequest" >Params</field>
+			<filter>c.client_id = 0 AND c.id > 1</filter>
+		</table>
+		<component>
+			<form>com_menus#menu#cid#task#!edit</form>
+		</component>
+	<treatment>
+		<target>native</target>
+		<tableclass>Menu</tableclass>
+		<publishedfield>published</publishedfield>
+		
+		<!-- 
+		is not needed if use in ContentElement getTranslationObjectClass
+		<translationObject>TranslationObjectMenu</translationObject>
+		is not needed if use in ContentElement getTranslateFormsClass
+		<translateForms>TranslateFormsMenu</translateForms>
+		
+		
+		-->
+
+
+		<!--<jformModel>ContentJForm</jformModel>-->
+	</treatment>
+	</reference>
+	<translationfilters>
+			<keyword>title</keyword>
+			<menutype>menutype</menutype>
+			<published>published</published>
+			<trash>published</trash>
+	</translationfilters>
+ </joomfish>

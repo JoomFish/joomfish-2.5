@@ -35,7 +35,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 /**
- * Database class for handling the mambe fish contents
+ * Database class for handling the joomfish contents
  *
  * @package joomfish
  * @subpackage administrator
@@ -44,7 +44,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
  * @version $Revision: 1502 $
  * @author Alex Kempkens
  */
+//class JFContent extends JTable  {
 class jfContent extends JTable  {
+
 	/** @var int Primary ke */
 	public $id=null;
 	/** @var int Reference id for the language */
@@ -74,7 +76,9 @@ class jfContent extends JTable  {
 
 	/** Standard constructur
 	*/
-	public function __construct( &$db ) {
+	public function __construct( &$db )
+	//public function __construct($table, $key, &$db)
+	{
 		parent::__construct( '#__jf_content', 'id', $db );
 	}
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!--
+		$Id: article.xml 22573 2011-12-21 05:05:21Z github_bot $
+	-->
+<form>
+	<fieldset>
+		<field name="reference_id"  type="hidden" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true" />
+
+		<field name="refField_title" type="text" label="JGLOBAL_TITLE"
+			description="JFIELD_TITLE_DESC" class="inputbox" size="30"
+			required="true" />
+
+
+	</fieldset>
+</form>

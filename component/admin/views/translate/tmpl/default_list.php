@@ -61,7 +61,7 @@ if (isset($this->filterlist) && count($this->filterlist)>0){
 			<th class="title" width="20%" align="left" nowrap="nowrap"><?php echo JText::_( 'TITLE' );?></th>
 			<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_( 'LANGUAGE' );?></th>
 			
-			<th width="10%" align="left" nowrap="nowrap"><?php echo 'org-'.JText::_( 'LANGUAGE' );?></th>
+			<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_( 'ORIGINAL' ).'-'.JText::_( 'LANGUAGE' );?></th>
 			
 			
 			<th width="20%" align="left" nowrap="nowrap"><?php echo JText::_('TITLE_TRANSLATION');?></th>
