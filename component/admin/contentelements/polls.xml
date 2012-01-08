@@ -2,7 +2,7 @@
 <joomfish type="contentelement">
   <name>Polls</name>
   <author>A. Kempkens</author>
-  <version>2.0.3</version>
+  <version>2.5.0 alpha</version>
   <description>Definition for the core poll component</description>
   <reference>
   	<table name="polls">
