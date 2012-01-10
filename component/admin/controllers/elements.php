@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -41,7 +41,7 @@ JLoader::import( 'helpers.controllerHelper',JOOMFISH_ADMINPATH);
  * The JoomFish Tasker manages the general tasks within the Joom!Fish admin interface
  *
  */
-class ElementsController extends JController   {
+class ElementsController extends JController {
 
 	/** @var string		action within the task */
 	private $act=null;
@@ -67,13 +67,13 @@ class ElementsController extends JController   {
 		parent::__construct();
 		$this->registerDefaultTask( 'show' );
 
-		$this->act =  JRequest::getVar( 'act', '' );
-		$this->task =  JRequest::getVar( 'task', '' );
-		$this->cid =  JRequest::getVar( 'cid', array(0) );
+		$this->act = JRequest::getVar( 'act', '' );
+		$this->task = JRequest::getVar( 'task', '' );
+		$this->cid = JRequest::getVar( 'cid', array(0) );
 		if (!is_array( $this->cid )) {
 			$this->cid = array(0);
 		}
-		$this->fileCode =  JRequest::getVar( 'fileCode', '' );
+		$this->fileCode = JRequest::getVar( 'fileCode', '' );
 		$this->_joomfishManager = JoomFishManager::getInstance();
 
 		$this->registerTask( 'show', 'showCElementConfig' );
@@ -86,16 +86,16 @@ class ElementsController extends JController   {
 		// Populate data used by controller
 		$this->_catid = JFactory::getApplication()->getUserStateFromRequest('selected_catid', 'catid', '');
 		$this->_select_language_id = JFactory::getApplication()->getUserStateFromRequest('selected_lang','select_language_id', '-1');
-		$this->_language_id =  JRequest::getVar( 'language_id', $this->_select_language_id );
+		$this->_language_id = JRequest::getVar( 'language_id', $this->_select_language_id );
 		$this->_select_language_id = ($this->_select_language_id == -1 && $this->_language_id != -1) ? $this->_language_id : $this->_select_language_id;
 		
 		// Populate common data used by view
 		// get the view
-		$this->view =  $this->getView("elements");
+		$this->view = $this->getView("elements");
 
 		// Assign data for view 
-		$this->view->assignRef('catid'   , $this->_catid);
-		$this->view->assignRef('select_language_id',  $this->_select_language_id);
+		$this->view->assignRef('catid' , $this->_catid);
+		$this->view->assignRef('select_language_id', $this->_select_language_id);
 		$this->view->assignRef('task', $this->task);
 		$this->view->assignRef('act', $this->act);
 	}
@@ -175,14 +175,14 @@ class ElementsController extends JController   {
 		$pageNav = new JPagination($total, $limitstart, $limit);
 
 		// get the view
-		$view =  $this->getView("elements");
+		$view = $this->getView("elements");
 
 		// Set the layout
 		$view->setLayout('default');
 
 		// Assign data for view - should really do this as I go along
-		$view->assignRef('pageNav'   , $pageNav);
-		$view->assignRef('joomfishManager'   , $this->_joomfishManager);
+		$view->assignRef('pageNav' , $pageNav);
+		$view->assignRef('joomfishManager' , $this->_joomfishManager);
 		$view->display();
 		//HTML_joomfish::showElementOverview( $this->_joomfishManager, $pageNav );
 	}
@@ -190,19 +190,19 @@ class ElementsController extends JController   {
 	/** Detailinformation about one specific content element */
 	// TODO - should move more from the view to here or the model!
 	public function showElementConfiguration( ) {
-		$cid =  JRequest::getVar( 'cid', array(0) );
+		$cid = JRequest::getVar( 'cid', array(0) );
 		if (count($cid)>0){
 			$id = $cid[0];
 		}
 		// get the view
-		$view =  $this->getView("elements");
+		$view = $this->getView("elements");
 
 		// Set the layout
 		$view->setLayout('edit');
 
 		// Assign data for view - should really do this as I go along
-		$view->assignRef('id'   , $id);
-		$view->assignRef('joomfishManager'   , $this->_joomfishManager);
+		$view->assignRef('id' , $id);
+		$view->assignRef('joomfishManager' , $this->_joomfishManager);
 		$view->display();
 		//HTML_joomfish::showElementConfiguration( $this->_joomfishManager, $id );
 	}
@@ -214,13 +214,13 @@ class ElementsController extends JController   {
 	public function showContentElementsInstaller() {
 		$cElements = $this->_joomfishManager->getContentElements(true);
 		// get the view
-		$view =  $this->getView("elements");
+		$view = $this->getView("elements");
 
 		// Set the layout
 		$view->setLayout('installer');
 
 		// Assign data for view - should really do this as I go along
-		$view->assignRef('cElements'   , $cElements);
+		$view->assignRef('cElements' , $cElements);
 		$view->display();
 		//HTML_joomfish::showContentElementInstaller( $cElements, $this->view->message );
 	}

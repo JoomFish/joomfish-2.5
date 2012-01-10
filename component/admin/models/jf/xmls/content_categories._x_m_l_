@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
 <joomfish type="contentelement">
-	<name>Categories</name>
+	<name>Content Categories</name>
 	<author>A. Kempkens</author>
-	<version>2.5.0 alpha</version>
+	<version>2.1.5</version>
 	<description>Definition for the core categories</description>
-	<copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
-	<reference >
-		<table name="categories" subnames="extension">
+	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+	<reference name="category_content">
+		<table name="categories" elementname="category_content" extension="com_content">
 			<field type="referenceid" name="id" translate="0">ID</field>
 			<field type="titletext" name="title" translate="1" >Title</field>
 			<!-- must add extension ? -->
@@ -15,7 +15,7 @@
 			<field type="htmltext" name="description" translate="1" ebuttons="readmore,pagebreak">Description</field>
 			<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
 			<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
-			<filter>c.id > 1 </filter>
+			<filter>c.id > 1 AND c.extension='com_content'</filter>
 		</table>
 		<component>
 			<form>com_categories#categories#cid#task#!edit</form>

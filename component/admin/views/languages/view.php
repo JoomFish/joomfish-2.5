@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -99,7 +99,7 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 		$this->assignRef('directory_flags', $jfManager->getCfg('directory_flags'));
 
 		// state filter
-		$lists['state']	= JHTML::_('grid.state',  $filter_state );
+		$lists['state']	= JHTML::_('grid.state', $filter_state );
 
 		// table ordering
 		$lists['order_Dir'] = $filter_order_Dir;
@@ -147,19 +147,19 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 		$document->addStyleSheet(JURI::root(true).'/media/media/css/popup-imagelist.css');
 		//$document->addStyleSheet(JURI::base().'components/com_media/assets/popup-imagelist.css');
 		
-        $jfManager = JoomFishManager::getInstance();
-        $root = $jfManager->getCfg('directory_flags');
-        
-        $current = JRequest::getVar('current', '');
-        if($current != '') {
-        	$root = dirname($current);
-        }
-        
-        // remove leading / in case it exists
-        $root = preg_replace('/^\/(.*)/', "$1", $root);
-        
-        $flagField = JRequest::getVar('flagField', '');
-        
+		$jfManager = JoomFishManager::getInstance();
+		$root = $jfManager->getCfg('directory_flags');
+		
+		$current = JRequest::getVar('current', '');
+		if($current != '') {
+			$root = dirname($current);
+		}
+		
+		// remove leading / in case it exists
+		$root = preg_replace('/^\/(.*)/', "$1", $root);
+		
+		$flagField = JRequest::getVar('flagField', '');
+		
 		$folder = JRequest::getVar( 'folder', $root, 'default', 'path');
 		$type = JRequest::getCmd('type', 'image');
 		if(JString::trim($folder)=="") {

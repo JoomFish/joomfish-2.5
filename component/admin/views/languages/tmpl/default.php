@@ -1,9 +1,9 @@
 <?php 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -103,7 +103,7 @@ function showConfigEditor(fieldId, lang_id) {
 							<?php echo $this->fetchTooltip('TITLE_IMAGE', JText::_('IMAGES_DIR_HELP')); ?>
 						</th>
 						<th class="title" nowrap="nowrap" width="10">
-							<?php echo JHTML::_('grid.sort',  'Order', 'lext.ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+							<?php echo JHTML::_('grid.sort', 'Order', 'lext.ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 						</th>
 						<th class="title">
 							<?php echo $this->fetchTooltip('TITLE_CONFIG', JText::_('CONFIG_HELP')); ?>
@@ -119,13 +119,13 @@ function showConfigEditor(fieldId, lang_id) {
 					$model = $this->getModel('languages');
 					foreach ($this->items as $language ) { ?>
 					<tr class="<?php echo 'row' . $k; ?>">
-				      	<td align="center">
-			      			<input type="hidden" name="cid[]" value="<?php echo $language->lang_id; ?>" />
+						<td align="center">
+							<input type="hidden" name="cid[]" value="<?php echo $language->lang_id; ?>" />
 							<?php 
 							if ( $this->defaultLanguage != $language->lang_code ) {?>
-			      			<input type="checkbox" name="checkboxid[]" id="cb<?php echo $language->lang_id; ?>" value="<?php echo $language->lang_id; ?>" onclick="isChecked(this.checked);" />
-				      		<?php }?>
-				      	</td>
+							<input type="checkbox" name="checkboxid[]" id="cb<?php echo $language->lang_id; ?>" value="<?php echo $language->lang_id; ?>" onclick="isChecked(this.checked);" />
+							<?php }?>
+						</td>
 						<td><input type="text" name="title[]" value="<?php echo $language->title; ?>" maxlength="50" /></td>
 						<td><input type="text" name="title_native[]" value="<?php echo $language->title_native; ?>" maxlength="50" /></td>
 						<td align="center">
@@ -147,20 +147,20 @@ function showConfigEditor(fieldId, lang_id) {
 						<td><input type="text" name="sef[]" value="<?php echo $language->sef; ?>" maxlength="10" /></td>
 						<td><input type="text" name="fallbackCode[]" value="<?php echo $language->fallback_code; ?>" maxlength="20" /></td>
 						<td nowrap="nowrap">
-				      		<?php
+							<?php
 							$src = JoomfishExtensionHelper::getLanguageImageSource($language);
 							?>
 							<img src="<?php echo $src != '' ? JURI::root(true).$src : JURI::base().'images/blank.png';?>" alt="<?php echo html_entity_decode( $src );?>" title="<?php echo $language->title?>" class="flag" id="flagImage<?php echo $i;?>" />
-				      		<input id="flagValue<?php echo $i;?>" type="text" name="image[]" value="<?php echo $src ?>" style="width: 100px;" readonly="readonly" />
-				      		<input id="browseLanguageImage" class="button" type="button" value="<?php echo JText::_( 'BROWSE' );?>" onClick="showImageBrowser('<?php echo $i;?>');"/>
+							<input id="flagValue<?php echo $i;?>" type="text" name="image[]" value="<?php echo $src ?>" style="width: 100px;" readonly="readonly" />
+							<input id="browseLanguageImage" class="button" type="button" value="<?php echo JText::_( 'BROWSE' );?>" onClick="showImageBrowser('<?php echo $i;?>');"/>
 						</td>
-				      <td><input type="text" name="order[]" value="<?php echo $language->ordering; ?>" maxlength="5" /></td>
-				      <td align="center"><input id="paramsValue<?php echo $i;?>" type="hidden" name="params[]" value="<?php echo $language->params; ?>" />
-				      	<a href="#" onClick="showConfigEditor('paramsValue<?php echo $i;?>', '<?php echo $language->lang_id;?>');"><?php echo JHTML::_('image.administrator', 'menu/icon-16-config.png', '/images/', null, null, JText::_( 'EDIT' ));?></a>
-					  </td>
-					      <?php
-					      $k = 1 - $k;
-					      $i++;
+						<td><input type="text" name="order[]" value="<?php echo $language->ordering; ?>" maxlength="5" /></td>
+						<td align="center"><input id="paramsValue<?php echo $i;?>" type="hidden" name="params[]" value="<?php echo $language->params; ?>" />
+							<a href="#" onClick="showConfigEditor('paramsValue<?php echo $i;?>', '<?php echo $language->lang_id;?>');"><?php echo JHTML::_('image.administrator', 'menu/icon-16-config.png', '/images/', null, null, JText::_( 'EDIT' ));?></a>
+						</td>
+							<?php
+							$k = 1 - $k;
+							$i++;
 					}?>
 					</tr>
 				</tbody>
@@ -178,18 +178,18 @@ function showConfigEditor(fieldId, lang_id) {
 			
 			<table class="jfSidebarInformation">
 				<thead><th colspan="2"><?php echo JText::_('JF_CONFIG_INFORMATION')?></th>
-			    <tr>
-			      <td width="45%"><strong><?php echo $this->fetchTooltip('System default language', JText::_('SYSTEM_DEFAULT_LANGUAGE_HELP')); ?></strong></td>
-			      <td nowrap="nowrap"><?php echo $this->defaultLanguage; ?></td>
-			    </tr>
-			    <tr>
-			      <td><strong><?php echo $this->fetchTooltip('Overwrite global config values', JText::_('OVERWRITE_GLOBAL_CONFIG_HELP')); ?></strong></td>
-			      <td nowrap="nowrap"><?php echo $this->overwriteGlobalConfig ? JText::_('JF_YES') : JText::_('JF_NO'); ?></td>
-			    </tr>
-			    <tr>
-			      <td><strong><?php echo $this->fetchTooltip('Flags directory', JText::_('FLAGS_DIRECTORY_HELP')); ?></strong></td>
-			      <td nowrap="nowrap"><?php echo $this->directory_flags; ?></td>
-			    </tr>
+				<tr>
+					<td width="45%"><strong><?php echo $this->fetchTooltip('System default language', JText::_('SYSTEM_DEFAULT_LANGUAGE_HELP')); ?></strong></td>
+					<td nowrap="nowrap"><?php echo $this->defaultLanguage; ?></td>
+				</tr>
+				<tr>
+					<td><strong><?php echo $this->fetchTooltip('Overwrite global config values', JText::_('OVERWRITE_GLOBAL_CONFIG_HELP')); ?></strong></td>
+					<td nowrap="nowrap"><?php echo $this->overwriteGlobalConfig ? JText::_('JF_YES') : JText::_('JF_NO'); ?></td>
+				</tr>
+				<tr>
+					<td><strong><?php echo $this->fetchTooltip('Flags directory', JText::_('FLAGS_DIRECTORY_HELP')); ?></strong></td>
+					<td nowrap="nowrap"><?php echo $this->directory_flags; ?></td>
+				</tr>
 			</table>
 		</td>
 		</tr>

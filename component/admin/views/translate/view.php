@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -51,7 +51,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 	 */
 	private function _initialize($layout="overview") {
 		// get list of active languages
-		$langOptions[] = JHTML::_('select.option',  '-1', JText::_( 'SELECT_LANGUAGE' ) );
+		$langOptions[] = JHTML::_('select.option', '-1', JText::_( 'SELECT_LANGUAGE' ) );
 		// Get data from the model
 		$langActive = $this->get('Languages');		// all languages even non active once
 		$defaultLang = $this->get('DefaultLanguage');
@@ -62,7 +62,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 			foreach( $langActive as $language )
 			{
 				if($language->code != $defaultLang || $showDefaultLanguageAdmin) {
-					$langOptions[] = JHTML::_('select.option',  $language->lang_id, $language->title );
+					$langOptions[] = JHTML::_('select.option', $language->lang_id, $language->title );
 				}
 			}
 		}
@@ -74,7 +74,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 
 			$langlist = JHTML::_('select.genericlist', $langOptions, 'language_id', 'class="inputbox" size="1" '.$confirm, 'value', 'text', $this->select_language_id );
 		}
-		$this->assignRef('langlist'   , $langlist);
+		$this->assignRef('langlist'	, $langlist);
 	}
 	/**
 	 * Control Panel display function
@@ -86,28 +86,28 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JOOMFISH_TITLE') . ' :: ' .JText::_('TITLE_TRANSLATION'));
 
-		// Set  page title
+		// Set page title
 		JToolBarHelper::title( JText::_( 'TITLE_TRANSLATION' ), 'jftranslations' );
 
 		$layout = $this->getLayout();
+
 		$this->_initialize($layout);
 		if (method_exists($this,$layout)){
 			$this->$layout($tpl);
 		} else {
 			$this->overview($tpl);
 		}
-		/*
-		if($layout == 'edit')
-		{
-			$form = $this->get('Form');
-			$this->form = $form;
-		}
-		*/
+
 		JHTML::_('behavior.tooltip');
 		parent::display($tpl);
 	}
 
-
+	protected function translationmap($tpl = null)
+	{
+		
+	}
+	
+	
 	protected function overview($tpl = null)
 	{
 		// browser title
@@ -147,7 +147,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		// Set toolbar items for the page
 		if (JRequest::getVar("catid","")=="content"){
 			//JToolBarHelper::preview('index.php?option=com_joomfish',true);
-			$bar =  JToolBar::getInstance('toolbar');
+			$bar = JToolBar::getInstance('toolbar');
 			// Add a special preview button by hand
 			$live_site = JURI::base();
 			$bar->appendButton( 'Popup', 'preview', 'Preview', JRoute::_("index.php?option=com_joomfish&task=translate.preview&tmpl=component"), "800","550");
@@ -201,7 +201,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 
 		// hide the sub menu
 		// This won't work
-		$submenu =  JModuleHelper::getModule("submenu");
+		$submenu = JModuleHelper::getModule("submenu");
 		$submenu->content = "\n";
 
 		JRequest::setVar('hidemainmenu',1);

@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -44,7 +44,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
  * @package joomfish
  * @since	2.1
  */
-class  JoomfishExtensionHelper  {
+class JoomfishExtensionHelper {
 	
 	private static $imagePath;
 	
@@ -119,15 +119,15 @@ class  JoomfishExtensionHelper  {
 			return $extraPaths;
 		}
 		$extraPaths = array();
-		$base = JOOMFISH_ADMINPATH .DS. 'models'.DS.'jf';
+		$base = JPATH::clean(JOOMFISH_ADMINPATH .DS. 'models'.DS.'jf');
 		$extraPaths['base'] = $base;
-		$extraPaths['element'] = $base.DS.'element';
-		$extraPaths['filters'] = $base.DS.'filters';
-		$extraPaths['forms'] = $base.DS.'forms';
-		$extraPaths['models'] = $base.DS.'models';
-		$extraPaths['objects'] = $base.DS.'objects';
-		$extraPaths['params'] = $base.DS.'params';
-		$extraPaths['xmls'] = $base.DS.'xmls';
+		$extraPaths['element'] = $base.DS.'element';	// ContentElement
+		$extraPaths['filters'] = $base.DS.'filters';	// TranslationFilter
+		$extraPaths['forms'] = $base.DS.'forms';		// TranslateForms
+		$extraPaths['models'] = $base.DS.'models';		// TranslateModel
+		$extraPaths['objects'] = $base.DS.'objects';	// TranslationObject
+		$extraPaths['params'] = $base.DS.'params';		// TranslateParam
+		$extraPaths['xmls'] = $base.DS.'xmls';			// contentelements
 		
 		return ($path ? $extraPaths[$path] : $extraPaths);
 		
@@ -160,7 +160,7 @@ class  JoomfishExtensionHelper  {
 	 * The component parameters will be used as folder path within the template or starting with the root directory of your site
 	 * If the image is found in the current template + folder this reference is returned. Otherwise the reference from
 	 * JPATH_SITE + folder. The reference is not verified if the image exists!
-	 *  
+	 * 
 	 * @param	$language	JFLnaguage language object including the detailed information
 	 * @return	string		Path to the image found
 	 */
@@ -173,7 +173,7 @@ class  JoomfishExtensionHelper  {
 		$file = '';
 
 		if(!empty($language->image_ext)) {
-			$file =  basename($language->image_ext);
+			$file = basename($language->image_ext);
 			$folder = dirname($language->image_ext);
 			
 		} elseif (!empty( $language->image)) {

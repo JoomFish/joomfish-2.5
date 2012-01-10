@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -62,7 +62,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	{
 		static $expiredCacheCleaned;
 
-		$this->profile_db =  JFactory::getDBO();
+		$this->profile_db = JFactory::getDBO();
 		//$this->db = clone ($this->profile_db);		
 		$this->db = $this->profile_db;
 
@@ -100,10 +100,10 @@ class JCacheStorageJfdb extends JCacheStorage
 	 *
 	 */
 	public static function setupDB() {
-		$db =  JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$charset = ($db->hasUTF()) ? 'CHARACTER SET utf8 COLLATE utf8_general_ci' : '';
 		$sql = "CREATE TABLE IF NOT EXISTS `#__dbcache` ("
-		. "\n `id` varchar ( 32 )  NOT NULL default '',"
+		. "\n `id` varchar ( 32 ) NOT NULL default '',"
 		. "\n `groupname` varchar ( 32 ) NOT NULL default '',"
 		. "\n `expire` datetime NOT NULL default '0000-00-00 00:00:00',"
 		//. "\n `value` MEDIUMTEXT NOT NULL default '',"
@@ -138,7 +138,7 @@ class JCacheStorageJfdb extends JCacheStorage
 
 		$data = false;
 
-		$sql = "SELECT  UNCOMPRESS(value) FROM `#__dbcache` WHERE id=".$this->db->quote($hashedid)." AND groupname=".$this->db->quote($group)." AND expire>FROM_UNIXTIME(".$this->db->quote($this->_now).")";
+		$sql = "SELECT UNCOMPRESS(value) FROM `#__dbcache` WHERE id=".$this->db->quote($hashedid)." AND groupname=".$this->db->quote($group)." AND expire>FROM_UNIXTIME(".$this->db->quote($this->_now).")";
 		
 		$keepSQL = $this->db->getQuery();
 		$this->db->setQuery($sql);
@@ -179,7 +179,7 @@ class JCacheStorageJfdb extends JCacheStorage
 		$sql = "REPLACE INTO `#__dbcache` (id, groupname,expire,value) VALUES (".$this->db->quote($hashedid).",".$this->db->quote($group).",FROM_UNIXTIME(".$this->db->quote($this->_now + $this->_lifetime)."),COMPRESS(".$this->db->quote($data)."))";
 		$this->db->setQuery($sql);
 
-		$res =  $this->db->query();
+		$res = $this->db->query();
 		if (method_exists($this->profile_db,"_profile")) $pfunc = $this->profile_db->_profile($pfunc);
 		return $res;
 	}
@@ -209,13 +209,13 @@ class JCacheStorageJfdb extends JCacheStorage
 	/**
 	 * Lock cached item
 	 *
-	 * @param   string   $id        The cache data id
-	 * @param   string   $group     The cache data group
-	 * @param   integer  $locktime  Cached item max lock time
+	 * @param	string	$id			The cache data id
+	 * @param	string	$group		The cache data group
+	 * @param	integer	$locktime	Cached item max lock time
 	 *
-	 * @return  boolean  True on success, false otherwise.
+	 * @return	boolean	True on success, false otherwise.
 	 *
-	 * @since   11.1
+	 * @since	11.1
 	 */
 	public function lock($id, $group, $locktime)
 	{
@@ -228,11 +228,11 @@ class JCacheStorageJfdb extends JCacheStorage
 	/**
 	 * Unlock cached item
 	 *
-	 * @param   string   $id     The cache data id
-	 * @param   string   $group  The cache data group
+	 * @param	string	$id	 The cache data id
+	 * @param	string	$group	The cache data group
 	 *
-	 * @return  boolean  True on success, false otherwise.
-	 * @since   11.1
+	 * @return	boolean	True on success, false otherwise.
+	 * @since	11.1
 	 */
 	public function unlock($id, $group = null)
 	{
@@ -298,7 +298,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	 * Garbage collect expired cache data
 	 *
 	 * @access public
-	 * @return boolean  True on success, false otherwise.
+	 * @return boolean	True on success, false otherwise.
 	 */
 	public function gc()
 	{
@@ -321,7 +321,7 @@ class JCacheStorageJfdb extends JCacheStorage
 	 *
 	 * @static
 	 * @access public
-	 * @return boolean  True on success, false otherwise.
+	 * @return boolean	True on success, false otherwise.
 	 */
 	public static function test()
 	{

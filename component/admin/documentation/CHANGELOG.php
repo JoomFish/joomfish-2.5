@@ -1,9 +1,9 @@
 <?
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -16,12 +16,12 @@
  * This program is distributed in the hope that it will be useful,
 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -39,7 +39,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 This application is opensource software released under a variant of the GPL.
 Please see source code and the LICENSE file for more details.
 
-Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+Copyright (C) 2003 - 2012, Think Network GmbH, Munich
 - All Rights Reserved.
 
 
@@ -73,7 +73,7 @@ Legend:
  ! removed the necessarity for the view. The view is removed completely from the installation and all other references
 
 2011-04-16 Alex Kempkens
-  # [#24270] JF fails to change current language on visitor first visit
+ # [#24270] JF fails to change current language on visitor first visit
  
 2011-04-16 Geraint Edwards
  # Ensure insert/select type subquery doesn't trigger setreftables
@@ -118,7 +118,7 @@ Legend:
 
 2010-08-26 Alex Kempkens
  + added Khemer flag to media repository
-  
+ 
 2010-08-24 Alex Kempkens
  # Removed create view from inital database population script to avoid issues during upgrade process
  
@@ -162,7 +162,7 @@ Legend:
  ! language versions.
  # changed ContentObject to use new interface and PHP5 syntax
  # fixed issue with ContentObject accessing private variables of JFManager
- # config issue with  'Overwrite global config values' http://www.joomfish.net/forum/viewtopic.php?f=15&t=5318
+ # config issue with 'Overwrite global config values' http://www.joomfish.net/forum/viewtopic.php?f=15&t=5318
 
 2010-07-22 Alex Kempkens
  # fixed problem with CSS for the module
@@ -446,7 +446,7 @@ Legend:
  # in getNumRows must allow fallback language otherwise contenttablelocalisation plugin is skipped
  # [#12747] enable publishers and above to see unpublished translations in the front by default
  # Remove "x" default value for defaulttext in language configuration
- # [#13613] Add content element field ebuttons - false=> no editor buttons, array => buttons to suppress.  Default is to suppress readmore
+ # [#13613] Add content element field ebuttons - false=> no editor buttons, array => buttons to suppress. Default is to suppress readmore
 
 2008-11-30 Alex Kempkens
  # Admin Module for translations now automatically opens the translation dialog
@@ -463,8 +463,8 @@ Legend:
  # [#13854] Fields in jf_content
  # [#12803] Copy function doesn't works when found the symbol '
  ^ [#13856] Add index to jf_content plus other indicies - performance gain in front and backend
- # [#13853] Uninstalling the last used content element brings an error.  Also added trap for bad content element file  in translation overview
- # [#13852] Content Element Installer.  I also changed the file copy function to be JFTP compatible.
+ # [#13853] Uninstalling the last used content element brings an error. Also added trap for bad content element file in translation overview
+ # [#13852] Content Element Installer. I also changed the file copy function to be JFTP compatible.
 
 2008-11-24 Ivo Apostolov
  # Fixing the uninstall bug
@@ -620,7 +620,7 @@ Legend:
  # split of management and statistic fuctions
 
 2008-08-05 Geraint Edwards
- # Some Joomfish cache files were not being removed on expiry.  Add a garbage handler to the jfdatabase::onAfterRender method to take care of this
+ # Some Joomfish cache files were not being removed on expiry. Add a garbage handler to the jfdatabase::onAfterRender method to take care of this
 
 2008-08-03 Geraint Edwards
  + Add "Apply" button when editing translations
@@ -629,7 +629,7 @@ Legend:
  # Fixed JS copying and deleting of textarea params
 
  2008-07-23 Geraint Edwards
- # Remove option to delete language from languages overview - we don't have a method and have not defined what this should do.  Should it uninstall the Joomla language files?
+ # Remove option to delete language from languages overview - we don't have a method and have not defined what this should do. Should it uninstall the Joomla language files?
 
  2008-07-23 Geraint Edwards
  # Force reload of content element cache when saving translations see http://www.joomfish.net/forum/viewtopic.php?f=28&t=1567&p=7387#p7387
@@ -676,7 +676,7 @@ Legend:
  # Fixing Czech language flag [#11406] Default country flag for czech language is wrong
 
 2008-06-21 Geraint Edwards
- # Joomfish routine to find site default language was obtaining the current user's admin language!!  This is now fixed.
+ # Joomfish routine to find site default language was obtaining the current user's admin language!! This is now fixed.
  # Fix translation preview - note that some editors are still broken e.g. xstandard (poor coding assuptions) and JCE/TinyMCE needed a workaround of a bug
 
 2008-06-20 Geraint Edwards
@@ -769,4 +769,4 @@ Legend:
 2008-12-30 Alex Kempkens
  + Inital setup of files and structures
 
- === Base of work procress is JoomFish 1.8 release                              ===
+ === Base of work procress is JoomFish 1.8 release							 ===

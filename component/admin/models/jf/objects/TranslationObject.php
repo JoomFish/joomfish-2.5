@@ -2,9 +2,9 @@
 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -16,12 +16,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -49,7 +49,7 @@ JLoader::register('iJFTranslatable', dirname(__FILE__) . DS . 'iJFTranslatable.p
  *
  * @package joomfish
  * @subpackage administrator
- * @copyright 2003 - 2011, Think Network GmbH, Munich
+ * @copyright 2003 - 2012, Think Network GmbH, Munich
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Revision: 1543 $
  * @author Alex Kempkens
@@ -58,7 +58,7 @@ class TranslationObject implements iJFTranslatable
 {
 
 	/** @var contentElement Reference to the ContentElement definition of the instance */
-	protected  $contentElement;
+	protected $contentElement;
 
 	/** @var id ID of the based content */
 	public $id;
@@ -66,7 +66,7 @@ class TranslationObject implements iJFTranslatable
 	/** @var translation_id 	translation id value */
 	public $translation_id = 0;
 
-	/** @var reference_id 	id of item being translated  value */
+	/** @var reference_id 	id of item being translated value */
 	public $reference_id = 0;
 	
 	/** @var checked_out User who checked out this content if any */
@@ -85,6 +85,7 @@ class TranslationObject implements iJFTranslatable
 	public $language;
 	
 	public $org_language;
+	public $org_language_id;
 
 	/** @var lastchanged Date when the translation was last modified */
 	public $lastchanged;
@@ -94,8 +95,8 @@ class TranslationObject implements iJFTranslatable
 
 	/** @var state State of the translation
 	 * -1 := for at least one field of the content the translation is missing
-	 *  0 := the translation exists but the original content was changed
-	 *  1 := the translation is valid
+	 * 0 := the translation exists but the original content was changed
+	 * 1 := the translation is valid
 	 */
 	public $state = -1;
 
@@ -111,6 +112,9 @@ class TranslationObject implements iJFTranslatable
 	/** published Flag if the translation is published or not */
 	public $published = false;
 
+
+	
+	
 	/** Standard constructor
 	 *
 	 * @param	languageID		ID of the associated language
@@ -331,7 +335,7 @@ class TranslationObject implements iJFTranslatable
 						// must have the original id
 						if (isset($fieldContent->reference_id) && intval($fieldContent->reference_id) > 0)
 						{
-							//// NEW SYSTEM - Split the store method into 2  methods store and store Translation or override the bind method
+							//// NEW SYSTEM - Split the store method into 2 methods store and store Translation or override the bind method
 							$reference_id = intval($fieldContent->reference_id);
 							$translation_id = $this->translation_id;
 							
@@ -429,7 +433,7 @@ class TranslationObject implements iJFTranslatable
 					$dispatcher = JDispatcher::getInstance();
 					$dispatcher->trigger("onContentAfterJFSave", array("com_content.content", &$table, $isNew, $elementTable));
 				}
-				 */
+				*/
 				/*
 				if(!$translation_id)
 				{
@@ -499,7 +503,7 @@ class TranslationObject implements iJFTranslatable
 			// We must reset the primary key and language fields for new translations
 			// If we don't then joomla validity checks on aliases not being unique will fail etc.
 			$isnew = false;
-			if (isset($origObject->language)  && $origObject->language!=$language){
+			if (isset($origObject->language) && $origObject->language!=$language){
 				$origObject->language = $language;
 				$isnew = true;
 			}
@@ -550,7 +554,7 @@ class TranslationObject implements iJFTranslatable
 				$fieldContent->modified_by = $user->id;
 				
 				// make sure reference_id is set if not already set
-				if ((!isset($fieldContent->reference_id) || is_null($fieldContent->reference_id) ||  $fieldContent->reference_id==0)  && (isset($origObject->id) && $origObject->id>0)){
+				if ((!isset($fieldContent->reference_id) || is_null($fieldContent->reference_id) || $fieldContent->reference_id==0) && (isset($origObject->id) && $origObject->id>0)){
 					$fieldContent->reference_id = $origObject->id;
 				}
 				
@@ -575,6 +579,10 @@ class TranslationObject implements iJFTranslatable
 		if(isset($row->org_language))
 		{
 			$this->org_language = $row->org_language;
+		}
+		if(isset($row->org_language_id))
+		{
+			$this->org_language_id = $row->org_language_id;
 		}
 		
 		$this->lastchanged = $row->lastchanged;
@@ -624,12 +632,12 @@ class TranslationObject implements iJFTranslatable
 		if ($this->contentElement->getTarget() == "joomfish")
 		{
 			$sql = "select * "
-					. "\n  from #__jf_content"
+					. "\n from #__jf_content"
 					. "\n where reference_id='" . $this->id . "'"
-					. "\n   and reference_table='" . $elementTable->Name . "'";
+					. "\n and reference_table='" . $elementTable->Name . "'";
 			if (isset($this->language_id) && $this->language_id != "")
 			{
-				$sql .= "\n   and language_id=" . $this->language_id;
+				$sql .= "\n and language_id=" . $this->language_id;
 			}
 
 			//echo "load sql=>$sql<<br />";
@@ -731,14 +739,14 @@ class TranslationObject implements iJFTranslatable
 				{
 					$field = $elementTable->Fields[$i];
 					/*
-					  if ($field->prehandlertranslation != "")
-					  {
-					  if (method_exists($this, $field->prehandlertranslation))
-					  {
-					  $handler = $field->prehandlertranslation;
-					  $this->$handler($field, $translationFields);
-					  }
-					  } */
+					 if ($field->prehandlertranslation != "")
+					 {
+					 if (method_exists($this, $field->prehandlertranslation))
+					 {
+					 $handler = $field->prehandlertranslation;
+					 $this->$handler($field, $translationFields);
+					 }
+					 } */
 					$fieldname = $field->Name;
 					$transfieldname = "jfc_" . $field->Name;
 					$fieldContent = null;
@@ -992,6 +1000,93 @@ class TranslationObject implements iJFTranslatable
 
 	}
 
+	public function checkTranslationMap( $language_id )
+	{
+		if($this->org_language_id == $language_id)
+		{
+			$joomfishManager = JoomFishManager::getInstance();
+			$lang = $joomfishManager->getLanguageByID($language_id);
+			$db =& JFactory::getDBO();
+			/*only if not in #__jf_translationmap
+			*/	
+				$referencefield = "id";
+
+				$referencefield = $this->contentElement->PrimaryKey;
+				$tablename = $this->contentElement->referenceInformation['tablename'];
+				
+				$more1 = "\nSELECT tm4.reference_id from #__jf_translationmap as tm4 WHERE tm4.reference_table=".$db->quote($tablename);//.' AND tm4.reference_id <>'.$db->quote( $this->id);
+				$more2 = "\nSELECT tm5.translation_id from #__jf_translationmap as tm5 WHERE tm5.reference_table=".$db->quote($tablename);//.' AND tm5.reference_id <>'.$db->quote( $this->id);
+				
+				//$more = " ( c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." )) ";
+				//$more = " ( ".$db->quote( $this->id). " NOT IN (".$more2." ) AND ".$db->quote( $this->id). " NOT IN (".$more1." )) ";
+				$more = " ( ".$db->quote( $this->id). " IN (".$more2." ) OR ".$db->quote( $this->id). " IN (".$more1." )) ";
+
+				$query = $db->getQuery(true);
+				$query->select('*');
+				$query->from('#__' . $tablename . ' as c');
+				//need language??
+				//$query->where('language <> '.$db->quote($lang->code));
+				//$query->where("c." . $referencefield .' <> '.$db->quote( $this->id));
+				$query->where($more);
+				//$query->order("c." . $referencefield);
+				$db->setQuery($query);
+				$transmap = $db->loadObjectList();
+				
+				/*
+				$query = $db->getQuery(true);
+				$query->select('*');
+				$query->from('#__' . $tablename . ' as c');
+				//$query->where('language <> '.$db->quote($lang->code));
+				$query->where("c." . $referencefield .' <> '.$db->quote( $this->id));
+				$db->setQuery($query);
+				$content = $db->loadObjectList();
+				*/
+				
+				//if(count($transmap) >0)
+				if(!count($transmap))
+				{
+					/*
+					return an image with link to popup
+					
+					
+					<a onclick="return listItemTask('cb3','articles.checkin')" href="javascript:void(0);" class="jgrid hasTip">
+					<span class="state checkedout" title="" floatingtitle="Einchecken::Super User&lt;br /&gt;Donnerstag, 05. Januar 2012&lt;br /&gt;18:24">
+							<span class="text">Ausgecheckt
+							</span>
+						</span>
+					</a>
+					
+					showTransmapEditor(fieldId, lang_id, id, catid) {
+					
+					<a href="#" id="showTransMapValue<?php echo $this->id;?>" onClick="showTransmapEditor('showTransMap<?php echo $this->id;?>', '<?php echo $lang->lang_id;?>', '<?php echo $this->id;?>', '<?php echo $tablename;?>');">
+						<?php echo JHTML::_('image.administrator', 'menu/icon-16-config.png', '/images/', null, null, JText::_( 'EDIT' ));?>
+					</a>
+					
+					and 
+					&tmpl=component
+					&task=translate.manualtranslationmap
+					&catid='.$tablename
+					&id='.$this->id
+					
+					
+					*/
+					$link = '<a href="#" id="showTransMapValue<?php echo $this->id;?>" onClick="showTransmapEditor(\'showTransMap'.$this->id.'\', \''.$lang->lang_id.'\', \''.$this->id.'\', \''.$tablename.'\');">';
+						$link .= JHTML::_('image.administrator', 'menu/icon-16-config.png', '/images/', null, null, JText::_( 'EDIT' ));
+					$link .= '</a>';
+					return $link;
+					
+					
+					return 'doit';
+					/*
+					<a href="#edit" onclick=" return listItemTask('cb<?php echo $i;?>','translate.edit');">
+					</a>
+					*/
+				}
+			
+		}
+		return '';
+	}
+
 	public function generateTranslationMap( &$article, $isNew, $tablename, $elementTable=false){
 		$keyname = $article->getKeyName();
 		$translationid = $article->$keyname;
@@ -1005,12 +1100,124 @@ class TranslationObject implements iJFTranslatable
 			$db->setQuery($sql);
 			$success = $db->query();
 			if($success)
-			$this->translation_id = $translationid;
-			return;
+			{
+				$this->translation_id = $translationid;
+				return true;
+			}
 		}
 		else
 		{
 			
 		}
+		return false;
+	}
+	
+	/*
+	MS: add to save translationMap from manuell set from user
+	*/
+	public function generateTranslationMapManual($originalid, $translationid,$tablename,$language)
+	{
+		
+		$db = JFactory::getDbo();
+		$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($originalid, $translationid," . $db->quote($tablename) . "," . $db->quote($language) . ")";
+		$db->setQuery($sql);
+		$success = $db->query();
+		
+		if($success)
+		{
+			return true;
+		}
+		
+		return false;
+		/*
+		$elementTable = $this->contentElement->getTable();
+
+		// different route based on target for saving data
+		if ($this->contentElement->getTarget() == "native")
+		{
+			$db = JFactory::getDbo();
+			$tableclass = $this->contentElement->getTableClass();
+			
+			$tableprefix = $this->contentElement->getTablePrefix();
+			$tablepath = $this->contentElement->getTablePath();
+			
+			if($tablepath)
+			{
+				JTable::addIncludePath($tablepath);
+			}
+			
+			if ($tableclass)
+			{
+				// find the reference id and translation id
+				$reference_id = ($this->reference_id ? $this->reference_id : false);
+				$translation_id = ($this->translation_id ? $this->translation_id : false);
+				$language_id = ($this->language_id ? $this->language_id : false);
+				if(!$reference_id || !$translation_id || !$language_id)
+				for ($i = 0; $i < count($elementTable->Fields); $i++)
+				{
+					$field = $elementTable->Fields[$i];
+					$fieldContent = $field->translationContent;
+
+					if ($field->Translate)
+					{
+						// must have the original id
+						if (isset($fieldContent->reference_id) && intval($fieldContent->reference_id) > 0)
+						{
+							//// NEW SYSTEM - Split the store method into 2 methods store and store Translation or override the bind method
+							$reference_id = intval($fieldContent->reference_id);
+							$translation_id = $this->translation_id;
+							
+							$this->reference_id = $reference_id;
+							
+							$language_id = intval($fieldContent->language_id);
+							
+
+							break;
+						}
+					}
+				}
+				
+				$jfm = JoomFishManager::getInstance();
+				$languages = $jfm->getLanguagesIndexedById();
+				$language_id = $languages[$language_id]->code;
+				
+				if (!$reference_id)
+				{
+					return false;
+				}
+
+				// Now do the translation
+				if (intval($translation_id) > 0)
+				{
+					// load the translation and amend
+					$table = JTable::getInstance($tableclass,$tableprefix);
+					$table->load(intval($translation_id));
+					$isNew = false;
+				}
+				else
+				{
+					// load the original and amend
+					$table = JTable::getInstance($tableclass,$tableprefix);
+					$table->load(intval($reference_id));
+					$key = $table->getKeyName();
+					$table->$key = 0;
+					if (is_callable(array($table, "setLocation")))
+					{
+						//$table->setLocation($table->parent_id, 'last-child');
+						$table->setLocation(intval($reference_id), 'after');
+					}
+					$isNew = true;
+				}
+				
+				
+				$table->language = $language_id;
+				return false;
+				//$succes = $this->generateTranslationMap($table, $isNew, $this->contentElement->getTableName(), $elementTable);
+				return $succes;
+			
+			}
+		}
+		return false;
+		*/
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -39,11 +39,11 @@ jimport('joomla.application.component.controller');
  * The JoomFish Tasker manages the general tasks within the Joom!Fish admin interface
  *
  */
-class LanguagesController extends JController  {
+class LanguagesController extends JController {
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
-		$this->registerTask('show',  'display' );
+		$this->registerTask('show', 'display' );
 	}
 
 
@@ -54,7 +54,7 @@ class LanguagesController extends JController  {
 	public function display( )
 	{
 		//JHTML::_('behavior.framework');
-		$this->view =  $this->getView("languages");
+		$this->view = $this->getView("languages");
 		parent::display();
 	}
 	
@@ -66,7 +66,7 @@ class LanguagesController extends JController  {
 		$model = $this->getModel('languages');
 		$model->add();
 		
-		$this->view =  $this->getView("languages");
+		$this->view = $this->getView("languages");
 		$this->view->setModel($model, true);
 		$this->view->display();
 	}
@@ -145,7 +145,7 @@ class LanguagesController extends JController  {
 		$viewName	= JRequest::getCmd( 'view', $this->getName() );
 		$viewLayout	= JRequest::getCmd( 'layout', 'fileBrowser' );
 
-		$this->view =  $this->getView("languages");
+		$this->view = $this->getView("languages");
 
 		// Set the layout
 		$this->view->setLayout($viewLayout);
@@ -214,7 +214,7 @@ class LanguagesController extends JController  {
 		$viewLayout	= JRequest::getCmd( 'layout', 'translateconfig' );
 		$lang_id = JRequest::getVar( 'lang_id', null, 'request', 'int' );
 		
-		$this->view =  $this->getView("languages");
+		$this->view = $this->getView("languages");
 
 		// Set the layout
 		$this->view->setLayout($viewLayout);
@@ -279,7 +279,7 @@ class LanguagesController extends JController  {
 		$language = $model->getTable('JFLanguage');		
 		$language->load($lang_id);
 
-		if  (is_null($lang_id) || !isset($language->id) || $language->id<=0){
+		if (is_null($lang_id) || !isset($language->id) || $language->id<=0){
 			die( 'Invalid Language Id' );
 		}
 		
@@ -289,9 +289,9 @@ class LanguagesController extends JController  {
 			if (strpos($key,"trans_")===0){
 				$key = str_replace("trans_","",$key);
 				if (ini_get('magic_quotes_gpc')) {
-          		  $val = stripslashes($val);
-        		} 
-        		$data[$key]=$val;
+					$val = stripslashes($val);
+				} 
+				$data[$key]=$val;
 			}
 		}
 		$registry = new JRegistry();

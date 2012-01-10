@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -102,7 +102,7 @@ class JoomfishViewDefault extends JView {
 	
 	/** 
 	 * Returns the path of the help file to be included as output for the page
-	 * The path is used as include statement within the view template  
+	 * The path is used as include statement within the view template 
 	 */
 	protected function getHelpPathL($ref) {
 		$lang =& JFactory::getLanguage();
@@ -111,7 +111,7 @@ class JoomfishViewDefault extends JView {
 		}
 
 		$url = 'components/com_joomfish/help';
-		$tag =  $lang->getTag();
+		$tag = $lang->getTag();
 
 		// Check if the file exists within a different language!
 		if( $lang->getTag() != 'en-GB' ) {
@@ -157,7 +157,7 @@ class JoomfishViewDefault extends JView {
 		?>
 		<div style="float:left;">
 			<div class="icon">
-				<a href="<?php echo $link; ?>" <?php echo $target;?>  <?php echo $onclick;?>>
+				<a href="<?php echo $link; ?>" <?php echo $target;?> <?php echo $onclick;?>>
 					<?php echo JHTML::_('image.administrator', $image, $path, NULL, NULL, $text ); ?>
 					<span><?php echo $text; ?></span>
 				</a>

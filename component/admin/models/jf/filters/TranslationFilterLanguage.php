@@ -2,9 +2,9 @@
 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -16,12 +16,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -63,7 +63,7 @@ class TranslationFilterLanguage extends TranslationFilter
 						$whereFilter[] = $contentTable->Filter;
 					}
 					
-					$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND '  : '');
+					$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND ' : '');
 					if(JoomfishManager::getDefaultLanguage() == $lang->code )
 					{
 						$more = " OR (".$moreFilter." c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." ) ) ";
@@ -143,7 +143,7 @@ class TranslationFilterLanguage extends TranslationFilter
 			foreach( $langActive as $language )
 			{
 				if($language->code != $defaultLang || $showDefaultLanguageAdmin) {
-					$langOptions[] = JHTML::_('select.option',  $language->lang_code, $language->title );
+					$langOptions[] = JHTML::_('select.option', $language->lang_code, $language->title );
 				}
 			}
 		}

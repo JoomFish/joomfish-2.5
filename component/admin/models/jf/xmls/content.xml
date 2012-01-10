@@ -2,10 +2,10 @@
 <joomfish type="contentelement">
 	<name>Contents</name>
 	<author>A. Kempkens</author>
-	<version>2.1.5</version>
+	<version>2.5.0 alpha</version>
 	<description>Definition for the core content component</description>
-	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
-	<reference type="content">
+	<copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
+	<reference type="content" name="content">
 		<table name="content">
 			<field type="referenceid" name="id" translate="0">ID</field>
 			<field type="titletext" name="title" length="50" maxlength="250" translate="1">Title</field>
@@ -16,13 +16,10 @@
 			<!-- jform="1" mean in the translateform we use jform -->
 			<field 
 				type="category" 
-	
 				name="catid" 
-				
 				jform="1"
 				extension="com_content" 
 				scope="com_content" 
-				
 				translate="1">Category</field>
 			
 			<field 

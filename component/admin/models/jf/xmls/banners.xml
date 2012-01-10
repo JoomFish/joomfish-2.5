@@ -2,9 +2,9 @@
 <joomfish type="contentelement">
 	<name>Banners</name>
 	<author>R. Muilwijk</author>
-	<version>2.1.5</version>
+	<version>2.5.0 alpha</version>
 	<description>Definition for the core banner component</description>
-	<copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+	<copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
 	<reference>
 		<table name="banners">
 			<field type="referenceid" name="id" translate="0">ID</field>

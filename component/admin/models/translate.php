@@ -2,9 +2,9 @@
 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -16,12 +16,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -34,55 +34,17 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
-//jimport('joomla.application.component.modeladmin');
 JLoader::register('JFModel', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'JFModel.php');
-
-	
-
 
 /**
  * This is the corresponding module for translation management
  * @package		Joom!Fish
  * @subpackage	Translate
  */
-class TranslateModelTranslate extends JFModel //JModelAdmin
+class TranslateModelTranslate extends JFModel
 {
-	/**
-	 * @var		string	The prefix to use with controller messages.
-	 * @since	1.6
-	 */
-	protected $text_prefix = 'COM_JOOMFISH';
 
 	protected $_modelName = 'translate';
-
-	/*
-	public function getTable($type = 'JFContent', $prefix = '', $config = array())
-	{
-		JTable::addIncludePath(JOOMFISH_ADMINPATH.DS.'tables');
-		$table = JTable::getInstance($type, $prefix, $config);
-		return $table;
-	}
-
-	public function getForm($data = array(), $loadData = false)
-	{
-		// Get the form.
-		$form = $this->loadForm('com_joomfish.translate', 'translate', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
-	}
-	*/
-	/**
-	 * returns the default language of the frontend
-	 * @return object	instance of the default language
-	 */
-	/*
-	public function getDefaultLanguage() {
-		return JoomfishManager::getDefaultLanguage();
-	}
-
-	*/
 
 	/**
 	 * return the model name
@@ -92,8 +54,6 @@ class TranslateModelTranslate extends JFModel //JModelAdmin
 		return $this->_modelName;
 
 	}
-
-	
 
 	/**
 	 * Method to prepare the language list for the translation backend
@@ -130,7 +90,6 @@ class TranslateModelTranslate extends JFModel //JModelAdmin
 
 				// safety check -- complete overkill but better to be safe than sorry
 				// get the translation details
-				//TODO from folder tables
 				JLoader::import('tables.JFContent', JOOMFISH_ADMINPATH);
 				//JLoader::import('models.JFContent', JOOMFISH_ADMINPATH);
 				$translation = new jfContent($db);

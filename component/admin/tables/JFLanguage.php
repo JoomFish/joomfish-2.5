@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -44,11 +44,11 @@ JLoader::register('TableJLanguage', JOOMFISH_ADMINPATH .DS. 'tables' .DS. 'JLang
  *
  * @package joomfish
  * @subpackage administrator
- * @copyright 2003 - 2011, Think Network GmbH, Munich
+ * @copyright 2003 - 2012, Think Network GmbH, Munich
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Revision: 1511 $
  */
-class TableJFLanguage extends JTable  {
+class TableJFLanguage extends JTable {
 	/** @var int Primary key
 	 * @access public
 	 */
@@ -181,7 +181,7 @@ class TableJFLanguage extends JTable  {
 	 * @access private
 	 * @since 2.1
 	 */
-	private static $deprecatedAttribs = array('lang_id' => 'id',  'lang_code' => 'code', 'title_native' => 'name', 'published' => 'active', 'sef' => 'shortcode');
+	private static $deprecatedAttribs = array('lang_id' => 'id', 'lang_code' => 'code', 'title_native' => 'name', 'published' => 'active', 'sef' => 'shortcode');
 		
 	/** Standard constructur
 	*/
@@ -260,7 +260,7 @@ class TableJFLanguage extends JTable  {
 	
 	/**
 	 * Loads the class instance and updates all related fields as well as the associated extended table
-	 * @param	mixed	Optional primary key.  If not specifed, the value of current key is used
+	 * @param	mixed	Optional primary key. If not specifed, the value of current key is used
 	 * @return	boolean	True if successful
 	 * @access public
 	 */
@@ -344,7 +344,7 @@ class TableJFLanguage extends JTable  {
 		$jfm = JoomFishManager::getInstance();
 		$langdata = $jfm->getLanguageByShortcode($shortcode,$active);
 		// if we allow Joomfish to attempt to translate this object then the language is loaded 
-		// too early by JFactory::getLanguage();  This then breaks everything!!!
+		// too early by JFactory::getLanguage(); This then breaks everything!!!
 		if( !$lang->bind($langdata) ) {
 			$lang = null;
 		}

@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -75,16 +75,16 @@ class JFTempModelContent extends ContentModelArticle {
 	/**
 	 * Overload Method to get a form object - we MUST NOT use JPATH_COMPONENT
 	 *
-	 * @param   string   $name     The name of the form.
-	 * @param   string   $source   The form source. Can be XML string if file flag is set to false.
-	 * @param   array    $options  Optional array of options for the form creation.
-	 * @param   boolean  $clear    Optional argument to force load a new form.
-	 * @param   string   $xpath    An optional xpath to search for the fields.
+	 * @param	string	$name		The name of the form.
+	 * @param	string	$source		The form source. Can be XML string if file flag is set to false.
+	 * @param	array	$options	Optional array of options for the form creation.
+	 * @param	boolean	$clear		Optional argument to force load a new form.
+	 * @param	string	$xpath		An optional xpath to search for the fields.
 	 *
-	 * @return  mixed  JForm object on success, False on error.
+	 * @return mixed JForm object on success, False on error.
 	 *
-	 * @see     JForm
-	 * @since   11.1
+	 * @see		JForm
+	 * @since	11.1
 	 */
 	protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
 	{
@@ -166,7 +166,7 @@ class TranslateModelContent extends ContentModelArticle //extends JFTempContentM
 	public function __construct($config = array())
 	{
 		// Must set option value to override constructors attempts to find it!
-		$this->option  = "com_content";
+		$this->option = "com_content";
 		// Get the form.
 		$componentpath = JPATH_BASE."/components/".$this->option;
 		JForm::addFormPath($componentpath.'/models/forms');

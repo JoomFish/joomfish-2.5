@@ -1,9 +1,9 @@
 <?php 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -34,9 +34,9 @@ defined('_JEXEC') or die('Restricted access'); ?>
 <div id="joomfish">
 	<form action="index.php" method="post" name="adminForm">
 	<table width="90%" border="0" cellpadding="2" cellspacing="2" class="adminform" >	<tr align="center" valign="middle">
- 	<tr align="center" valign="middle">
-      <td align="left" valign="top" width="70%">
-		<h2>PREAMBLE</h2>
+		<tr align="center" valign="middle">
+			<td align="left" valign="top" width="70%">
+				<h2>PREAMBLE</h2>
 		The JoomFish is an extention for the open source CMS Joomla!.<br />
 		Joomla! is Copyright (C) 2005 Open Source Matters. All rights reserved.<br />
 		license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php<br />
@@ -74,13 +74,13 @@ defined('_JEXEC') or die('Restricted access'); ?>
 					break;
 					}
 			?>
-		</td>
-		<td align="left" valign="top" nowrap>
-			<?php $this->_sideMenu();?>
-			<?php $this->_creditsCopyright(); ?>
-		</td>
-	</tr>
-  </table>
+			</td>
+			<td align="left" valign="top" nowrap>
+				<?php $this->_sideMenu();?>
+				<?php $this->_creditsCopyright(); ?>
+			</td>
+		</tr>
+	</table>
 <input type="hidden" name="option" value="com_joomfish" />
 <input type="hidden" name="task" value="help.show" />
 <input type="hidden" name="boxchecked" value="0" />

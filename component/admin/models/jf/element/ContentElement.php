@@ -2,7 +2,7 @@
 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
  * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -41,7 +41,7 @@ include_once(dirname(__FILE__) . DS . "ContentElementTable.php");
  *
  * @package joomfish
  * @subpackage administrator
- * @copyright 2003 - 2011, Think Network GmbH, Munich
+ * @copyright 2003 - 2012, Think Network GmbH, Munich
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Revision: 1543 $
  * @author Alex Kempkens
@@ -143,7 +143,7 @@ class ContentElement
 		if (isset($this->_xmlFile))
 		{
 			$joomfishManager = JoomFishManager::getInstance();
-			$treatment = $joomfishManager->getTreatment($this->_xmlFile);
+			$treatment = $joomfishManager->getTreatment($this->_xmlFile,$this->getTableName());
 			if(count($treatment))
 			{
 				$this->Treatment = $treatment;
@@ -162,6 +162,15 @@ class ContentElement
 	{
 		if (isset($this->_xmlFile))
 		{
+			$treatment = $this->getTreatment();
+			if(count($treatment) > 0)
+			{
+				if(isset($treatment['target']))
+				{
+					return $treatment['target'];
+				}
+			}
+			/*
 			$xpath = new DOMXPath($this->_xmlFile);
 			$targetElement = $xpath->query('//reference/treatment/target')->item(0);
 			if (!isset($targetElement))
@@ -170,6 +179,7 @@ class ContentElement
 			}
 			$target = trim($targetElement->textContent);
 			return $target;
+			*/
 		}
 		return 'joomfish';
 
@@ -183,12 +193,26 @@ class ContentElement
 	changed this function
 	
 	we have 3 ways to get the $className:
-	1. over $treatment['translationObjectModel']
+	1. over $treatment['translationObject']
 	2. over 'TranslationObject'.ucfirst($this->getTableName())
 	3. the base class 'TranslationObject'
 	
 	we can have different folder to search:
 	1. $includePath.DS.'objects'
+		in include path we can have
+		
+		<includePath>administrator/components/com_content/joomfish</includePath>
+		return an path like JPATH_ROOT/administrator/components/com_content/joomfish
+		or 
+		<includePath extension="1" site="0">jf</includePath>
+		<extension>com_content</extension>
+		return an path like JPATH_ADMINISTRATOR/components/com_content/jf
+		
+		<includePath extension="1" site="1">jf</includePath>
+		<extension>com_content</extension>
+		return an path like JPATH_ROOT/components/com_content/jf
+		
+	
 	2. JoomfishExtensionHelper::getExtraPath('objects')
 	for the path i have created JOOMFISH_ADMINPATH.DS.'models'.DS.'jf'....
 
@@ -371,6 +395,15 @@ class ContentElement
 	public function getPublishedField(){
 		if (isset($this->_xmlFile))
 		{
+			$treatment = $this->getTreatment();
+			if(count($treatment) > 0)
+			{
+				if(isset($treatment['publishedfield']))
+				{
+					return $treatment['publishedfield'];
+				}
+			}
+			/*
 			$xpath = new DOMXPath($this->_xmlFile);
 			$publishedfield = $xpath->query('//reference/treatment/publishedfield')->item(0);
 			if (!isset($publishedfield))
@@ -379,6 +412,7 @@ class ContentElement
 			}
 			$result = trim($publishedfield->textContent);
 			return $result;
+			*/
 		}
 		return 'published';
 		
@@ -388,6 +422,15 @@ class ContentElement
 	{
 		if (isset($this->_xmlFile))
 		{
+			$treatment = $this->getTreatment();
+			if(count($treatment) > 0)
+			{
+				if(isset($treatment['tableclass']))
+				{
+					return $treatment['tableclass'];
+				}
+			}
+			/*
 			$xpath = new DOMXPath($this->_xmlFile);
 			$targetElement = $xpath->query('//reference/treatment/tableclass')->item(0);
 			if (!isset($targetElement))
@@ -396,6 +439,7 @@ class ContentElement
 			}
 			$tableclass = trim($targetElement->textContent);
 			return $tableclass;
+			*/
 		}
 		return false;
 
@@ -473,6 +517,39 @@ class ContentElement
 
 	}
 
+	/** 
+	MS: add Name of the contentelement
+	
+	*/
+	public function getElementName($xmlDoc)
+	{
+		if (!$xmlDoc)
+		{
+			return null;
+		}
+		$element = $xmlDoc->documentElement;
+		if ($element->nodeName == 'joomfish') 
+		{
+			if ( $element->getAttribute('type')=='contentelement' ) 
+			{
+				$xpath = new DOMXPath($this->_xmlFile);
+				$reference = $xpath->query('//reference')->item(0);
+				$referenceName = trim($reference->getAttribute('name'));
+				if($referenceName)
+				{
+					$this->referenceInformation["referencename"] = strtolower($referenceName);
+				}
+				else
+				{
+					$nameElements = $element->getElementsByTagName('name');
+					$nameElement = $nameElements->item(0);
+					$this->referenceInformation["referencename"] = strtolower( trim($nameElement->textContent) );
+				}
+			}
+		}
+		return $this->referenceInformation["referencename"];
+	}
+
 	/** Name of the refering table
 	 */
 	public function getTableName()
@@ -534,6 +611,120 @@ class ContentElement
 
 	}
 
+	/*
+	function getTranslationMap($exclude_language_id = null,$sqlFields = null)
+	{
+		$joomfishManager = JoomFishManager::getInstance();
+		$db =& JFactory::getDBO();
+		
+		$query = $db->getQuery(true);
+		
+		//$contentElement = $joomfishManager->getContentElement($catid);
+		$contentTable = $this->getTable();
+		$referencefield = "id";
+		foreach ($contentTable->Fields as $tableField)
+		{
+
+			switch($tableField->Type)
+			{
+				case "referenceid":
+				$referencefield = $tableField->Name;
+				break;
+				case "titletext":
+					$sqlFields[] = 'c.' . $tableField->Name . ' as title';
+				break;
+			}
+		}
+		
+		
+		
+		$query->select('tm.reference_id,tm.translation_id,tm.reference_table,'.implode(', ', $sqlFields));
+		$query->from('#__jf_translationmap as tm');
+		if($exclude_language_id)
+		{
+			$lang = $joomfishManager->getLanguageByID($exclude_language_id);
+			$query->where('tm.language <> '.$db->quote($lang->code));
+		}
+		
+		$query->leftJoin('#__'.$contentTable->Name . ' as c  ON c.' . $referencefield.'=tm.reference_id');
+		
+		$query->where('tm.reference_table='.$db->quote($contentTable->Name));
+		$query->order("tm.language,tm.reference_id");
+		$db->setQuery($query);
+		$transmap = $db->loadObjectList();
+		return $transmap;
+		
+	}
+	*/
+	
+	function getContentMap($exclude_language_id = null,$filters = array(0),$order = null,$orderDir = 'ASC',$sqlFields = null)
+	{
+		$joomfishManager = JoomFishManager::getInstance();
+		$db =& JFactory::getDBO();
+		
+		$query = $db->getQuery(true);
+		
+		$contentTable = $this->getTable();
+		$referencefield = "id";
+		foreach ($contentTable->Fields as $tableField)
+		{
+
+			switch($tableField->Type)
+			{
+				case "referenceid":
+				$referencefield = $tableField->Name;
+					$sqlFields[] = 'c.' . $tableField->Name . ' as id';
+				break;
+				case "titletext":
+					$sqlFields[] = 'c.' . $tableField->Name . ' as title';
+				break;
+			}
+		}
+		
+		$sqlFields[] = 'c.language as language';
+		
+		$sqlFields[] = "l.lang_id as orig_language_id";
+		
+		$sqlFields[] = 'tm.language as transmap_language';
+		$sqlFields[] = 'tm.reference_id';
+		$sqlFields[] = 'tm.translation_id';
+		
+		$sqlFields[] = 'ct.language as trans_language';
+		$sqlFields[] = 'co.language as orig_language';
+		
+		$query->select(implode(', ', $sqlFields));
+		$query->from('#__' . $contentTable->Name . ' as c');
+		$lang = null;
+		if($exclude_language_id)
+		{
+			$lang = $joomfishManager->getLanguageByID($exclude_language_id);
+		}
+		
+		$query->leftJoin('#__jf_translationmap as tm ON (tm.reference_id=c.' . $referencefield .' OR tm.translation_id=c.' . $referencefield .') AND tm.reference_table='.$db->quote($contentTable->Name));
+		
+		$query->leftJoin('#__' . $contentTable->Name . ' as co ON (( co.'.$referencefield.'=tm.reference_id AND tm.translation_id<>co.'.$referencefield.' AND tm.reference_table='.$db->quote($contentTable->Name).') OR ( (c.language=\'*\' ) AND co.'.$referencefield.'=c.'.$referencefield.' ))');
+		
+		$query->leftJoin('#__' . $contentTable->Name . ' as ct ON ct.'.$referencefield.'=tm.translation_id AND ct.'.$referencefield.'=c.'.$referencefield);
+		
+		$query->leftJoin('#__languages as l ON l.lang_code=c.language');
+		
+		if($exclude_language_id)
+		{
+			$query->where('c.language <> '.$db->quote($lang->lang_code));
+		}
+		
+		foreach($filters as $filter)
+		{
+			if($filter)
+			$query->where($filter);
+		}
+
+		$query->order(($order ? $order : 'c.language, c.' . $referencefield).' '.$orderDir);
+		$db->setQuery($query);
+		$transmap = $db->loadObjectList();
+		return $transmap;
+		
+	}
 	/** Generating the sql statement to retrieve the information
 	 * from the database
 	 */
@@ -758,6 +949,8 @@ class ContentElement
 			
 			
 			$sqlFields[] = "l.title_native as org_language";
+			$sqlFields[] = "l.lang_id as org_language_id";
+			
 			if ($contentTable->Filter != '')
 			{
 				$where[] = $contentTable->Filter;
@@ -787,7 +980,7 @@ class ContentElement
 						$whereFilter[] = $contentTable->Filter;
 					}
 					
-					$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND '  : '');
+					$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND ' : '');
 					if(JoomfishManager::getDefaultLanguage() == $lang->code )
 					{
 						//$more = " OR (".$moreFilter." c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." ) ) ";
@@ -1030,7 +1223,7 @@ class ContentElement
 					$whereFilter[] = $contentTable->Filter;
 				}
 					
-				$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND '  : '');
+				$moreFilter .= (count($whereFilter) ? implode(' AND ', $whereFilter).' AND ' : '');
 				$more = " AND ( c." . $referencefield. " NOT IN (".$more2." ) AND c." . $referencefield. " NOT IN (".$more1." )) ";
 				$more = " AND (".$moreFilter." c." . $referencefield. " NOT IN (".$more2." ) )"; //AND c." . $referencefield. " NOT IN (".$more1." )) ";
 				

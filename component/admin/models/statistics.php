@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -95,7 +95,7 @@ class StatisticsModelStatistics extends JModel
 
 						$sql = "SELECT * FROM #__jf_content" .
 						"\n WHERE reference_table='" .$row->reference_table. "'" .
-						"\n   AND language_id=" .$row->language_id .
+						"\n AND language_id=" .$row->language_id .
 						"\n GROUP BY reference_id";
 						$db->setQuery($sql);
 						$totalrows = $db->loadRowList();
@@ -143,7 +143,7 @@ class StatisticsModelStatistics extends JModel
 				if( is_array($translationStatus) && count ($translationStatus)>0 ) {
 					if( $statecheck_i>=0 && $statecheck_i<count($translationStatus)) {
 						$stateRow =& $translationStatus[$statecheck_i];
-
+						
 						$contentElement = $jfManager->getContentElement( $stateRow['catid'] );
 						$filters = array();
 
@@ -237,7 +237,7 @@ class StatisticsModelStatistics extends JModel
 				$tables = $db->loadResultArray();
 
 				$allContentElements = $jfManager->getContentElements();
-
+				
 				foreach ($allContentElements as $catid=>$ce){
 					$ceInfo = array();
 					$ceInfo['name'] = $ce->Name;
@@ -290,10 +290,10 @@ class StatisticsModelStatistics extends JModel
 
 						foreach ($languages as $lang) {
 							$sql = "SELECT * FROM #__jf_content as jfc" .
-							"\n  WHERE jfc.language_id=" .$lang->lang_id .
-							"\n    AND jfc.reference_table='" .$stateRow['catid'] ."'".
-							"\n    AND jfc.published=1" .
-							"\n	 GROUP BY reference_id";
+							"\n WHERE jfc.language_id=" .$lang->lang_id .
+							"\n AND jfc.reference_table='" .$stateRow['catid'] ."'".
+							"\n AND jfc.published=1" .
+							"\n GROUP BY reference_id";
 							$db->setQuery($sql);
 							$rows = $db->loadRowList();
 							$key = 'langentry_' .$lang->getLanguageCode();

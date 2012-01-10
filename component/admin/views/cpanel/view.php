@@ -1,9 +1,9 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
- * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
  * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
@@ -15,12 +15,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,USA.
  *
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -95,8 +95,8 @@ class CPanelViewCPanel extends JoomfishViewDefault
 	
 
 	 /**
-	  * render Information module
-	  */
+	 * render Information module
+	 */
 	 protected function renderInformation () {
 	 	$output = '';
 	 	//$panelStates = $this->get('panelStates');
@@ -105,13 +105,13 @@ class CPanelViewCPanel extends JoomfishViewDefault
 	 }
 	 
 	 /**
-	  * render News feed from Joom!Fish portal
-	  */
+	 * render News feed from Joom!Fish portal
+	 */
 	 protected function renderJFNews() {
 	 	
 	 	$output = '';
 
-		//  get RSS parsed object
+		// get RSS parsed object
 		$options = array();
 		$options['rssUrl']		= 'http://www.joomfish.net/news?format=feed&type=rss&utm_source=jf-core&utm_medium=newsfeed&utm_campaign=jf21';
 		$options['cache_time']	= 86400;
@@ -131,21 +131,21 @@ class CPanelViewCPanel extends JoomfishViewDefault
 			
 			$items = array_slice($rssDoc->get_items(), 0, 3);
 			$numItems = count($items);
-            	$k = 0;
-            if($numItems == 0) {
-            	$output .= '<tr><th>' .JText::_( 'NO_NEWS_ITEMS_FOUND' ). '</th></tr>';
-            } else {
-                for( $j = 0; $j < $numItems; $j++ ) {
-                    $item = $items[$j];
-                	$output .= '<tr><td class="row' .$k. '">';
-                	$output .= '<a href="' .$item->get_link(). '" target="_blank">' .$item->get_title(). '</a>';
+				$k = 0;
+			if($numItems == 0) {
+				$output .= '<tr><th>' .JText::_( 'NO_NEWS_ITEMS_FOUND' ). '</th></tr>';
+			} else {
+				for( $j = 0; $j < $numItems; $j++ ) {
+					$item = $items[$j];
+					$output .= '<tr><td class="row' .$k. '">';
+					$output .= '<a href="' .$item->get_link(). '" target="_blank">' .$item->get_title(). '</a>';
 					if($item->get_description()) {
-	                	$description = $this->limitText($item->get_description(), 50);
+						$description = $this->limitText($item->get_description(), 50);
 						$output .= '<br />' .$description;
 					}
-                	$output .= '</td></tr>';
-                }
-            }
+					$output .= '</td></tr>';
+				}
+			}
 			$k = 1 - $k;
 						
 			$output .= '</table>';
@@ -154,10 +154,10 @@ class CPanelViewCPanel extends JoomfishViewDefault
 	 }
 	 
 	 /**
-	  * render content state information
-	  */
+	 * render content state information
+	 */
 	 protected function renderContentState() {
-	 	$joomFishManager =  JoomFishManager::getInstance();
+	 	$joomFishManager = JoomFishManager::getInstance();
 	 	$output = '';
 		$alertContent = false;
 		if( array_key_exists('unpublished', $this->contentInfo) && is_array($this->contentInfo['unpublished']) ) {
@@ -226,8 +226,8 @@ class CPanelViewCPanel extends JoomfishViewDefault
 	 }
 	 
 	 /**
-	  * render content state information
-	  */
+	 * render content state information
+	 */
 	 protected function renderPerformanceInfo() {
 	 	$output = '';
 		ob_start();
@@ -271,11 +271,11 @@ class CPanelViewCPanel extends JoomfishViewDefault
 	 }
 	 
 	 /**
-	  * render system state information
-	  */
+	 * render system state information
+	 */
 	 protected function renderSystemState() {
 	 	$output = '';
-		$stateGroups =  $this->panelStates;
+		$stateGroups = $this->panelStates;
 		ob_start();
 		?>
 		<table class="adminlist">

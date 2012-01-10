@@ -1,7 +1,7 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2011, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
  *
  * All rights reserved. The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -50,7 +50,6 @@ $task=$this->task;
 $select_language_id = $this->select_language_id;
 $user = JFactory::getUser();
 $db = JFactory::getDBO();
-
 $elementTable = $this->translationObject->getTable();
 $option = JRequest::getCmd("option");
 
@@ -144,7 +143,7 @@ else
 </script>
 <?php } ?>
 
-<script language="javascript" type="text/javascript">
+	<script language="javascript" type="text/javascript">
 	function googleTranslate(value) {
 		<?php
 		JHTML::script("jsapi","http://www.google.com/");
@@ -183,7 +182,7 @@ else
 			alert("<?php echo preg_replace( '#<br\s*/>#', '\n', JText::_('JS_REINSTATE_TRANSLATION_LANGUAGE',true)); ?>");
 		}
 	}
-</script>
+    </script>
 <form action="index.php" method="post" name="adminForm">
 	<?php //echo JHtml::_('tabs.start','edittranslation', array('useCookie'=>1));?>
 	<?php //echo JHtml::_('tabs.panel', JText::_( 'PUBLISHING' ),"ItemEdit-page"); ?>
