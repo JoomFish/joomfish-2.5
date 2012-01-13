@@ -219,7 +219,7 @@ class CPanelViewCPanel extends JoomfishViewDefault
 			}
 			?>
 		</table>
-		<?php 
+		<?php
 		$output .= ob_get_clean();
 	 	return $output;
 	 }
