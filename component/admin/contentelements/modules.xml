@@ -2,9 +2,9 @@
 <joomfish type="contentelement">
   <name>Modules</name>
   <author>A. Kempkens</author>
-  <version>2.1.5</version>
+  <version>2.5.0 alpha</version>
   <description>Definition for general module management</description>
-  <copyright>2003 - 2010, Think Network GmbH, Munich</copyright>
+  <copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
   <reference>
   	<table name="modules">
   		<field type="referenceid" name="id" translate="0">ID</field>
