@@ -3,14 +3,4 @@
 .buildpath
 .settings
 .project
-old
-old/
-ehthumbs.db
-Icon?
-Thumbs.db
-thumbs.db
 component/admin/manifest.xml
-*.WinMerge
-*.pdf
-component/admin/TODO.txt
-component/admin/changes.txt
