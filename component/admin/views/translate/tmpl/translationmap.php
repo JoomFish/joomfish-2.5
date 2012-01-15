@@ -33,7 +33,12 @@
 
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
-
+/**
+ * layout translationmap
+ * use in layout default default_list 
+ * to set the table #__jf_translationmap manual
+ * if the translation not make with joomfish
+*/
 $joomfishManager = JoomFishManager::getInstance();
 $lang = null;
 $lang = $joomfishManager->getLanguageByID($this->language_id);
