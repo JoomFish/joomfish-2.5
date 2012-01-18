@@ -35,6 +35,7 @@
 			<option value="0">JF_NO</option>
 			<option value="1">JF_YES</option>
 		</field>
+		<field name="google_translate_key" type="text" size="100" default="" label="GOOGLE_TRANSLATE_V2_API_KEY" description="GOOGLE_TRANSLATE_API_KEY" />			
 		<field name="@spacer" type="spacer" default='ADVANCED_USERS_ONLY'  label='ADVANCED_USERS_ONLY'  description="" />
 		<field name="copyparams" type="radio" default="1" label='COPY_ORIGINAL_PARAMS_TO_EMPTY_TRANSLATION'  description="COPYPARAMS_HELP">
 			<option value="0">JF_NO</option>

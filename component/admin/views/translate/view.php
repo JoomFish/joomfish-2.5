@@ -75,6 +75,9 @@ class TranslateViewTranslate extends JoomfishViewDefault
 			$langlist = JHTML::_('select.genericlist', $langOptions, 'language_id', 'class="inputbox" size="1" '.$confirm, 'value', 'text', $this->select_language_id );
 		}
 		$this->assignRef('langlist'   , $langlist);
+		
+		$googleApikey =  $params->get("google_translate_key", "");
+		$this->assignRef('googleApikey'   , $googleApikey);
 	}
 	/**
 	 * Control Panel display function
