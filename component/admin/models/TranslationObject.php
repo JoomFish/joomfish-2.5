@@ -101,6 +101,10 @@ class TranslationObject implements iJFTranslatable
 
 	/** @var int Number for fields unchanged */
 	protected $_numUnchangedFields = 0;
+	/*
+	 * Number of unstranslated fields
+	 */
+	protected $_untraslatedFields = 0;
 
 	/** published Flag if the translation is published or not */
 	public $published = false;
@@ -554,6 +558,12 @@ class TranslationObject implements iJFTranslatable
 						if (isset($row->$transfieldname))
 						{
 							$fieldContent->value = $row->$transfieldname;
+							if (!empty($row->$fieldname) && empty($row->$transfieldname)) {
+								$this->_untraslatedFields ++;
+							}
+							
+						} else {
+							$this->_untraslatedFields ++;
 						}
 						$fieldContent->original_value = $row->$fieldname;
 						$fieldContent->original_text = $row->$fieldname;
@@ -565,25 +575,29 @@ class TranslationObject implements iJFTranslatable
 						$fieldContent = null;
 					}
 
-					if ($field->Translate)
-					{
-						// TODO track changes and new fields etc.
-						if (isset($fieldContent))
-						{
-							$field->changed = (md5($field->originalValue) != $fieldContent->original_value);
-							if ($field->changed)
-							{
-								$this->_numChangedFields++;
-							}
-							else
-								$this->_numUnchangedFields++;
-						}
-					}
 					$field->translationContent = $fieldContent;
 				}
+				
+			$modifiedcompare = (isset($row->modified) && isset($row->jfc_modified) && ($row->modified > $row->jfc_modified)) ? 1 : 0;
 
-				// TODO find way to deal with 'state'
+			/*
+			 * Checking the record state based on existance of translated entry in database,
+			 * the fields translations (are all translatable fields not empty?) 
+			 * and modified dates. If original modified date is later than transaltion modified date, original was modified after translation.
+			 */ 
+			if (!empty($row->jfc_id) && $this->_untraslatedFields == 0 && $modifiedcompare == 0)
+			{
 				$this->state = 1;
+			}
+
+			elseif (empty($row->jfc_id))
+			{
+				$this->state = -1;
+			}
+			else
+			{
+				$this->state = 0;
+			}
 			}
 		}
 
