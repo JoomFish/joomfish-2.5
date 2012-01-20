@@ -32,6 +32,8 @@
  */
 defined('_JEXEC') or die('Restricted access');
 
+jimport( 'joomla.database.table');
+
 class TranslateForms
 {
 
@@ -61,7 +63,8 @@ class TranslateForms
 		$this->contentElement = $contentElement;
 		//$this->tablename = $tablename;
 		//JLoader::import('models.JFForm', JOOMFISH_ADMINPATH);
-		JLoader::import('forms.JFTranslateForm', JoomfishExtensionHelper::getExtraPath('base'));
+		//JLoader::import('forms.JFTranslateForm', JoomfishExtensionHelper::getExtraPath('base'));
+		JLoader::import('JFTranslateForm', JoomfishExtensionHelper::getExtraPath('forms'));
 
 
 	}
@@ -517,8 +520,8 @@ class TranslateForms
 				//we have an component name
 			}
 
-			JLoader::import('models.TranslateModel', JoomfishExtensionHelper::getExtraPath('base'));
-		
+			//JLoader::import('models.TranslateModel', JoomfishExtensionHelper::getExtraPath('base'));
+			JLoader::import('TranslateModel', JoomfishExtensionHelper::getExtraPath('models'));
 			// NOW GET THE TRANSLATION - IF AVAILABLE
 			$this->trans_model = new TranslateModel(array(),$this->contentElement,$this->fields);
 			$this->orig_model = new TranslateModel(array(),$this->contentElement,$this->fields);

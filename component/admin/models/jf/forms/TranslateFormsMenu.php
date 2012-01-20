@@ -44,6 +44,10 @@ class TranslateFormsMenu extends TranslateForms
 	{
 		$this->loadLangComponent();
 		
+		// for J2.5 beta2 and J2.5 RC1 and J2.5  we need to set the table
+		// The Model load this and without nothing found
+		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_menus'.DS.'tables');
+		
 		$cid = JRequest::getVar('cid', array(0));
 		$oldcid = $cid;
 		$translation_id = 0;
@@ -61,7 +65,8 @@ class TranslateFormsMenu extends TranslateForms
 		JRequest::setVar("edit", true);
 
 
-		JLoader::import('models.TranslateModelMenu', JoomfishExtensionHelper::getExtraPath('base'));
+		//JLoader::import('models.TranslateModelMenu', JoomfishExtensionHelper::getExtraPath('base'));
+		JLoader::import('TranslateModelMenu', JoomfishExtensionHelper::getExtraPath('models'));
 		$this->orig_model = new TranslateModelMenu();
 		
 		// Get The Original State Data
