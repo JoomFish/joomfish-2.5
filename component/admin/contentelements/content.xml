@@ -42,7 +42,7 @@
   	  <category>catid</category>
   	  <author>created_by</author>
   	  <keyword>title</keyword>
-  	  <published>published</published>
+  	  <published>state</published>
   	  <changed>created|modified</changed>
   	  <trash>state</trash>
   	  <archive>state</archive>
