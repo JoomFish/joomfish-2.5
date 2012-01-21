@@ -69,7 +69,8 @@ class TranslateFormsContent extends TranslateForms
 		*/
 		
 		//JLoader::import('models.JFContentModelItem', JOOMFISH_ADMINPATH);
-		JLoader::import('models.TranslateModelContent', JoomfishExtensionHelper::getExtraPath('base'));
+		//JLoader::import('models.TranslateModelContent', JoomfishExtensionHelper::getExtraPath('base'));
+		JLoader::import('TranslateModelContent', JoomfishExtensionHelper::getExtraPath('models'));
 		
 		// NOW GET THE TRANSLATION - IF AVAILABLE
 		//$this->trans_model = new JFContentModelItem();
@@ -83,6 +84,11 @@ class TranslateFormsContent extends TranslateForms
 		$this->orig_model->setState('article.id', $contentid);
 		
 		$this->setForms($translation_id, $contentid);
+		
+		
+		//need for J2.5
+		$this->orig_form->setFieldAttribute('catid','extension','com_content');
+		$this->trans_form->setFieldAttribute('catid','extension','com_content');
 		
 		/*
 		if we want for new translation an empty value on an field see TranslateParamsContent
