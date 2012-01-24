@@ -45,6 +45,12 @@ class TranslateModelTranslate extends JFModel
 {
 
 	protected $_modelName = 'translate';
+	protected $_jfManager;
+	
+	public function __construct() {
+		$this->_jfManager = JoomFishManager::getInstance();
+		parent::__construct();
+	}
 
 	/**
 	 * return the model name
@@ -63,9 +69,73 @@ class TranslateModelTranslate extends JFModel
 	 */
 	public function getLanguages()
 	{
-		$jfManager = JoomFishManager::getInstance();
-		return $jfManager->getLanguages(false);
+		return $this->_jfManager->getLanguages(false);
 
+	}
+	
+	
+	/** 
+	 * get a list of content's that must be translated
+	 * @return object result
+	*/
+	public function getTranslations( $language_id, $catid, $limit, $limitstart, $search )
+	{
+
+	$db = JFactory::getDBO();
+	$result = new stdClass();
+	
+	// Build up the rows for the table
+	$rows = null;
+	$total = 0;
+	$result->filterHTML = array();
+	if ($language_id != -1 && isset($catid) && $catid != "")
+	{
+		$contentElement = $this->_jfManager->getContentElement($catid);
+		if (!$contentElement)
+		{
+			$catid = "content";
+			$contentElement = $this->_jfManager->getContentElement($catid);
+		}
+		JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
+		$tranFilters = getTranslationFilters($catid, $contentElement);
+	
+		$total = $contentElement->countReferences($language_id, $tranFilters);
+	
+		if ($total < $limitstart)
+		{
+			$limitstart = 0;
+		}
+	
+		$db->setQuery($contentElement->createContentSQL($language_id, null, $limitstart, $limit, $tranFilters));
+		$rows = $db->loadObjectList();
+		if ($db->getErrorNum())
+		{
+			JError::raiseWarning(200, JTEXT::_('No valid database connection: ') . $db->stderr());
+			// should not stop the page here otherwise there is no way for the user to recover
+			$rows = array();
+		}
+	
+		// Manipulation of result based on further information
+		for ($i = 0; $i < count($rows); $i++)
+		{
+			$translationClass = $contentElement->getTranslationObjectClass();
+			$translationObject = new $translationClass( $language_id, $contentElement );
+			$translationObject->readFromRow($rows[$i]);
+			$rows[$i] = $translationObject;
+		}
+	
+		foreach ($tranFilters as $tranFilter)
+		{
+			$afilterHTML = $tranFilter->createFilterHTML();
+			if (isset($afilterHTML))
+			$result->filterHTML[$tranFilter->filterType] = $afilterHTML;
+		}
+		}
+		
+		$result->rows = &$rows;
+		$result->total = $total;
+		
+		return $result;
 	}
 
 	/**
@@ -80,8 +150,7 @@ class TranslateModelTranslate extends JFModel
 		{
 			list($translationid, $contentid, $language_id) = explode('|', $cid_row);
 
-			$jfManager = JoomFishManager::getInstance();
-			$contentElement = $jfManager->getContentElement($catid);
+			$contentElement = $this->_jfManager->getContentElement($catid);
 			if ($contentElement->getTarget() == "joomfish")
 			{
 				$contentTable = $contentElement->getTableName();
@@ -124,7 +193,7 @@ class TranslateModelTranslate extends JFModel
 			else
 			{
 				$db = JFactory::getDbo();
-				$contentElement = $jfManager->getContentElement($catid);
+				$contentElement = $this->_jfManager->getContentElement($catid);
 				$tableclass = $contentElement->getTableClass();
 				if ($tableclass && intval($translationid) > 0)
 				{
@@ -146,6 +215,60 @@ class TranslateModelTranslate extends JFModel
 		}
 		return $message;
 
+	}
+	
+	/*
+	 * Get orphans list
+	 * @return object $rows
+	 */
+	public function getOrphans($language_id, $limitstart, $limit, $tranFilters) {
+			
+			$data 		= new stdClass();
+			$db 		= JFactory::getDBO();
+			
+			$data->total = 0;
+			$contentElement = $this->_jfManager->getContentElement($catid);
+			$db->setQuery($contentElement->createOrphanSQL($language_id, null, $limitstart, $limit, $tranFilters));
+			$data->rows = $db->loadObjectList();
+			
+			if ($db->getErrorNum())
+			{
+				JError::raiseError(200, JTEXT::_('No valid database connection: ') . $db->stderr());
+				return false;
+			}
+
+			$data->total = count($data->rows);
+
+			for ($i = 0; $i < count($data->rows); $i++)
+			{
+				$data->rows[$i]->state = null;
+				$data->rows[$i]->title = $data->rows[$i]->original_text;
+				if (is_null($data->rows[$i]->title))
+				{
+					$data->rows[$i]->title = JText::_('ORIGINAL_MISSING');
+				}
+				$data->rows[$i]->checked_out = false;
+			}
+			
+			return $data;
+	}
+	
+	/*
+	 * Get details for orphan
+	 * @return object $rows
+	 */
+	public function getOrphanDetail($contentid=null, $language_id=null, $tablename) {
+		
+		$db = JFactory::getDBO();
+
+		// read details of orphan translation
+		//$sql = "SELECT * FROM #__jf_content WHERE id=$mbfc_id AND reference_id=$contentid AND reference_table='".$tablename."'";
+		$sql = "SELECT * FROM #__jf_content WHERE reference_id=$contentid AND language_id='" . $language_id . "' AND reference_table='" . $tablename . "'";
+		$db->setQuery($sql);
+		$rows = null;
+		$rows = $db->loadObjectList();
+		
+		return $rows;
 	}
 
 }
