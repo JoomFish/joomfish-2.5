@@ -777,17 +777,21 @@ class TranslationObject implements iJFTranslatable
 					$table->$publishfield = $this->published;
 				}
 
+							$app = JFactory::getApplication();
+				$language= JFactory::getLanguage(); //get the current language
+				$language->load( 'com_content');
+				
 				// Check the data.
 				if (!$table->check())
 				{
-					//$this->setError($table->getError());
+					$app->enqueueMessage($table->getError(), 'error');
 					return false;
 				}
 
 				// Store the data.
 				if (!$table->store())
 				{
-					//$this->setError($table->getError());
+					$app->enqueueMessage($table->getError(), 'error');
 					return false;
 				}
 				
