@@ -7,8 +7,8 @@
   <copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
  <reference type="content">
     <table name="languages">
-      <field type="referenceid" name="id" translate="0">ID</field>
-      <field type="titletext" name="name" translate="1">Title</field>
+      <field type="referenceid" name="lang_id" translate="0">ID</field>
+      <field type="titletext" name="title" translate="1">Title</field>
     </table>
   </reference>
   <translationfilters>
