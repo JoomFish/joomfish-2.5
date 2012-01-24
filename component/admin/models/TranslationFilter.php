@@ -233,19 +233,37 @@ class translationArchiveFilter extends translationFilter
 	public function createFilter()
 	{
 		if (!$this->filterField)
-			return "";
+		return "";
 		$filter = "";
-		if ($this->filter_value != $this->filterNullValue)
+
+		if ($this->contentElement->getTarget()  == "joomfish")
 		{
-			if ($this->filter_value == 0)
+			if ($this->filter_value != $this->filterNullValue)
 			{
-				$filter = " c." . $this->filterField . " >=0 ";
+				if ($this->filter_value == 0)
+				{
+					$filter = " c." . $this->filterField . " >=0 ";
+				}
+				else
+				{
+					$filter = " c." . $this->filterField . " =-1 ";
+				}
 			}
-			else
+
+		} else {
+			if ($this->filter_value != $this->filterNullValue)
 			{
-				$filter = " c." . $this->filterField . " =-1 ";
+				if ($this->filter_value == 0)
+				{
+					$filter = " ct." . $this->filterField . " !=2 OR  ct." . $this->filterField ." IS NULL";
+				}
+				else
+				{
+					$filter = " ct." . $this->filterField . " =2 ";
+				}
 			}
 		}
+
 		return $filter;
 
 	}
