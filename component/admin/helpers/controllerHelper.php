@@ -45,7 +45,7 @@ class  JoomfishControllerHelper  {
 	{
 		$db =& JFactory::getDBO();
 		// Make usre table exists otherwise create it.
-		$db->setQuery( "CREATE TABLE IF NOT EXISTS `#__jf_tableinfo` ( `id` int(11) NOT NULL auto_increment, `joomlatablename` varchar(100) NOT NULL default '',  `tablepkID`  varchar(100) NOT NULL default '', PRIMARY KEY (`id`)) TYPE=MyISAM");
+		$db->setQuery( "CREATE TABLE IF NOT EXISTS `#__jf_tableinfo` ( `id` int(11) NOT NULL auto_increment, `joomlatablename` varchar(100) NOT NULL default '',  `tablepkID`  varchar(100) NOT NULL default '', PRIMARY KEY (`id`)) ENGINE=MyISAM");
 		$db->query();
 		// clear out existing data
 		$db->setQuery( "DELETE FROM `#__jf_tableinfo`");
