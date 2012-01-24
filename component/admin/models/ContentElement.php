@@ -686,7 +686,7 @@ class ContentElement
 				}
 			}
 
-			$sqlFields[] = "COUNT(distinct $referencefield)";
+			$sqlFields[] = "COUNT(distinct c.$referencefield)";
 			if (isset($idLanguage) && $idLanguage != -1)
 			{
 				// TODO we need a source language for the count!
@@ -716,6 +716,7 @@ class ContentElement
 			$sql = "SELECT " . implode(', ', $sqlFields)
 					. "\nFROM #__" . $contentTable->Name . ' as c'
 					. $transmap
+					."\nLEFT JOIN #__" . $contentTable->Name . ' as ct ON tm.translation_id=ct.' .$referencefield
 					. (count($where) ? "\nWHERE " . implode(' AND ', $where) : "");
 
 			//echo "<pre>count-sql = $sql</pre><br />";
