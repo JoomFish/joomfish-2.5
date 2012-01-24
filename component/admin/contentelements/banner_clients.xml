@@ -6,8 +6,8 @@
   <description>Definition for the core banner component</description>
   <copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
  <reference>
-  	<table name="bannerclient">
-  		<field type="referenceid" name="cid" translate="0">ID</field>
+  	<table name="banner_clients">
+  		<field type="referenceid" name="id" translate="0">ID</field>
   		<field type="titletext" name="name" translate="1">Client Name</field>
   		<field type="text" name="contact" translate="1">Contact Name</field>
   		<field type="text" name="email" translate="1">Contact Email</field>
