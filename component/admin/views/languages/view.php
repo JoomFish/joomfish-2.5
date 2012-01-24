@@ -119,12 +119,16 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 	public function translateConfig($tpl = null) {
 		$document = JFactory::getDocument();
 		$livesite = JURI::base();
+		JHTML::_('behavior.mootools');
+		JHTML::_('behavior.modal');
 		$document->addStyleSheet($livesite.'components/com_joomfish/assets/css/joomfish.css');
 		$document->addScript($livesite.'components/com_joomfish/assets/js/joomfish.mootools.js');
 		
 		//$document->setTitle(JText::_('JOOMFISH_TITLE') . ' :: ' .JText::_( 'LANGUAGE_TITLE' ));
 		$paramsField = JRequest::getVar('paramsField', '');
 		$this->assignRef('paramsField',$paramsField);
+		$lang_id = JRequest::getVar('langId', '');
+		$this->assignRef('lang_id',$lang_id);
 
 		parent::display($tpl);
 	}
@@ -137,6 +141,8 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 	public function filebrowser($tpl = null){
 		$document = JFactory::getDocument();
 		$livesite = JURI::base();
+		JHTML::_('behavior.mootools');
+		JHTML::_('behavior.modal');
 		$document->addStyleSheet($livesite.'components/com_joomfish/assets/css/joomfish.css');
 		$document->addScript($livesite.'components/com_joomfish/assets/js/joomfish.mootools.js');
 		$document->addStyleSheet(JURI::base().'components/com_media/assets/popup-imagelist.css');

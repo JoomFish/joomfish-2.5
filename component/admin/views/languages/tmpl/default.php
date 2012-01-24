@@ -36,22 +36,16 @@ defined('_JEXEC') or die('Restricted access'); ?>
 function showImageBrowser(fieldNum){
 	var imgField = document.getElementById('flagValue'+fieldNum);
 	SqueezeBox.initialize();
-	SqueezeBox.fromElement(this, {
-		handler: 'iframe',
-		url: '<?php echo JURI::base()?>index.php?option=com_joomfish&task=languages.fileBrowser&layout=filebrowser&type=image&tmpl=component&current='+imgField.value+'&flagField='+fieldNum,
-		size: {x: 560, y: 450}
-	});
+	SqueezeBox.setContent( 'iframe', '<?php echo JURI::base()?>index.php?option=com_joomfish&task=languages.fileBrowser&layout=filebrowser&type=image&tmpl=component&current='+imgField.value+'&flagField='+fieldNum
+	);
 }
 
 function showConfigEditor(fieldId, lang_id) {
 	var field = document.getElementById(fieldId);
 	
 	SqueezeBox.initialize();
-	SqueezeBox.fromElement(this, {
-		handler: 'iframe',
-		url: '<?php echo JURI::base()?>index.php?option=com_joomfish&task=languages.translateconfig&layout=translateconfig&tmpl=component&paramsField='+fieldId+'&lang_id='+lang_id+'&current='+encodeURI(field.value),
-		size: {x: 760, y: 550}
-	});
+	SqueezeBox.setContent( 'iframe', '<?php echo JURI::base()?>index.php?option=com_joomfish&task=languages.translateconfig&layout=translateconfig&tmpl=component&paramsField='+fieldId+'&lang_id='+lang_id+'&current='+encodeURI(field.value)
+ 	);
 }
 //]]>
 </script>

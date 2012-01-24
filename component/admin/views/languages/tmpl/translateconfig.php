@@ -34,7 +34,7 @@
 defined('_JEXEC') or die('Restricted access'); ?>
 <form action="index.php" method="post" name="adminForm">
 <input type="hidden" id="paramsfield" name="paramsfield" value="<?echo $this->paramsField;?>" />
-<input type="hidden" name="lang_id" value="<?php echo $this->language->lang_id;?>" />
+<input type="hidden" name="lang_id" value="<?php echo $this->lang_id;?>" />
 <fieldset>
 	<div style="float: right;">
 		<button id="saveConfigTranslation" type="button"><?php echo JText::_( 'SAVE' );?></button>
