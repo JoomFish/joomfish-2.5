@@ -93,7 +93,7 @@ class com_JoomfishInstallerScript
         	$query = $db->getQuery(true);
         	$columnElement   = $db->nameQuote("element");
         	
-			$query->select($db->nameQuote("id").",".$columnElement;
+			$query->select($db->nameQuote("id").",".$columnElement);
 			$query->from($db->nameQuote("#__extensions"));
 			
 			$where = null;
@@ -133,7 +133,7 @@ class com_JoomfishInstallerScript
         	// Uninstall modules
         	foreach($manifest->modules->module as $module) {
         		$attributes = $module->attributes();
-        		$modID = (int)$ids[$attributes['module]]->id;
+        		$modID = (int)$ids[$attributes['module']]->id;
         		$installer->uninstall('module', $modID);
         	}
         	 
