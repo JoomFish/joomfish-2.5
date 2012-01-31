@@ -11,11 +11,9 @@
 	<description>
 		Multilingual extention and translation manager for Joomla! 1.7.x
 	</description>
-	<!--
-	These are now in scriptfile.php
-	<installfile>install/install.php</installfile>
-	<uninstallfile>install/uninstall.php</uninstallfile>
-	//-->
+
+	<scriptfile>install.php</scriptfile>
+
 	<install>
 		<sql>
 			<file driver="mysql" charset="utf8">install/install.mysql.utf8.sql</file>

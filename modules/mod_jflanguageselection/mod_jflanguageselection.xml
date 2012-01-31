@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/module-install.dtd">
-<extension type="module" version="1.6" method="upgrade">
+<extension type="module" version="1.6" method="upgrade" client="site">
 	<name>JF Language Selection</name>
 	<creationDate>January 2012</creationDate>
 	<author>Joom!Fish Project</author>

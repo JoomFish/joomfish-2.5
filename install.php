@@ -24,14 +24,16 @@ class com_JoomfishInstallerScript
             foreach($manifest->plugins->plugin as $plugin) {
                 $attributes = $plugin->attributes();
                 $plg = $source . DS . $attributes['folder'].DS.$attributes['plugin'];
-                $installer->install($plg);
+                $result = ($installer->install($plg) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;;
+                echo '<p>' . JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result . '</p>';
             }
             
             // Install modules
             foreach($manifest->modules->module as $module) {
                 $attributes = $module->attributes();
                 $mod = $source . DS . $attributes['folder'].DS.$attributes['module'];
-                $installer->install($mod);
+                $result = ($installer->install($mod) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;
+                echo '<p>' . JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result . '</p>';;
             }
             
             $db = JFactory::getDbo();
@@ -53,7 +55,7 @@ class com_JoomfishInstallerScript
 			foreach($manifest->plugins->plugin as $plugin) {
 				if ($ltp ==1 ) $where .= " OR ";
 				$attributes = $plugin->attributes();
-				$where .= $columnElement ."='".$attributes['plugin'];
+				$where .= $columnElement ."='".$attributes['plugin']."'";
 				$ltp = 1;
 			}
 			
@@ -64,14 +66,14 @@ class com_JoomfishInstallerScript
 				}
 				if ($ltm ==1 ) $where .= " OR ";
 				$attributes = $module->attributes();
-				$where .= $columnElement ."='".$attributes['module'];
+				$where .= $columnElement ."='".$attributes['module']."'";
 			}
 			
 			$where = 
 			
 			$query->where($where);
             $query->where("$columnType='plugin' OR $columnType='module'");
-            
+            $db->setQuery((string)$query);
             $db->query();
             
         }
@@ -93,7 +95,7 @@ class com_JoomfishInstallerScript
         	$query = $db->getQuery(true);
         	$columnElement   = $db->nameQuote("element");
         	
-			$query->select($db->nameQuote("id").",".$columnElement);
+			$query->select($db->nameQuote("extension_id").",".$columnElement);
 			$query->from($db->nameQuote("#__extensions"));
 			
 			$where = null;
@@ -104,7 +106,7 @@ class com_JoomfishInstallerScript
 			foreach($manifest->plugins->plugin as $plugin) {
 				if ($ltp ==1 ) $where .= " OR ";
 				$attributes = $plugin->attributes();
-				$where .= $columnElement ."='".$attributes['plugin'];
+				$where .= $columnElement ."='".$attributes['plugin']."'";
 				$ltp = 1;
 			}
 			
@@ -115,64 +117,64 @@ class com_JoomfishInstallerScript
 				}
 				if ($ltm ==1 ) $where .= " OR ";
 				$attributes = $module->attributes();
-				$where .= $columnElement ."='".$attributes['module'];
+				$where .= $columnElement ."='".$attributes['module']."'";
 			}
 			
 			$query->where($where);
 			$db->setQuery((string)$query);
 			
 			$ids = $db->loadObjectList('element');
-			
+
         	// Uninstall plugins
         	foreach($manifest->plugins->plugin as $plugin) {
         		$attributes = $plugin->attributes();
-        		$plgID = (int)$ids[$attributes['plugin']]->id;
-	       		$installer->uninstall('plugin', $plgID);
+        		$plgID = $ids[(string)$attributes['plugin']]->extension_id;
+	       		$result = ($installer->uninstall('plugin', (int)$plgID) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;
+	       		echo '<p>' . JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result . '</p>';
         	}
 
         	// Uninstall modules
         	foreach($manifest->modules->module as $module) {
         		$attributes = $module->attributes();
-        		$modID = (int)$ids[$attributes['module']]->id;
-        		$installer->uninstall('module', $modID);
+        		$modID = $ids[(string)$attributes['module']]->extension_id;
+        		$result = ($installer->uninstall('module', (int)$modID) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;
+        		echo '<p>' . JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result . '</p>';
         	}
         	 
-        	// $parent is the class calling this method
-        	echo '<p>' . JText::_('COM_JOOMFISH_UNINSTALL_TEXT') . '</p>';
         }
  
         /**
          * method to update the component
          *
          * @return void
-         */
+         *
         function update($parent) 
         {
                 // $parent is the class calling this method
                 echo '<p>' . JText::_('COM_JOOMFISH_UPDATE_TEXT') . '</p>';
-        }
+        }*/
  
         /**
          * method to run before an install/update/uninstall method
          *
          * @return void
-         */
+         *
         function preflight($type, $parent) 
         {
                 // $parent is the class calling this method
                 // $type is the type of change (install, update or discover_install)
                 echo '<p>' . JText::_('COM_JOOMFISH_PREFLIGHT_' . $type . '_TEXT') . '</p>';
-        }
+        }*/
  
         /**
          * method to run after an install/update/uninstall method
          *
          * @return void
-         */
+         *
         function postflight($type, $parent) 
         {
                 // $parent is the class calling this method
                 // $type is the type of change (install, update or discover_install)
                 echo '<p>' . JText::_('COM_JOOMFISH_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
-        }
+        }*/
 }
