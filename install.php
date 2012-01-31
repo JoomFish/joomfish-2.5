@@ -41,16 +41,36 @@ class com_JoomfishInstallerScript
             $columnEnabled   = $db->nameQuote("enabled");
             
             // Enable plugins and modules
-            $db->setQuery(
-                "UPDATE 
-                    $tableExtensions
-                SET
-                    $columnEnabled=1
-                WHERE
-                    $columnElement='jfrouter' OR $columnElement='jfdatabase' OR $columnElement='mod_jflanguageselection'
-                AND
-                    $columnType='plugin' OR $columnType='module'"
-            );
+            $query = $db->getQuery(true);
+            $query->update($tableExtensions);
+            $query->set($columnEnabled."=1");
+            
+            $where = null;
+			// looptest counters
+			$ltp = 0;
+			$ltm = 0;
+			
+			foreach($manifest->plugins->plugin as $plugin) {
+				if ($ltp ==1 ) $where .= " OR ";
+				$attributes = $plugin->attributes();
+				$where .= $columnElement ."='".$attributes['plugin'];
+				$ltp = 1;
+			}
+			
+			foreach($manifest->modules->module as $module) {
+				if ($ltp ==1 ) {
+					$where .= " OR ";
+					$ltp = 0;
+				}
+				if ($ltm ==1 ) $where .= " OR ";
+				$attributes = $module->attributes();
+				$where .= $columnElement ."='".$attributes['module'];
+			}
+			
+			$where = 
+			
+			$query->where($where);
+            $query->where("$columnType='plugin' OR $columnType='module'");
             
             $db->query();
             
@@ -61,10 +81,64 @@ class com_JoomfishInstallerScript
          *
          * @return void
          */
-        function uninstall($parent) 
+        function uninstall($parent)
         {
-                // $parent is the class calling this method
-                echo '<p>' . JText::_('COM_JOOMFISH_UNINSTALL_TEXT') . '</p>';
+        	$manifest = $parent->get("manifest");
+        	$parent = $parent->getParent();
+        	$source = $parent->getPath("source");
+        	 
+        	$installer = new JInstaller();
+        	
+        	$db = JFactory::getDbo();
+        	$query = $db->getQuery(true);
+        	$columnElement   = $db->nameQuote("element");
+        	
+			$query->select($db->nameQuote("id").",".$columnElement;
+			$query->from($db->nameQuote("#__extensions"));
+			
+			$where = null;
+			// looptest counters
+			$ltp = 0;
+			$ltm = 0;
+			
+			foreach($manifest->plugins->plugin as $plugin) {
+				if ($ltp ==1 ) $where .= " OR ";
+				$attributes = $plugin->attributes();
+				$where .= $columnElement ."='".$attributes['plugin'];
+				$ltp = 1;
+			}
+			
+			foreach($manifest->modules->module as $module) {
+				if ($ltp ==1 ) {
+					$where .= " OR ";
+					$ltp = 0;
+				}
+				if ($ltm ==1 ) $where .= " OR ";
+				$attributes = $module->attributes();
+				$where .= $columnElement ."='".$attributes['module'];
+			}
+			
+			$query->where($where);
+			$db->setQuery((string)$query);
+			
+			$ids = $db->loadObjectList('element');
+			
+        	// Uninstall plugins
+        	foreach($manifest->plugins->plugin as $plugin) {
+        		$attributes = $plugin->attributes();
+        		$plgID = (int)$ids[$attributes['plugin']]->id;
+	       		$installer->uninstall('plugin', $plgID);
+        	}
+
+        	// Uninstall modules
+        	foreach($manifest->modules->module as $module) {
+        		$attributes = $module->attributes();
+        		$modID = (int)$ids[$attributes['module]]->id;
+        		$installer->uninstall('module', $modID);
+        	}
+        	 
+        	// $parent is the class calling this method
+        	echo '<p>' . JText::_('COM_JOOMFISH_UNINSTALL_TEXT') . '</p>';
         }
  
         /**
