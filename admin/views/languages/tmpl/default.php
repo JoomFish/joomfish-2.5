@@ -30,7 +30,10 @@
  * @subpackage Views
  *
 */
-defined('_JEXEC') or die('Restricted access'); ?>
+defined('_JEXEC') or die('Restricted access'); 
+JHtml::_('behavior.mootools');
+JHtml::_('behavior.modal');
+?>
 <script type="text/javascript">
 	//<![CDATA[
 function showImageBrowser(fieldNum){
