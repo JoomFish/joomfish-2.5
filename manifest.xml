@@ -92,175 +92,14 @@
  	</administration>
 
 	<params />
-<!--
 	<modules>
-		<module module="mod_jflanguageselection" title="Language Selection" position="user4" order="-1" client="site">
-			<files folder="mod_jflanguageselection">
-				<folder>tmpl</folder>
-
-				<file>helper.php</file>
-				<file>index.html</file>
-				<file module="mod_jflanguageselection">mod_jflanguageselection.php</file>
-				<file>mod_jflanguageselection.xml</file>
-			</files>
-
-			<languages folder="mod_jflanguageselection/language">
-				<language tag="en-GB">en-GB.mod_jflanguageselection.ini</language>
-			</languages>
-			<media />
-		</module>
-		
-		<module module="mod_translate" title="Direct Translation" position="status" client="administrator">
-			<files folder="mod_translate">
-				<file module="mod_translate">mod_translate.php</file>
-				<file>helper.php</file>
-				<file>index.html</file>
-				<file>mod_translate.xml</file>
-				<folder>assets</folder>
-				<folder>elements</folder>
-				<folder>tmpl</folder>
-			</files>
-			<languages folder="mod_translate/language">
-				<language tag="en-GB">en-GB.mod_translate.ini</language>
-			</languages>
-			<media />
-		</module>
+		<module folder="modules" module="mod_jflanguageselection" name="Language Selection" />
 	</modules>
 
 	<plugins>
-		<plugin plugin="jfdatabase" order="-100" group="system">
-			<files folder="plg_jfdatabase">
-				<folder>jfdatabase</folder>
-				<file>jfdatabase.php</file>
-				<file>jfdatabase.xml</file>
-			</files>
-
-			<languages folder="plg_jfdatabase/language">
-				<language tag="en-GB">en-GB.plg_system_jfdatabase.ini</language>
-			</languages>
-
-			<media />
-		</plugin>
-
-		<plugin plugin="jfrouter" order="-101" group="system">
-			<files folder="plg_jfrouter">
-				<folder>jfrouter</folder>
-				<file>jfrouter.php</file>
-				<file>jfrouter.xml</file>
-			</files>
-
-			<languages folder="plg_jfrouter/language">
-				<language tag="en-GB">en-GB.plg_system_jfrouter.ini</language>
-			</languages>
-
-			<media />
-		</plugin>
-
-		<plugin plugin="jfalternative" group="content">
-			<files folder="plg_jfalternative">
-				<file>jfalternative.php</file>
-				<file>jfalternative.xml</file>
-			</files>
-
-			<languages folder="plg_jfalternative/language">
-				<language tag="en-GB">en-GB.plg_content_jfalternative.ini</language>
-			</languages>
-
-			<media />
-		</plugin>
-
-		<plugin plugin="jfcategories" group="search">
-			<files folder="plg_jfcategories">
-				<file>jfcategories.php</file>
-				<file>jfcategories.xml</file>
-			</files>
-
-			<languages folder="plg_jfcategories/language">
-				<language tag="en-GB">en-GB.plg_search_jfcategories.ini</language>
-			</languages>
-
-			
-			<media />
-		</plugin>
-		<plugin plugin="jfcontacts" group="search">
-			<files folder="plg_jfcontacts">
-				<file>jfcontacts.php</file>
-				<file>jfcontacts.xml</file>
-			</files>
-
-			<languages folder="plg_jfcontacts/language">
-				<language tag="en-GB">en-GB.plg_search_jfcontacts.ini</language>
-			</languages>
-
-						
-			<media />
-		</plugin>
-		<plugin plugin="jfcontent" group="search">
-			<files folder="plg_jfcontent">
-				<file>jfcontent.php</file>
-				<file>jfcontent.xml</file>
-			</files>
-
-			<languages folder="plg_jfcontent/language">
-				<language tag="en-GB">en-GB.plg_search_jfcontent.ini</language>
-			</languages>
-
-						
-			<media />
-		</plugin>
-		<plugin plugin="jfnewsfeeds" group="search">
-			<files folder="plg_jfnewsfeeds">
-				<file>jfnewsfeeds.php</file>
-				<file>jfnewsfeeds.xml</file>
-			</files>
-
-			<languages folder="plg_jfnewsfeeds/language">
-				<language tag="en-GB">en-GB.plg_search_jfnewsfeeds.ini</language>
-			</languages>
-
-						
-			<media />
-		</plugin>
-		<plugin plugin="jfsections" group="search">
-			<files folder="plg_jfsections">
-				<file>jfsections.php</file>
-				<file>jfsections.xml</file>
-			</files>
-
-			<languages folder="plg_jfsections/language">
-				<language tag="en-GB">en-GB.plg_search_jfsections.ini</language>
-			</languages>
-
-						
-			<media />
-		</plugin>
-		<plugin plugin="jfweblinks" group="search">
-			<files folder="plg_jfweblinks">
-				<file>jfweblinks.php</file>
-				<file>jfweblinks.xml</file>
-			</files>
-
-			<languages folder="plg_jfweblinks/language">
-				<language tag="en-GB">en-GB.plg_search_jfweblinks.ini</language>
-			</languages>
-
-						
-			<media />
-		</plugin>
-
-		<plugin plugin="missing_translation" group="joomfish">
-			<files folder="plg_missing_translation">
-				<file>missing_translation.php</file>
-				<file>missing_translation.xml</file>
-			</files>
-			<languages folder="plg_missing_translation/language">
-				<language tag="en-GB">en-GB.plg_joomfish_missing_translation.ini</language>
-			</languages>
-			
-			<media />
-		</plugin>
+		<plugin folder="plugins/system" plugin="jfdatabase" name="System - JFDatabase" group="system" />
+		<plugin folder="plugins/system" plugin="jfrouter" name="System - JFRouter" group="system" />
 	</plugins>
-	//-->
 	
 	<check>
 		<directory>/modules</directory>
@@ -275,14 +114,14 @@
 		<extension name="jfnewsfeeds"  type="plugins" field="published" value="1">element='jfnewsfeeds'</extension>
 		<extension name="jfsections"  type="plugins" field="published" value="1">element='jfsections'</extension>
 		<extension name="jfweblinks"  type="plugins" field="published" value="1">element='jfweblinks'</extension>
+		<extension name="jfalternative"  type="plugins" field="published" value="1">element='jfalternative'</extension>
+		<extension name="mod_translate"  type="modules" field="published" value="1">module='mod_translate'</extension>
+		//-->
 		<extension name="jfrouter"  type="plugins" field="published" value="1">element='jfrouter'</extension>
 		<extension name="jfrouter"  type="plugins" field="ordering" value="0">folder='system'</extension>
 		<extension name="jfdatabase"  type="plugins" field="published" value="1">element='jfdatabase'</extension>
 		<extension name="jfdatabase"  type="plugins" field="ordering" value="1">folder='system'</extension>
-		<extension name="jfalternative"  type="plugins" field="published" value="1">element='jfalternative'</extension>
-		//-->
 		<extension name="mod_jflanguageselection"  type="modules" field="published" value="1">module='mod_jflanguageselection'</extension>
-	 	<extension name="mod_translate"  type="modules" field="published" value="1">module='mod_translate'</extension>
 	 	<performance name="mySQL Driver" type="database" check_function="mysqli_connect" check_true="mysqli" check_false="mysql" optimal_value="mysqli" link="index.php?option=com_config" />
 	 	<performance name="PHP Version" type="php" required="5.0.0" optimal_value="5.3.0" link="index.php?option=com_admin&amp;task=sysinfo" />
 	 	<performance name="Cache" type="config" value="transcaching" optimal_value="1" link="index.php?option=com_joomfish" />
