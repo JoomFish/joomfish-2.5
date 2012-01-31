@@ -19,21 +19,35 @@ class com_JoomfishInstallerScript
             $source = $parent->getPath("source");
              
             $installer = new JInstaller();
+			$app = JFactory::getApplication();
             
             // Install plugins
             foreach($manifest->plugins->plugin as $plugin) {
                 $attributes = $plugin->attributes();
                 $plg = $source . DS . $attributes['folder'].DS.$attributes['plugin'];
-                $result = ($installer->install($plg) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;;
-                echo '<p>' . JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result . '</p>';
+                if ($installer->install($plg) !== false) {
+                	$result = JText::_('COM_JOOMFISH_SUCCESS');
+                	$mtype = 'information';
+                }  else {
+                	$result = JText::_('COM_JOOMFISH_FAIL') ;
+                	$mtype = 'error';
+                }       
+                
+                $app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result , $mtype);
             }
             
             // Install modules
             foreach($manifest->modules->module as $module) {
                 $attributes = $module->attributes();
                 $mod = $source . DS . $attributes['folder'].DS.$attributes['module'];
-                $result = ($installer->install($mod) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;
-                echo '<p>' . JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result . '</p>';;
+                if ($installer->install($mod) !== false) {
+                	$result = JText::_('COM_JOOMFISH_SUCCESS');
+                	$mtype = 'information';
+                }  else {
+                	$result = JText::_('COM_JOOMFISH_FAIL') ;
+                	$mtype = 'error';
+                }
+                $app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result , $mtype);
             }
             
             $db = JFactory::getDbo();
@@ -90,6 +104,7 @@ class com_JoomfishInstallerScript
         	$source = $parent->getPath("source");
         	 
         	$installer = new JInstaller();
+        	$app = JFactory::getApplication();
         	
         	$db = JFactory::getDbo();
         	$query = $db->getQuery(true);
@@ -129,16 +144,28 @@ class com_JoomfishInstallerScript
         	foreach($manifest->plugins->plugin as $plugin) {
         		$attributes = $plugin->attributes();
         		$plgID = $ids[(string)$attributes['plugin']]->extension_id;
-	       		$result = ($installer->uninstall('plugin', (int)$plgID) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;
-	       		echo '<p>' . JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result . '</p>';
+	       	    if ($installer->uninstall('plugin', (int)$plgID) !== false) {
+                	$result = JText::_('COM_JOOMFISH_SUCCESS');
+                	$mtype = 'information';
+                }  else {
+                	$result = JText::_('COM_JOOMFISH_FAIL') ;
+                	$mtype = 'error';
+                }
+	       		$app->enqueueMessage( JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result , $mtype);
         	}
 
         	// Uninstall modules
         	foreach($manifest->modules->module as $module) {
         		$attributes = $module->attributes();
         		$modID = $ids[(string)$attributes['module']]->extension_id;
-        		$result = ($installer->uninstall('module', (int)$modID) !== false) ? JText::_('COM_JOOMFISH_SUCCESS') : JText::_('COM_JOOMFISH_FAIL') ;
-        		echo '<p>' . JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result . '</p>';
+        	    if ($installer->uninstall('module', (int)$modID) !== false) {
+                	$result = JText::_('COM_JOOMFISH_SUCCESS');
+                	$mtype = 'information';
+                }  else {
+                	$result = JText::_('COM_JOOMFISH_FAIL') ;
+                	$mtype = 'error';
+                }
+        		$app->enqueueMessage( JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result , $mtype);
         	}
         	 
         }
