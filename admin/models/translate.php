@@ -90,7 +90,7 @@ class TranslateModelTranslate extends JFModel
 
 				// safety check -- complete overkill but better to be safe than sorry
 				// get the translation details
-				JLoader::import('models.JFContent', JOOMFISH_ADMINPATH);
+				JLoader::import('tables.JFContent', JOOMFISH_ADMINPATH);
 				$translation = new jfContent($db);
 				$translation->load($translationid);
 

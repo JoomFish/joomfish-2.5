@@ -31,7 +31,7 @@
  * @subpackage Models
  *
  */
-JLoader::register('jfContent', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'JFContent.php');
+JLoader::register('jfContent', JOOMFISH_ADMINPATH . DS . 'tables' . DS . 'JFContent.php');
 JLoader::register('iJFTranslatable', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'iJFTranslatable.php');
 
 /**

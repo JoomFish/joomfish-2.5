@@ -35,7 +35,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 /**
- * Database class for handling the mambe fish contents
+ * Database class for handling the joomfish contents
  *
  * @package joomfish
  * @subpackage administrator
@@ -82,9 +82,9 @@ class jfContent extends JTable  {
 	 * Bind the content of the newValues to the object. Overwrite to make it possible
 	 * to use also objects here
 	 */
-	public function bind( $newValues ) {
+	public function bind( $newValues, $ignore = array() ) {
 		if (is_array( $newValues )) {
-			return parent::bind( $newValues );
+			return parent::bind( $newValues, $ignore );
 		} else {
 			foreach (get_object_vars($this) as $k => $v) {
 				if ( isset($newValues->$k) ) {
