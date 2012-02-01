@@ -790,10 +790,15 @@ class TranslateParams_components extends TranslateParams_xml
 
 		$path = DS . "components" . DS . $comp . DS . "config.xml";
 		$xmlfile = JApplicationHelper::_checkPath($path);
-
-		$this->origparams = new JParameter($original, $xmlfile, "component");
-		$this->transparams = new JParameter($translation, $xmlfile, "component");
-		$this->defaultparams = new JParameter("", $xmlfile, "component");
+		
+		
+		$this->origparams = new JRegistry($original);
+		$this->origparams->loadFile($xmlfile, 'XML');
+		
+		$this->transparams = new JRegistry($translation);
+		$this->transparams->loadFile($xmlfile, 'XML');
+		$this->defaultparams = new JRegistry();
+		$this->defaultparams->loadFile($xmlfile, 'XML');
 		$this->fields = $fields;
 
 	}

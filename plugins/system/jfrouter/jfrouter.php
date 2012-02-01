@@ -346,7 +346,7 @@ class plgSystemJFRouter extends JPlugin{
 		$overwriteGlobalConfig =  $jfparams->get( 'overwriteGlobalConfig', 0 );
 		if($overwriteGlobalConfig ) {
 			// We should overwrite additional global variables based on the language parameter configuration
-			$params = new JParameter($jfLang->params);
+			$params = new JRegistry($jfLang->params);
 			$paramarray = $params->toArray();
 			foreach ($paramarray as $key=>$val) {
 				$registry->setValue("config.".$key,$val);
@@ -547,7 +547,7 @@ function routeJFRule($router, &$uri){
 		// so load plugin parameters directly
 		if (is_null($params)){
 			$params = JPluginHelper::getPlugin("system", "jfrouter");
-			$params = new JParameter($params->params);
+			$params = new JRegistry($params->params);
 		}
 		
 		$sefordomain = $params->get("sefordomain","sefprefix");

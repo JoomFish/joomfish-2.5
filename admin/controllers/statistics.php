@@ -67,7 +67,7 @@ class StatisticsController extends JController  {
 	 * Standard display control structure
 	 * 
 	 */
-	public function display( )
+	public function display($cachable = false, $urlparams = false)
 	{
 		$this->view =  $this->getView("statistics");
 		parent::display();

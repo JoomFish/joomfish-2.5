@@ -414,10 +414,11 @@ class TableJFLanguage extends JTable  {
 		// allow bind of aggregated objects
 		$this->jLanguageTable->bind($src);
 		// If the core language object includes special meta information we ensure those are stored in our parameter objcet
-		$langParameter = new JParameter($this->params);
+		$langParameter = new JRegistry($this->params);
 		$langParameter->set('MetaDesc', $this->jLanguageTable->get('metadesc'));
 		$langParameter->set('MetaKeys',$this->jLanguageTable->get('metakey'));
 		$this->params = $langParameter->toString();
+		
 		$src->params = $this->params;
 		$this->jfLanguageExt->bind($src, $ignore);
 

@@ -16,7 +16,7 @@
 		</field>
 		
 		<field name="@spacer" type="spacer" default='MEDIA_FILES'  label='MEDIA_FILES'  description="" />
-		<field name="directory_flags" type="text" size="50" default="/media/com_joomfish/default/flags" label='FLAGS_DIRECTORY'  description="FLAGS_DIRECTORY_HELP" />
+		<field name="directory_flags" type="text" size="50" default="media/com_joomfish/default/flags" label='FLAGS_DIRECTORY'  description="FLAGS_DIRECTORY_HELP" />
 
 		<field name="@spacer" type="spacer" default='MANAGING_TRANSLATIONS'  label='MANAGING_TRANSLATIONS'  description="" />
 		<field name="storageOfOriginal" type="list" default="md5" label='STORE_ORIGINAL_VERSION_AS'  description="MNGORIGINAL_HELP">

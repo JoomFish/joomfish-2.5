@@ -76,7 +76,8 @@ class HelpViewHelp extends JoomfishViewDefault
 			$this->$layout($tpl);
 		}
 		
-		$this->assignRef('helppath', $this->getHelpPathL('help.overview'));
+		$helpov = $this->getHelpPathL('help.overview');
+		$this->assignRef('helppath', $helpov);
 		
 		parent::display($tpl);
 	}

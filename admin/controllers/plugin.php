@@ -51,7 +51,7 @@ class PluginController extends JController  {
 	 * Standard display control structure
 	 * 
 	 */
-	public function display( )
+	public function display($cachable = false, $urlparams = false)
 	{
 		// test if any plugins are installed - if not divert to installation screen
 		$db = JFactory::getDBO();

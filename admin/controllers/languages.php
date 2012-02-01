@@ -51,7 +51,7 @@ class LanguagesController extends JController  {
 	 * Standard display control structure
 	 * 
 	 */
-	public function display( )
+	public function display($cachable = false, $urlparams = false)
 	{
 		$this->view =  $this->getView("languages");
 		parent::display();
@@ -226,17 +226,17 @@ class LanguagesController extends JController  {
 		$this->view->language->load($lang_id);
 
 		if (isset($this->view->language) && isset($this->view->language->params) ){
-			$this->view->translations = new JParameter( $this->view->language->params);
+			$this->view->translations = new JRegistry( $this->view->language->params);
 		}
 		else {
-			$this->view->translations = new JParameter("");
+			$this->view->translations = new JRegistry();
 		}
 		*/
 		
-		$this->view->translations = new JParameter("");
+		$this->view->translations = new JRegistry();
 		$current = JRequest::getVar('current', '', 'request', 'string');
 		if($current != null) {
-			$this->view->translations = new JParameter($current);
+			$this->view->translations = new JRegistry($current);
 		}
 		
 
@@ -279,7 +279,6 @@ class LanguagesController extends JController  {
 			die( 'Invalid Language Id' );
 		}
 		
-		$params = new JParameter($language->params);
 		$data = array();
 		foreach ($_REQUEST as $key=>$val) {
 			if (strpos($key,"trans_")===0){

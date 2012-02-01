@@ -35,8 +35,8 @@
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-$user =& JFactory::getUser();
-$db =& JFactory::getDBO();
+$user = JFactory::getUser();
+$db = JFactory::getDBO();
 $filterOptions = '<table><tr><td width="100%"></td>';
 $filterOptions .= '<td  nowrap="nowrap" align="center">' .JText::_( 'LANGUAGES' ). ':<br/>' .$this->langlist. '</td>';
 $filterOptions .= '<td  nowrap="nowrap" align="center">' .JText::_( 'CONTENT_ELEMENTS' ). ':<br/>' .$this->clist. '</td>';

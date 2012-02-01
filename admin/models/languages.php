@@ -137,7 +137,7 @@ class LanguagesModelLanguages extends JFModel
 				$jfLang->set('params', $data['params'][$i]);
 				
 				// ensure the meta key information are stored in the respective fields, therefore extract them additionally form the params
-				$params = new JParameter($data['params'][$i]);
+				$params = new JRegistry($data['params'][$i]);
 				$jfLang->set('metadesc', $params->get('MetaDesc', ''));
 				$jfLang->set('metakey', $params->get('MetaKeys', ''));
 				
@@ -247,7 +247,7 @@ class LanguagesModelLanguages extends JFModel
 			$frontlang->title_native 	= $frontlang->title;
 			$frontlang->sef   			= $langarr[0];
 			$frontlang->published   	= &$frontlang->enabled;
-			$frontlang->image_ext 		= '/media/com_joomfish/default/flags/' .$langarr[0]. '.gif';
+			$frontlang->image_ext 		= 'media/com_joomfish/default/flags/' .$langarr[0]. '.gif';
 		}
 		
 		$languages = array_merge($frontlanguages, $contentlanguages);

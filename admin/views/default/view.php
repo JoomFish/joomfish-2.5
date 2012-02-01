@@ -105,7 +105,7 @@ class JoomfishViewDefault extends JView {
 	 * The path is used as include statement within the view template  
 	 */
 	protected function getHelpPathL($ref) {
-		$lang =& JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 		if (!preg_match( '#\.html$#i', $ref )) {
 			$ref = $ref . '.html';
 		}

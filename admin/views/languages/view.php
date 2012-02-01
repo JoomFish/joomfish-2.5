@@ -93,8 +93,10 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 		$this->assignRef('defaultLanguage', $defaultLanguage);
 		
 		$jfManager = JoomFishManager::getInstance();
-		$this->assignRef('overwriteGlobalConfig', $jfManager->getCfg('overwriteGlobalConfig'));
-		$this->assignRef('directory_flags', $jfManager->getCfg('directory_flags'));
+		$overwriteGlobalConfig = $jfManager->getCfg('overwriteGlobalConfig');
+		$this->assignRef('overwriteGlobalConfig', $overwriteGlobalConfig);
+		$directory_flags = $jfManager->getCfg('directory_flags');
+		$this->assignRef('directory_flags', $directory_flags);
 
 		// state filter
 		$lists['state']	= JHTML::_('grid.state',  $filter_state );
@@ -105,8 +107,9 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 
 		// search filter
 		$lists['search']= $search;
-
-		$this->assignRef('user',		JFactory::getUser());
+		
+		$user 			= JFactory::getUser();
+		$this->assignRef('user', 		$user);		
 		$this->assignRef('lists',		$lists);
 
 		JHTML::_('behavior.tooltip');
@@ -119,8 +122,8 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 	public function translateConfig($tpl = null) {
 		$document = JFactory::getDocument();
 		$livesite = JURI::base();
-		JHTML::_('behavior.mootools');
-		JHTML::_('behavior.modal');
+		JHtml::_('behavior.mootools');
+		JHtml::_('behavior.modal');
 		$document->addStyleSheet($livesite.'components/com_joomfish/assets/css/joomfish.css');
 		$document->addScript($livesite.'components/com_joomfish/assets/js/joomfish.mootools.js');
 		
@@ -141,8 +144,8 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 	public function filebrowser($tpl = null){
 		$document = JFactory::getDocument();
 		$livesite = JURI::base();
-		JHTML::_('behavior.mootools');
-		JHTML::_('behavior.modal');
+		JHtml::_('behavior.mootools');
+		JHtml::_('behavior.modal');
 		$document->addStyleSheet($livesite.'components/com_joomfish/assets/css/joomfish.css');
 		$document->addScript($livesite.'components/com_joomfish/assets/js/joomfish.mootools.js');
 		$document->addStyleSheet(JURI::base().'components/com_media/assets/popup-imagelist.css');

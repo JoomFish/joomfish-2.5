@@ -43,7 +43,7 @@ class  JoomfishControllerHelper  {
 	 */
 	public static function setupContentElementCache()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		// Make usre table exists otherwise create it.
 		$db->setQuery( "CREATE TABLE IF NOT EXISTS `#__jf_tableinfo` ( `id` int(11) NOT NULL auto_increment, `joomlatablename` varchar(100) NOT NULL default '',  `tablepkID`  varchar(100) NOT NULL default '', PRIMARY KEY (`id`)) ENGINE=MyISAM");
 		$db->query();
@@ -74,7 +74,7 @@ class  JoomfishControllerHelper  {
 	 */
 	public static function testSystemBotState()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$botState = false;
 		$plugin = JPluginHelper::getPlugin("system", "jfdatabase");
 		if ($plugin != null) {
