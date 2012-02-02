@@ -246,7 +246,7 @@ class LanguagesModelLanguages extends JFModel
 			$frontlang->lang_id   		= null;
 			$frontlang->title_native 	= $frontlang->title;
 			$frontlang->sef   			= $langarr[0];
-			$frontlang->published   	= &$frontlang->enabled;
+			$frontlang->published   	= 0;  // default to unpublished as it needs to be saved before it can be used - inserted in languages table
 			$frontlang->image_ext 		= 'media/com_joomfish/default/flags/' .$langarr[0]. '.gif';
 		}
 		

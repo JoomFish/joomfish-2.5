@@ -141,7 +141,7 @@ function showConfigEditor(fieldId, lang_id) {
 				      		<?php
 							$src = JoomfishExtensionHelper::getLanguageImageSource($language);
 							?>
-							<img src="<?php echo $src != '' ? $src : JURI::base().'images/blank.png';?>" alt="<?php echo html_entity_decode( $src );?>" title="<?php echo $language->title?>" class="flag" id="flagImage<?php echo $i;?>" />
+							<img src="<?php echo $src != '' ? JURI::root().$src : JURI::root().'images/blank.png';?>" alt="<?php echo html_entity_decode( $src );?>" title="<?php echo $language->title?>" class="flag" id="flagImage<?php echo $i;?>" />
 				      		<input id="flagValue<?php echo $i;?>" type="text" name="image[]" value="<?php echo $src ?>" style="width: 100px;" readonly="readonly" />
 				      		<input id="browseLanguageImage" class="button" type="button" value="<?php echo JText::_( 'JF_BROWSE' );?>" onClick="showImageBrowser('<?php echo $i;?>');"/>
 						</td>

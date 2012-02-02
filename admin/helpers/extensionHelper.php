@@ -81,7 +81,7 @@ class  JoomfishExtensionHelper  {
 	public static function getLanguageImageSource($language) {
 		
 		$params = JComponentHelper::getParams('com_joomfish');
-		$media = $params->get('directory_flags', 'media/mod_languages/images/');
+		$media = $params->get('directory_flags', 'media/mod_languages/images');
 		$cur_template = JFactory::getApplication()->getTemplate();
 		$folder = '';
 		$file = '';
@@ -113,8 +113,8 @@ class  JoomfishExtensionHelper  {
 				self::$imagePath[$path] = '/templates/'. $cur_template .'/'.$path;
 			} elseif ( JFile::exists ( JPATH_SITE .DS. $path )) {
 				self::$imagePath[$path] = $path;
-			} elseif ( JFile::exists ( JPATH_SITE . $media .DS. $path )) {
-				self::$imagePath[$path] = $media .DS. $path;
+			} elseif ( JFile::exists ( JPATH_SITE .DS. $media .DS. $path )) {
+				self::$imagePath[$path] = $media .'/'. $path;
 			} else {
 				self::$imagePath[$path] = $path;
 			}
