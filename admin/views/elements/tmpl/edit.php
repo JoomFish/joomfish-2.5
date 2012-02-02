@@ -107,7 +107,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 				<td><?php echo $tableField->Name ? $tableField->Name : "&nbsp;";?></td>
 				<td><?php echo $tableField->Type ? $tableField->Type : "&nbsp;";?></td>
 				<td><?php echo $tableField->Lable ? $tableField->Lable : "&nbsp;";?></td>
-				<td><?php echo $tableField->Translate ? JText::_('JF_YES') : JText::_('JF_NO');?></td>
+				<td><?php echo $tableField->Translate ? JText::_('JYES') : JText::_('JF_NO');?></td>
 			</tr>
 				<?php
 				$k=1-$k;

@@ -24,8 +24,8 @@
 		<fields name="params">
 			<fieldset name="basic"   addfieldpath="/plugins/system/jfrouter/jfrouter/fields" >
 				<field name="determitLanguage" type="radio" default="1" label='ENABLE_LANGUAGE_DETERMINATION'  description="If an unkown user comes to your site - try to determinate the language based on the browser settings.">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
+					<option value="0">JNo</option>
+					<option value="1">JYes</option>
 				</field>
 				<field name="newVisitorAction" type="list" default='BROWSER'       label="Language selection for new visitors?"
        description="Determine language selection for new visitors (only Enable Language determination is 'Yes')" >
@@ -34,13 +34,13 @@
 					<option value="site">Site Default Language</option>
 				</field>
 				<field name="use302redirect" type="radio" default="0" label="Use 302 redirect" description="For new users the redirection to the correct language is done by automatic integration or an official 302 redirect to a different URL such as www.yourdomain.com/en">
-					<option value="0">No</option>
-					<option value="1">Yes</option>
+					<option value="0">JNo</option>
+					<option value="1">JYes</option>
 				</field>
 				<field name="enableCookie" type="radio" default="1"
 			description="Switch off the cookie only if you have a different solution to define the once selected language, e.g. via an URL." label='SAVE_USER_LANGUAGE_IN_A_COOKIE' >
-					<option value="0">No</option>
-					<option value="1">Yes</option>
+					<option value="0">JNo</option>
+					<option value="1">JYes</option>
 				</field>
 				<field name="sefordomain" type="radio" default='SEFPREFIX'       label="Use SEF prefix or domains?" description='TBD'      >
 					<option value="sefprefix">SEF Prefix</option>

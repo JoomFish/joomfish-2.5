@@ -53,7 +53,7 @@ function showConfigEditor(fieldId, lang_id) {
 //]]>
 </script>
 <div id="jfToggleSidebarContainer">
-	<a href="#" id="jfToggleSidebar"><?php echo JText::_( 'TOGGLE_SIDEBAR' ); ?></a>
+	<a href="#" id="jfToggleSidebar"><?php echo JText::_( 'JF_TOGGLE_SIDEBAR' ); ?></a>
 </div>
 <form action="index.php" method="post" name="adminForm">
 <table cellspacing="0" cellpadding="0" border="0" class="jfAdminContainer">
@@ -143,11 +143,11 @@ function showConfigEditor(fieldId, lang_id) {
 							?>
 							<img src="<?php echo $src != '' ? $src : JURI::base().'images/blank.png';?>" alt="<?php echo html_entity_decode( $src );?>" title="<?php echo $language->title?>" class="flag" id="flagImage<?php echo $i;?>" />
 				      		<input id="flagValue<?php echo $i;?>" type="text" name="image[]" value="<?php echo $src ?>" style="width: 100px;" readonly="readonly" />
-				      		<input id="browseLanguageImage" class="button" type="button" value="<?php echo JText::_( 'BROWSE' );?>" onClick="showImageBrowser('<?php echo $i;?>');"/>
+				      		<input id="browseLanguageImage" class="button" type="button" value="<?php echo JText::_( 'JF_BROWSE' );?>" onClick="showImageBrowser('<?php echo $i;?>');"/>
 						</td>
 				      <td><input type="text" name="order[]" value="<?php echo $language->ordering; ?>" maxlength="5" /></td>
 				      <td align="center"><input id="paramsValue<?php echo $i;?>" type="hidden" name="params[]" value="<?php echo $language->params; ?>" />
-				      	<a href="#" onClick="showConfigEditor('paramsValue<?php echo $i;?>', '<?php echo $language->lang_id;?>');"><?php echo JHTML::_('image.administrator', 'menu/icon-16-config.png', '/images/', null, null, JText::_( 'EDIT' ));?></a>
+				      	<a href="#" onClick="showConfigEditor('paramsValue<?php echo $i;?>', '<?php echo $language->lang_id;?>');"><?php echo JHTML::_('image.administrator', 'menu/icon-16-config.png', '/images/', null, null, JText::_( 'JF_EDIT' ));?></a>
 					  </td>
 					      <?php
 					      $k = 1 - $k;
@@ -175,7 +175,7 @@ function showConfigEditor(fieldId, lang_id) {
 			    </tr>
 			    <tr>
 			      <td><strong><?php echo $this->fetchTooltip('Overwrite global config values', JText::_('OVERWRITE_GLOBAL_CONFIG_HELP')); ?></strong></td>
-			      <td nowrap="nowrap"><?php echo $this->overwriteGlobalConfig ? JText::_('JF_YES') : JText::_('JF_NO'); ?></td>
+			      <td nowrap="nowrap"><?php echo $this->overwriteGlobalConfig ? JText::_('JYES') : JText::_('JNO'); ?></td>
 			    </tr>
 			    <tr>
 			      <td><strong><?php echo $this->fetchTooltip('Flags directory', JText::_('FLAGS_DIRECTORY_HELP')); ?></strong></td>

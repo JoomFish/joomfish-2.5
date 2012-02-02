@@ -35,7 +35,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	  <h1><?php echo $this->title;?></h1>
 		<div id="fileBrowserFolderPath">
 			<a id="fileBrowserFolderPathUp" href="<?php echo JRoute::_('index.php?option=com_joomfish&task=languages.fileBrowser&layout=filebrowser&folder='.$this->parent.'&type='.$this->type.'&tmpl=component&flagField='.$this->flagField);?>">
-				<span><?php echo JText::_( 'UP' ); ?></span>
+				<span><?php echo JText::_( 'JF_UP' ); ?></span>
 			</a>
 			<input type="text" value="<?php echo $this->path;?>" name="path" disabled="disabled" id="addressPath" maxlength="255" />
 			<div class="clr"></div>

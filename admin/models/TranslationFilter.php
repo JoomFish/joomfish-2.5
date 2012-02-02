@@ -206,8 +206,8 @@ class translationFrontpageFilter extends translationFilter
 
 		$FrontpageOptions = array();
 		$FrontpageOptions[] = JHTML::_('select.option', -1, JText::_('FILTER_ANY'));
-		$FrontpageOptions[] = JHTML::_('select.option', 1, JText::_('JF_YES'));
-		$FrontpageOptions[] = JHTML::_('select.option', 0, JText::_('JF_NO'));
+		$FrontpageOptions[] = JHTML::_('select.option', 1, JText::_('JYES'));
+		$FrontpageOptions[] = JHTML::_('select.option', 0, JText::_('JNO'));
 		$frontpageList = array();
 		$frontpageList["title"] = JText::_('FRONTPAGE_FILTER');
 		$frontpageList["html"] = JHTML::_('select.genericlist', $FrontpageOptions, 'frontpage_filter_value', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value);
@@ -284,8 +284,8 @@ class translationArchiveFilter extends translationFilter
 
 		$FrontpageOptions = array();
 		$FrontpageOptions[] = JHTML::_('select.option', -1, JText::_('FILTER_ANY'));
-		$FrontpageOptions[] = JHTML::_('select.option', 1, JText::_('YES'));
-		$FrontpageOptions[] = JHTML::_('select.option', 0, JText::_('NO'));
+		$FrontpageOptions[] = JHTML::_('select.option', 1, JText::_('JYES'));
+		$FrontpageOptions[] = JHTML::_('select.option', 0, JText::_('JNO'));
 		$frontpageList = array();
 		$frontpageList["title"] = JText::_('ARCHIVE_FILTER');
 		$frontpageList["html"] = JHTML::_('select.genericlist', $FrontpageOptions, 'archive_filter_value', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value);
