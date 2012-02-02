@@ -134,15 +134,16 @@ class ContentElementTablefield {
 				parse_str(parse_url($value, PHP_URL_QUERY), $args);
 			}
 			$translation = json_decode($this->translationContent->value);
+			$translationobj = (is_object($translation)) ? $translation : new stdClass();
+			
 			if(count($args)>0){
-				$translation->jfrequest=$args;
-				$this->translationContent->value  = json_encode($translation);
+				$translationobj->jfrequest=$args;
+				$this->translationContent->value  = json_encode($translationobj);
 			} 
 			else {
-				$translation->jfrequest =array();
-				$this->translationContent->value  = json_encode($translation);
-			}
-				
+				$translationobj->jfrequest = array();
+				$this->translationContent->value  = json_encode($translationobj);
+			}			
 			
 
 		}

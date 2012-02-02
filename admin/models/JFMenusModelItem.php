@@ -116,9 +116,16 @@ class JFTempMenusModelItem extends MenusModelItem {
 	
 class JFMenusModelItem extends JFTempMenusModelItem {
 	
+	public function __construct($config = array())
+	{
+		// Must set option value to override constructors attempts to find it!
+		$this->option  = "com_menus";
+		return parent::__construct($config);
+	}
+	
 	function &getItem($translation=null)
 	{
-		
+		JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_menus/tables');
 		$table = clone(parent::getItem());
 
 		// I could pick up the URL here or treat as a special content element field type?
@@ -163,7 +170,7 @@ class JFMenusModelItem extends JFTempMenusModelItem {
 }
 class JFDefaultMenusModelItem extends JFTempMenusModelItem {
 
-	function &getItem()
+	function &getItem($pk = null)
 	{
 
 		$table =  parent::getItem();

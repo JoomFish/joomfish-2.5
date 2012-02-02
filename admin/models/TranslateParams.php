@@ -201,7 +201,7 @@ class JFMenuParams extends JObject
 	{
 		$this->menuform = $this->form;
 //		var_dump($this->menuform );
-		$sliders = & JPane::getInstance('sliders');
+		$sliders = JPane::getInstance('sliders');
 		echo $sliders->startPane('params');
 		
 		$fieldSets = $this->form->getFieldsets('request');
