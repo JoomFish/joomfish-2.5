@@ -672,20 +672,27 @@ class JFDatabase extends interceptDB {
 	 * if it doesn't already exist. And keeps sure that there is only one
 	 * instace for a specific combination of the JDatabase signature
 	 *
-	 * @param string  Database driver
-	 * @param string Database host
-	 * @param string Database user name
-	 * @param string Database user password
-	 * @param string Database name
-	 * @param string Common prefix for all tables
+	 * @param array  An array of otions
 	 * @return database A database object
-	 * @since 1.5
+	 * @since 2.5
 	*/
-	static function &getInstance( $driver='mysqli', $host='localhost', $user, $pass, $db='', $tablePrefix='' )
-	{
-		$signature = serialize(array($driver, $host, $user, $pass, $db, $tablePrefix));
-		$database = JDatabase::_getStaticInstance($signature,'JFDatabase',true);
+	
+	public static function getInstance($options = array())
+	{		
+		// Sanitize the database connector options.
+		$options['driver'] = (isset($options['driver'])) ? preg_replace('/[^A-Z0-9_\.-]/i', '', $options['driver']) : 'mysql';
+		$options['database'] = (isset($options['database'])) ? $options['database'] : null;
+		$options['select'] = (isset($options['select'])) ? $options['select'] : true;
 
+		// Get the options signature for the database connector.
+		$signature = md5(serialize($options));
+		
+		if (empty(parent::$instances[$signature])) {
+			parent::$instances[$signature] = new JFDatabase($options);
+		}
+		
+		$database = parent::$instances[$signature];
+		
 		return $database;
 	}
 
