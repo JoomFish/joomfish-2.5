@@ -62,7 +62,7 @@ class JoomFish
 	 * @param JFLanguage $language
 	 * @param array $tableArray
 	 */
-	public function translateListCached($rows, $language, $tableArray)
+	public static function translateListCached($rows, $language, $tableArray)
 	{
 		JoomFish::translateList($rows, $language, $tableArray);
 		return $rows;
@@ -75,7 +75,7 @@ class JoomFish
 	 * @param JFLanguage $language
 	 * @param array $tableArray
 	 */
-	public function translateList(&$rows, $language, $tableArray)
+	public static function translateList(&$rows, $language, $tableArray)
 	{
 		if (!isset($rows) || !is_array($rows))
 			return $rows;
@@ -171,7 +171,7 @@ class JoomFish
 	 * @param string $querySQL
 	 * @param boolean $allowfallback
 	 */
-	public function translateListWithIDs(&$rows, $ids, $reference_table, $language, $refTablePrimaryKey="id", & $tableArray, $querySQL, $allowfallback=true)
+	public static function translateListWithIDs(&$rows, $ids, $reference_table, $language, $refTablePrimaryKey="id", & $tableArray, $querySQL, $allowfallback=true)
 	{
 		//print " translateListWithIDs for ids=$ids refTablePrimaryKey=$refTablePrimaryKey<br>" ;
 		$config = JFactory::getConfig();
@@ -377,7 +377,7 @@ class JoomFish
 	 * @param JFLanguage $language
 	 * @param array $tableArray
 	 */
-	public function translateListArrayCached($rows, $language, $tableArray)
+	public static function translateListArrayCached($rows, $language, $tableArray)
 	{
 		JoomFish::translateListArray($rows, $language, $tableArray);
 		return $rows;
@@ -390,7 +390,7 @@ class JoomFish
 	 * @param JFLanguage $language
 	 * @param array $tableArray
 	 */
-	public function translateListArray(&$rows, $language, $fields)
+	public static function translateListArray(&$rows, $language, $fields)
 	{
 		if (!isset($rows) || !is_array($rows) || count($rows)==0)
 			return $rows;
@@ -473,7 +473,7 @@ class JoomFish
 
 	}
 
-	static function getTablesIdsAndFields($fields)
+	public static function getTablesIdsAndFields($fields)
 	{
 		$data = array();
 		$jfManager = JoomFishManager::getInstance();
@@ -533,7 +533,7 @@ class JoomFish
 	 * @param string $querySQL
 	 * @param boolean $allowfallback
 	 */
-	public function translateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, & $fielddata, $querySQL, $allowfallback=true)
+	public static function translateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, & $fielddata, $querySQL, $allowfallback=true)
 	{
 
 		$registry = JFactory::getConfig();
@@ -681,7 +681,7 @@ class JoomFish
 	 * @param string $querySQL
 	 * @param boolean $allowfallback
 	 */
-	public function nativeTranslateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $pk, & $fielddata, $querySQL, $allowfallback=true)
+	public static function nativeTranslateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $pk, & $fielddata, $querySQL, $allowfallback=true)
 	{
 
 		$registry = JFactory::getConfig();
@@ -824,7 +824,7 @@ class JoomFish
 	 * @param string $reference_table
 	 * @return value
 	 */
-	public function contentElementFields($reference_table)
+	public static function contentElementFields($reference_table)
 	{
 		static $info;
 		if (!isset($info))
@@ -879,9 +879,9 @@ class JoomFish
 	 * Version information of the component
 	 *
 	 */
-	public function version()
+	public static function version()
 	{
-		return JoomFishManager :: getVersion();
+		return JoomFishManager::getVersion();
 
 	}
 

@@ -335,7 +335,7 @@ class TableJFLanguage extends JTable  {
 	 * @param string	$shortcode name of the language
 	 * @return object	language class or null
 	 */
-	public function createByShortcode( $shortcode, $active=true ) {
+	public static function createByShortcode( $shortcode, $active=true ) {
 		$db = JFactory::getDBO();
 		if ($shortcode === null || $shortcode=='') {
 			return null;

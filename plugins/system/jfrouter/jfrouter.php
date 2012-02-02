@@ -366,7 +366,7 @@ class plgSystemJFRouter extends JPlugin{
 	/**
 	 * Custom handlers to deal with bad component routers e.g. for contact
 	 */ 
-	function procesCustomBuildRule($router, &$uri){
+	public static function procesCustomBuildRule($router, &$uri){
 		$option = $uri->getVar("option","");
 		if (strpos($option,"com_")!==0) return;
 		$option = substr($option,4);
