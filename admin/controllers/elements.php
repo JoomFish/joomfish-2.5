@@ -68,7 +68,6 @@ class ElementsController extends JController   {
 		$this->registerDefaultTask( 'show' );
 
 		$this->act =  JRequest::getVar( 'act', '' );
-		$this->task =  JRequest::getVar( 'task', '' );
 		$this->cid =  JRequest::getVar( 'cid', array(0) );
 		if (!is_array( $this->cid )) {
 			$this->cid = array(0);

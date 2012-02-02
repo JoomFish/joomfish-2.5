@@ -45,11 +45,7 @@ if ($this->showMessage) {
 	echo $this->loadTemplate('message');
 }
 
-$act=$this->act;
-$task=$this->task;
 $select_language_id = $this->select_language_id;
-$user = JFactory::getUser();
-$db = JFactory::getDBO();
 $elementTable = $this->translationObject->getTable();
 $option = JRequest::getCmd("option");
 

@@ -45,9 +45,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 	 * @param unknown_type $this->language_id
 	 * @param unknown_type $this->filterlist
 	 */
-global  $act, $task, $option;
-$user = JFactory::getUser();
-$db = JFactory::getDBO();
+
 
 $filterOptions = '<table><tr><td width="100%"></td>';
 if (strlen($this->langlist)>0) $filterOptions .= '<td  nowrap align="center">' .JText::_( 'LANGUAGES' ). ':<br/>' .$this->langlist. '</td>';

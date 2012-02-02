@@ -43,8 +43,6 @@ JLoader::import('helpers.controllerHelper', JOOMFISH_ADMINPATH);
 class TranslateController extends JController
 {
 
-	/** @var string		current used task */
-	var $task = null;
 	/** @var string		action within the task */
 	var $act = null;
 	/** @var array		int or array with the choosen list id */
@@ -68,7 +66,6 @@ class TranslateController extends JController
 		$this->registerDefaultTask('showTranslate');
 
 		$this->act = JRequest::getVar('act', '');
-		$this->task = JRequest::getVar('task', '');
 		$this->cid = JRequest::getVar('cid', array(0));
 		if (!is_array($this->cid))
 		{
@@ -339,7 +336,7 @@ class TranslateController extends JController
 			$this->view->message = JText::_('Cannot save - invalid catid');
 		}
 
-		if ($this->task == "translate.apply")
+		if ($this->task == "apply")
 		{
 			$cid = $translationObject->id . "|" . $id . "|" . $language_id;
 			JRequest::setVar('cid', array($cid));
@@ -639,7 +636,7 @@ class TranslateController extends JController
 				<script language="javascript" type="text/javascript">
 					window.parent.SqueezeBox.close();
 <?php
-				if ($this->task == "translate.save")
+				if ($this->task == "save")
 				{
 					echo "alert('" . JText::_('TRANSLATION_SAVED') . "');";
 				}
@@ -652,7 +649,7 @@ class TranslateController extends JController
 				<script language="javascript" type="text/javascript">
 					window.close();
 <?php
-				if ($this->task == "translate.save")
+				if ($this->task == "save")
 				{
 					echo "alert('" . JText::_('TRANSLATION_SAVED') . "');";
 				}

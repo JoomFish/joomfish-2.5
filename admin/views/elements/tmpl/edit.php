@@ -34,7 +34,6 @@
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-	global  $act, $task, $option;
 	$user = JFactory::getUser();
 	$db = JFactory::getDBO();
 	//$this->_JoomlaHeader( JText::_( 'CONTENT_ELEMENTS' ), 'extensions', '', false );

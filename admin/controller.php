@@ -41,23 +41,21 @@ jimport('joomla.application.component.controller');
  */
 class JoomfishController extends JController  {
 
-	/** @var string		current used task */
-	var $task=null;
 
 	/** @var string		action within the task */
-	var $act=null;
+	public $act=null;
 
 	/** @var array		int or array with the choosen list id */
-	var $cid=null;
+	public $cid=null;
 
 	/** @var string		file code */
-	var $fileCode = null;
+	public $fileCode = null;
 
 	/**
 	 * @var object	reference to the Joom!Fish manager
 	 * @access private
 	 */
-	var $_joomfishManager=null;
+	protected $_joomfishManager=null;
 
 	/**
 	 * Constructor 
