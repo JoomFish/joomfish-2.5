@@ -236,7 +236,7 @@ class TranslationObject implements iJFTranslatable
 				$fieldContent->original_value = $originalValue;
 				$fieldContent->original_text = !is_null($originalText) ? $originalText : "";
 
-				$datenow = & JFactory::getDate();
+				$datenow = JFactory::getDate();
 				$fieldContent->modified = $datenow->toMySQL();
 
 				$fieldContent->modified_by = $user->id;
@@ -270,7 +270,7 @@ class TranslationObject implements iJFTranslatable
 				$fieldContent->original_value = "";
 				$fieldContent->original_text = "";
 
-				$datenow = & JFactory::getDate();
+				$datenow = JFactory::getDate();
 				$fieldContent->modified = $datenow->toMySQL();
 
 				$fieldContent->modified_by = $user->id;
@@ -794,6 +794,8 @@ class TranslationObject implements iJFTranslatable
 					$app->enqueueMessage($table->getError(), 'error');
 					return false;
 				}
+				
+				$this->id = $table->id;
 				
 				// Save the translation map 
 				$this->generateTranslationMap($table, $isNew, $this->contentElement->getTableName(), $elementTable);

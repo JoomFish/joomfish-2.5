@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `#__jf_translationmap` (
   `reference_id` int(11) NOT NULL DEFAULT '0',
   `translation_id` int(11) NOT NULL DEFAULT '0',
   `reference_table` varchar(100) NOT NULL DEFAULT '',
-    UNIQUE KEY (`language`, `reference_id`, `translation_id`,`reference_table`)
+        UNIQUE KEY (`language`, `reference_id`, `reference_table`),
+    UNIQUE KEY (`language`, `translation_id`, `reference_table`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `#__languages` (

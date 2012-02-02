@@ -340,7 +340,8 @@ class TranslateController extends JController
 		{
 			$cid = $translationObject->id . "|" . $id . "|" . $language_id;
 			JRequest::setVar('cid', array($cid));
-			$this->editTranslation();
+			//$this->editTranslation();
+			$this->setRedirect( "index.php?option=com_joomfish&task=translate.edit&cid[]=$cid",$this->view->message);
 		}
 		else
 		{
