@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install version="1.5" type="plugin" group="system">
+<install version="1.6" type="plugin" group="system" method="upgrade">
 	<name>Joomfish - Basic Router</name>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<author>Joom!Fish Project</author>
@@ -13,22 +13,21 @@
 		<filename plugin="jfrouter">jfrouter.php</filename>
 		<filename>jfrouter/index.html</filename>
 		<filename>jfrouter/contact.php</filename>
-		<filename>jfrouter/elements/index.html</filename>
-		<filename>jfrouter/elements/sefprefix.php</filename>
-		<filename>jfrouter/elements/sefsubdomain.php</filename>
+		<filename>jfrouter/fields/index.html</filename>
+		<filename>jfrouter/fields/sefprefix.php</filename>
+		<filename>jfrouter/fields/sefsubdomain.php</filename>
 	</files>
 	<languages folder="jfrouter/language">
 		<language tag="en-GB">en-GB.plg_system_jfrouter.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
-			<fieldset name="basic"   addfieldpath="/plugins/system/jfrouter/jfrouter/fields" >
+			<fieldset name="basic" addfieldpath="/plugins/system/jfrouter/jfrouter/fields" >
 				<field name="determitLanguage" type="radio" default="1" label='ENABLE_LANGUAGE_DETERMINATION'  description="If an unkown user comes to your site - try to determinate the language based on the browser settings.">
 					<option value="0">JNo</option>
 					<option value="1">JYes</option>
 				</field>
-				<field name="newVisitorAction" type="list" default='BROWSER'       label="Language selection for new visitors?"
-       description="Determine language selection for new visitors (only Enable Language determination is 'Yes')" >
+				<field name="newVisitorAction" type="list" default='browser' label="Language selection for new visitors?" description="Determine language selection for new visitors (only Enable Language determination is 'Yes')" >
 					<option value="joomfish">Ordering of Languages in Joomfish Component</option>
 					<option value="browser">Browser Settings</option>
 					<option value="site">Site Default Language</option>
@@ -37,17 +36,16 @@
 					<option value="0">JNo</option>
 					<option value="1">JYes</option>
 				</field>
-				<field name="enableCookie" type="radio" default="1"
-			description="Switch off the cookie only if you have a different solution to define the once selected language, e.g. via an URL." label='SAVE_USER_LANGUAGE_IN_A_COOKIE' >
+				<field name="enableCookie" type="radio" default="1" description="Switch off the cookie only if you have a different solution to define the once selected language, e.g. via an URL." label='SAVE_USER_LANGUAGE_IN_A_COOKIE' >
 					<option value="0">JNo</option>
 					<option value="1">JYes</option>
 				</field>
-				<field name="sefordomain" type="radio" default='SEFPREFIX'       label="Use SEF prefix or domains?" description='TBD'      >
+				<field name="sefordomain" type="radio" default='sefprefix' label="Use SEF prefix or domains?" description='TBD' >
 					<option value="sefprefix">SEF Prefix</option>
 					<option value="domain">Domain</option>
 				</field>
-				<field name="sefprefixes" type="sefprefix" default="lang-" label='SEF_PREFIX'  description='SEF_PREFIX_DESCRIPTION'  />
-				<field name="sefsubdomain" type="sefsubdomain" default="" label='SEF_DOMAIN'  description='SEF_DOMAIN_DESCRIPTION'  />
+				<field name="sefprefixes" type="sefprefix" default="lang-" label='SEF_PREFIX' description='SEF_PREFIX_DESCRIPTION' />
+				<field name="sefsubdomain" type="sefsubdomain" default="" label='SEF_DOMAIN' description='SEF_DOMAIN_DESCRIPTION' />
 			</fieldset>
 		</fields>
 	</config>
