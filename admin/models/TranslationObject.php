@@ -534,15 +534,15 @@ class TranslationObject implements iJFTranslatable
 				for ($i = 0; $i < count($elementTable->Fields); $i++)
 				{
 					$field = $elementTable->Fields[$i];
-					/*
-					  if ($field->prehandlertranslation != "")
-					  {
-					  if (method_exists($this, $field->prehandlertranslation))
-					  {
-					  $handler = $field->prehandlertranslation;
-					  $this->$handler($field, $translationFields);
-					  }
-					  } */
+					
+					if ($field->prehandlertranslation != "")
+					{
+						if (method_exists($this, $field->prehandlertranslation))
+						{
+					  		$handler = $field->prehandlertranslation;
+					  		$this->$handler($field, $row);
+						}
+					}
 					$fieldname = $field->Name;
 					$transfieldname = "jfc_" . $field->Name;
 					$fieldContent = null;

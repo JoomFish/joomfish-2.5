@@ -132,32 +132,33 @@ class  TranslationObjectContent  extends TranslationObject
 	 *
 	 * @param unknown_type $row
 	 */
-	public function fetchArticleTranslation($field, &$translationFields)
+	public function fetchArticleTranslation($field, &$row)
 	{
 
-		if (is_null($translationFields))
+		if ($field->Name != 'introtext' || is_null($row)) {
 			return;
+		}
 		/*
 		 * We need to unify the introtext and fulltext fields and have the
 		 * fields separated by the {readmore} tag, so lets do that now.
 		 */
-		if (array_key_exists("fulltext", $translationFields))
+		if (isset($row->jfc_fulltext))
 		{
-			if (isset($translationFields["introtext"]))
+			if (isset($row->jfc_introtext))
 			{
-				$fulltext = $translationFields["fulltext"]->value;
-				$introtext = $translationFields["introtext"]->value;
+				$fulltext	= $row->jfc_fulltext;
+				$introtext	= $row->jfc_introtext;
 			}
 			else
 			{
-				$translationFields["introtext"] = clone $translationFields["fulltext"];
-				$translationFields["fulltext"]->value = "";
-				$fulltext = "";
+				$row->jfc_introtext = clone $row->jfc_fulltext;
+				$row->jfc_fulltext 	= "";
+				$fulltext 		= "";
 			}
 			if (JString::strlen($fulltext) > 1)
 			{
-				$translationFields["introtext"]->value = $introtext . "<hr id=\"system-readmore\" />" . $fulltext;
-				$translationFields["fulltext"]->value = "";
+				$row->jfc_introtext = $introtext . "<hr id=\"system-readmore\" />" . $fulltext;
+				$row->fulltext 	= "";
 			}
 		}
 
@@ -168,7 +169,7 @@ class  TranslationObjectContent  extends TranslationObject
 	 *
 	 * @param unknown_type $row
 	 */
-	public function saveArticleText(&$introtext, $fields, &$formArray, $prefix, $suffix, $storeOriginalText)
+	public function saveArticleText(&$introtext, &$fields, &$formArray, $prefix, $suffix, $storeOriginalText)
 	{
 
 		// Search for the {readmore} tag and split the text up accordingly.
