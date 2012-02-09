@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install version="1.6" type="plugin" group="system" method="upgrade">
-	<name>Joomfish - Basic Router</name>
+	<name>JOOMFISH_BASIC_ROUTER</name>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<author>Joom!Fish Project</author>
 	<authorEmail>support@joomfish.net</authorEmail>
@@ -8,7 +8,7 @@
 	<creationDate>January 2012</creationDate>
 	<copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
 	<version>2.5.0 alpha</version>
-	<description>When activated this bot provides language determination and basic routing. Must be enabled unless you are using a SEF plugin that performs the same tasks.</description>
+	<description>WHEN_ACTIVATED_THIS_PLUGIN_PROVIDES_LANGUAGE_DETERMINATION_AND_BASIC_ROUTING</description>
 	<files>
 		<filename plugin="jfrouter">jfrouter.php</filename>
 		<filename>jfrouter/index.html</filename>
@@ -23,29 +23,29 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic" addfieldpath="/plugins/system/jfrouter/jfrouter/fields" >
-				<field name="determitLanguage" type="radio" default="1" label='ENABLE_LANGUAGE_DETERMINATION'  description="If an unkown user comes to your site - try to determinate the language based on the browser settings.">
+				<field name="determitLanguage" type="radio" default="1" label='ENABLE_LANGUAGE_DETERMINATION'  description="IF_AN_UNKOWN_USER_COMES_TO_YOUR_SITE__TRY_TO_DETERMINATE_THE_LANGUAGE_BASED_ON_THE_BROWSER_SETTINGS">
 					<option value="0">JNo</option>
 					<option value="1">JYes</option>
 				</field>
-				<field name="newVisitorAction" type="list" default='browser' label="Language selection for new visitors?" description="Determine language selection for new visitors (only Enable Language determination is 'Yes')" >
-					<option value="joomfish">Ordering of Languages in Joomfish Component</option>
-					<option value="browser">Browser Settings</option>
-					<option value="site">Site Default Language</option>
+				<field name="newVisitorAction" type="list" default='browser' label="LANGUAGE_SELECTION_FOR_NEW_VISITORS" description="DETERMINE_LANGUAGE_SELECTION_FOR_NEW_VISITORS_ONLY_ENABLE_LANGUAGE_DETERMINATION_IS_YES" >
+					<option value="joomfish">ORDERING_OF_LANGUAGES_IN_JOOMFISH_COMPONENT</option>
+					<option value="browser">BROWSER_SETTINGS</option>
+					<option value="site">SITE_DEFAULT_LANGUAGE</option>
 				</field>
-				<field name="use302redirect" type="radio" default="0" label="Use 302 redirect" description="For new users the redirection to the correct language is done by automatic integration or an official 302 redirect to a different URL such as www.yourdomain.com/en">
+				<field name="use302redirect" type="radio" default="0" label="USE_302_REDIRECT" description="FOR_NEW_USERS_THE_REDIRECTION_TO_THE_CORRECT_LANGUAGE_IS_DONE_BY_302">
 					<option value="0">JNo</option>
 					<option value="1">JYes</option>
 				</field>
-				<field name="enableCookie" type="radio" default="1" description="Switch off the cookie only if you have a different solution to define the once selected language, e.g. via an URL." label='SAVE_USER_LANGUAGE_IN_A_COOKIE' >
+				<field name="enableCookie" type="radio" default="1" description="SWITCH_OFF_THE_COOKIE_ONLY" label='SAVE_USER_LANGUAGE_IN_A_COOKIE' >
 					<option value="0">JNo</option>
 					<option value="1">JYes</option>
 				</field>
-				<field name="sefordomain" type="radio" default='sefprefix' label="Use SEF prefix or domains?" description='TBD' >
-					<option value="sefprefix">SEF Prefix</option>
-					<option value="domain">Domain</option>
+				<field name="sefordomain" type="radio" default='sefprefix' label="USE_SEF_PREFIX_OR_DOMAINS" description='TBD' >
+					<option value="sefprefix">SEF_PREFIX</option>
+					<option value="domain">SUBDOMAIN</option>
 				</field>
 				<field name="sefprefixes" type="sefprefix" default="lang-" label='SEF_PREFIX' description='SEF_PREFIX_DESCRIPTION' />
-				<field name="sefsubdomain" type="sefsubdomain" default="" label='SEF_DOMAIN' description='SEF_DOMAIN_DESCRIPTION' />
+				<field name="sefsubdomain" type="sefsubdomain" default="" label='SEF_SUBDOMAIN' description='SEF_DOMAIN_DESCRIPTION' />
 			</fieldset>
 		</fields>
 	</config>

@@ -70,7 +70,7 @@ class JFormFieldSefsubdomain extends JFormField
 				}
 			}
 			$html = "<fieldset  style='clear:left'><table>";
-			$html .= "<tr style='font-weight:bold;'><td>".JText::_( 'LANGUAGE' )."</td><td>".JText::_( 'LANGUAGE' )."</td></tr>";
+			$html .= "<tr style='font-weight:bold;'><td>".JText::_( 'JFIELD_LANGUAGE_LABEL' )."</td><td>".JText::_( 'JFIELD_LANGUAGE_LABEL' )."</td></tr>";
 			foreach ($activeLanguages as $key => $val) {
 				$html .= "<tr>";
 				$html .= '<td>'.$val->name.'</td><td>';
