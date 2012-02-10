@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: version.php 226M 2011-05-27 07:29:41Z (local) $
+ * $Id: version.php 226M 2012-02-10 07:29:41Z (local) $
  * @package joomfish
  * @subpackage version
  *
@@ -35,12 +35,12 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class JoomFishVersion {
-	var $_version	= '2.6.0';
+	var $_version	= '2.5.0';
 	var $_versionid	= 'Tarw';
-	var $_date		= '2011-10-31';
+	var $_date		= '2012-02-10';
 	var $_status	= 'Preview';
 	var $_revision	= '$Rev: 1520 $';
-	var $_copyyears = '2003-2011';
+	var $_copyyears = '2003-2012';
 
 	/**
 	 * This method delivers the full version information in one line

@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: extensionHelper.php 232 2011-06-09 11:11:58Z geraint $
+ * $Id: extensionHelper.php 232 2012-02-10 11:11:58Z geraint $
  * @package joomfish
  * @subpackage helpers
  *

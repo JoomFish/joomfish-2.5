@@ -26,7 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: translate.php 226 2011-05-27 07:29:41Z alex $
+ * $Id: translate.php 226 2012-02-10 07:29:41Z alex $
  * @package joomfish
  * @subpackage Models
  *

@@ -26,7 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: joomfish.mootools.js 239 2011-06-22 06:28:53Z geraint $
+ * $Id: joomfish.mootools.js 239 2012-02-10 06:28:53Z geraint $
  * @package joomfish
  * @subpackage js
  *
