@@ -148,7 +148,8 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 		JHtml::_('behavior.modal');
 		$document->addStyleSheet($livesite.'components/com_joomfish/assets/css/joomfish.css');
 		$document->addScript($livesite.'components/com_joomfish/assets/js/joomfish.mootools.js');
-		$document->addStyleSheet(JURI::base().'components/com_media/assets/popup-imagelist.css');
+		//$document->addStyleSheet(JURI::base().'components/com_media/assets/popup-imagelist.css');
+		$document->addStyleSheet(JURI::root(true).'/media/media/css/popup-imagelist.css');
 		
         $jfManager = JoomFishManager::getInstance();
         $root = $jfManager->getCfg('directory_flags');
