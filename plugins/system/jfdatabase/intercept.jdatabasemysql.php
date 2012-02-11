@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: intercept.jdatabasemysql.php 241 2011-06-22 15:42:55Z geraint $
+ * $Id: intercept.jdatabasemysql.php 241 2012-02-10 15:42:55Z geraint $
  * @package joomfish
  * @subpackage jfdatabase
  * @version 2.0
