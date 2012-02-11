@@ -400,8 +400,8 @@ else {
 
 	<?php echo JHTML::_( 'form.token' ); ?>
 </form>
-<script language="javascript" type="text/javascript">
-function submitbutton(pressbutton) {
+<script type="text/javascript">
+	Joomla.submitbutton = function(pressbutton) {
 	var form = document.getElementsByName ('adminForm');
 	<?php
 	if( isset($editorFields) && is_array($editorFields) ) {
@@ -412,10 +412,10 @@ function submitbutton(pressbutton) {
 	}
 	?>
 	if (pressbutton == 'cancel') {
-		submitform( pressbutton );
+		Joomla.submitform( pressbutton );
 		return;
 	} else {
-		submitform( pressbutton );
+		Joomla.submitform( pressbutton );
 	}
 }
 </script>

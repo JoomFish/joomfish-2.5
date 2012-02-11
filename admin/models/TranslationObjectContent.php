@@ -133,22 +133,26 @@ class  TranslationObjectContent  extends TranslationObject
 	 * @param unknown_type $row
 	 */
 	public function fetchArticleTranslation($field, &$row)
-	{
+	{	
+		
+		
+		
 
 		if ($field->Name != 'introtext' || is_null($row)) {
 			return;
-		}
+		}	
+		
 		/*
 		 * We need to unify the introtext and fulltext fields and have the
 		 * fields separated by the {readmore} tag, so lets do that now.
-		 */
-		if (isset($row->jfc_fulltext))
+		*/
+		if (trim($row->jfc_fulltext) != '')
 		{
-			if (isset($row->jfc_introtext))
-			{
+			/*if (trim($row->jfc_introtext) != '')
+			{*/
 				$fulltext	= $row->jfc_fulltext;
 				$introtext	= $row->jfc_introtext;
-			}
+			/*}
 			else
 			{
 				$row->jfc_introtext = clone $row->jfc_fulltext;
@@ -156,11 +160,11 @@ class  TranslationObjectContent  extends TranslationObject
 				$fulltext 		= "";
 			}
 			if (JString::strlen($fulltext) > 1)
-			{
+			{*/
 				$row->jfc_introtext = $introtext . "<hr id=\"system-readmore\" />" . $fulltext;
-				$row->fulltext 	= "";
-			}
-		}
+				$row->jfc_fulltext 	= "";
+			//}
+		} 
 
 	}
 
