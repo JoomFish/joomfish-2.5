@@ -58,7 +58,7 @@ foreach( $langActive as $language )
 	
 	if($type == 'namesplusimages') {
 		$langImg = JFModuleHTML::getLanguageImageSource($language);
-		$outString .='<img src="' .JURI::base(true). $langImg. '" alt="' .$language->title_native. '" title="' .$language->title_native. '" border="0" class="langImg"/>';
+		$outString .='<img src="' .JURI::base(true) . '/' . $langImg. '" alt="' .$language->title_native. '" title="' .$language->title_native. '" border="0" class="langImg"/>';
 	}
 
 	if (isset($language->disabled) && $language->disabled){

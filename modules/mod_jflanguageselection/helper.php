@@ -321,7 +321,7 @@ if (!defined('JFMODULE_CLASS'))
 
 		}
 
-		public static function getJFMenu($lang, $getOriginals=true, $currentLangMenuItems=false)
+			public static function getJFMenu($lang, $getOriginals=true, $currentLangMenuItems=false)
 		{
 			static $instance;
 			if (!isset($instance))
@@ -341,7 +341,7 @@ if (!defined('JFMODULE_CLASS'))
 				$instance["raw"] = serialize($currentLangMenuItems);
 
 				$defLang = $registry->getValue("config.jflang");
-				$instance[$defLang] = unserialize($instance["raw"]);
+				$instance[$defLang]["originals"] = unserialize($instance["raw"]);
 			}
 						
 			if (!isset($instance[$lang]))
@@ -390,10 +390,11 @@ if (!defined('JFMODULE_CLASS'))
 				}
 				
 				JFModuleHTML::_setupMenuRoutes($menu);
+				$instance["raw"] = $menu;
 				// This is really annoying in PHP5 - an array of stdclass objects is copied as an array of references
 				// I tried doing this as a stdclass and cloning but it didn't seek to work.
 				$instance["raw"] = serialize($instance["raw"]);
-				$instance[$lang] = unserialize($instance["raw"]);
+				$instance[$lang]["rows"] = unserialize($instance["raw"]);
 				
 				
 			}

@@ -48,15 +48,15 @@ foreach( $langActive as $language )
 	$langImg = JFModuleHTML::getLanguageImageSource($language);
 	
 	if (isset($language->disabled) && $language->disabled){
-		if( file_exists( JPATH_ROOT . $langImg ) ) {
-			$outString .= '<span' .$langActive. ' style="opacity:0.5" class="opaque"><img src="' .JURI::base(true) . $langImg. '" alt="' .$language->title_native. '" title="' .$language->title_native. '" /></span>';
+		if( file_exists( JPATH_ROOT . '/' . $langImg ) ) {
+			$outString .= '<span' .$langActive. ' style="opacity:0.5" class="opaque"><img src="' .JURI::base(true) . '/' .$langImg. '" alt="' .$language->title_native. '" title="' .$language->title_native. '" /></span>';
 		} else {
 			$outString .= '<span' .$langActive. ' style="opacity:0.5" class="opaque">' .$language->title_native. '</span>';
 		}
 	}
 	else {
-		if( file_exists( JPATH_ROOT . $langImg ) ) {
-			$outString .= '<span' .$langActive. '><a href="' .$href. '"><img src="' .JURI::base(true) . $langImg. '" alt="' .$language->title_native. '" title="' .$language->title_native. '" /></a></span>';
+		if( file_exists( JPATH_ROOT . '/' . $langImg ) ) {
+			$outString .= '<span' .$langActive. '><a href="' .$href. '"><img src="' .JURI::base(true) . '/' . $langImg. '" alt="' .$language->title_native. '" title="' .$language->title_native. '" /></a></span>';
 		} else {
 			$outString .= '<span' .$langActive. '><a href="' .$href. '">' .$language->title_native. '</a></span>';
 		}

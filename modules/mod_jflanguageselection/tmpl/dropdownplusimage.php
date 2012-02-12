@@ -55,12 +55,12 @@ if ( count($langActive)>0 ) {
 		if (isset($language->disabled) && $language->disabled){
 			$disabled=" disabled='disabled'";
 			$noscriptString .= '<span lang="' .$languageCode. '" xml:lang="' .$languageCode. '" style="opacity:0.5" class="opaque">' .$language->title_native. '</span>&nbsp;';
-			$langOption=JFModuleHTML::makeOption($href , $language->title_native, $disabled." style='padding-left:22px;background-image: url(\"".JURI::base(true) . $langImg."\");background-repeat: no-repeat;background-position:center left;opacity:0.5;' class='opaque'" );
+			$langOption=JFModuleHTML::makeOption($href , $language->title_native, $disabled." style='padding-left:22px;background-image: url(\"".JURI::base(true) . '/' . $langImg."\");background-repeat: no-repeat;background-position:center left;opacity:0.5;' class='opaque'" );
 		}
 		else {
 			$disabled="";
 			$noscriptString .= '<a href="' .$href. '"><span lang="' .$languageCode. '" xml:lang="' .$languageCode. '">' .$language->title_native. '</span></a>&nbsp;';
-			$langOption=JFModuleHTML::makeOption($href , $language->title_native, $disabled." style='padding-left:22px;background-image: url(\"".JURI::base(true) . $langImg."\");background-repeat: no-repeat;background-position:center left;'" );
+			$langOption=JFModuleHTML::makeOption($href , $language->title_native, $disabled." style='padding-left:22px;background-image: url(\"".JURI::base(true) . '/' . $langImg."\");background-repeat: no-repeat;background-position:center left;'" );
 		}
 
 		$langOption->iso = $language->iso;
@@ -73,7 +73,7 @@ if ( count($langActive)>0 ) {
 		$outString = '<div id="jflanguageselection">';
 		$outString .= '<label for="jflanguageselection" class="jflanguageselection">' .JText::_('MOD_JFLANGUAGESELECTION_JFMSELECT'). '</label>';
 		if( $activeLangImg != null ) {
-			$outString .='<img src="' .JURI::base(true). $activeLangImg['img']. '" alt="' .$activeLangImg['name']. '" title="' .$activeLangImg['name']. '" border="0" class="langImg"/>';
+			$outString .='<img src="' .JURI::base(true) . '/' . $activeLangImg['img']. '" alt="' .$activeLangImg['name']. '" title="' .$activeLangImg['name']. '" border="0" class="langImg"/>';
 		}
 		$langlist = JFModuleHTML::selectList( $langOptions, 'lang', ' class="jflanguageselection" onfocus="jfselectlang=this.selectedIndex;" onchange="if(this.options[this.selectedIndex].disabled){this.selectedIndex=jfselectlang;} else {document.location.replace(this.value);}"', 'value', 'text', $activehref);
 		$outString .= ''.$langlist.'';
