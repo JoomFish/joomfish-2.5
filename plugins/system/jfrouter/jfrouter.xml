@@ -19,6 +19,7 @@
 	</files>
 	<languages folder="jfrouter/language">
 		<language tag="en-GB">en-GB.plg_system_jfrouter.ini</language>
+		<language tag="en-GB">en-GB.plg_system_jfrouter.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
