@@ -529,7 +529,8 @@ class TranslationObject implements iJFTranslatable
 		else
 		{
 			if (isset($row))
-			{
+			{	
+				$noprehandlerrow = clone $row;
 				// Check fields and their state
 				for ($i = 0; $i < count($elementTable->Fields); $i++)
 				{
@@ -558,7 +559,7 @@ class TranslationObject implements iJFTranslatable
 						if (isset($row->$transfieldname))
 						{
 							$fieldContent->value = $row->$transfieldname;
-							if (!empty($row->$fieldname) && empty($row->$transfieldname)) {
+							if (!empty($row->$fieldname) && empty($row->$transfieldname) && empty($noprehandlerrow->$transfieldname)) {
 								$this->_untraslatedFields ++;
 							}
 							
