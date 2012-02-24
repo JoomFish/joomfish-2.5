@@ -322,6 +322,7 @@ class ContentElement
 	{
 		$jf = JoomFishManager::getInstance();
 		$lang = $jf->getLanguageByID($idLanguage);
+		$defaultlang = $jf->getDefaultLanguage();
 		$db = JFactory::getDBO();
 		$sqlFields = null;
 		$where = array();
@@ -443,7 +444,7 @@ class ContentElement
 			}
 
 			// TODO set source language
-			$where[] = 'c.language="*"';
+			$where[] = 'c.language="*" OR c.language='. $db->quote($defaultlang);
 
 			foreach ($contentTable->Fields as $tableField)
 			{
