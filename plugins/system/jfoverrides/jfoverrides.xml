@@ -10,13 +10,13 @@
 	<version>2.5.0 alpha</version>
 	<description>WHEN_ACTIVATED_THIS_PLUGIN_PROVIDES_NECESSARY_JOOMLA_OVERRIDES</description>
 	<files>
-		<filename plugin="jfrouter">jfrouter.php</filename>
-		<filename>jfrouter/index.html</filename>
-		<filename>jfrouter/classes/index.html</filename>
-		<filename>jfrouter/classes/contentlanguage.php</filename>
-		<filename>jfrouter/classes/language.php</filename>
+		<filename plugin="jfrouter">jfoverrides.php</filename>
+		<filename>index.html</filename>
+		<filename>classes/index.html</filename>
+		<filename>classes/contentlanguage.php</filename>
+		<filename>classes/language.php</filename>
 	</files>
-	<languages folder="jfrouter/language">
+	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_system_jfoverrides.ini</language>
 	</languages>
 	<config>

@@ -97,12 +97,13 @@
 	<plugins>
 		<plugin folder="plugins/system" plugin="jfdatabase" name="System - JFDatabase" group="system" />
 		<plugin folder="plugins/system" plugin="jfrouter" name="System - JFRouter" group="system" />
+		<plugin folder="plugins/system" plugin="jfoverrides" name="System - JFOverrides" group="system" />
 	</plugins>
 	
 	<check>
 		<directory>/modules</directory>
 		<directory>/plugins/content</directory>
-		<directory>/plugins/search</directory>
+		<!--<directory>/plugins/search</directory>-->
 		<directory>/plugins/system</directory>
 		<directory>/administrator/modules</directory>
 		<!--
