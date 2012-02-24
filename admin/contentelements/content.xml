@@ -10,7 +10,7 @@
   		<field type="referenceid" name="id" translate="0">ID</field>
   		<field type="titletext" name="title"  length="50" maxlength="250" translate="1">Title</field>
   		<field type="text" name="title_alias"  length="50" maxlength="250" translate="0">Title Alias</field>
-  		<field type="category" name="catid"  scope="com_content" translate="1">Category</field>
+  		<field type="category" name="catid"  scope="com_content" translate="0">Category</field>
   		<field type="text" name="alias"  length="50" maxlength="250" translate="1" posthandler="filterTitle">Alias</field>
   		<field type="htmltext" name="introtext" translate="1" prehandleroriginal="fetchArticleText" prehandlertranslation="fetchArticleTranslation" posthandler="saveArticleText" ebuttons="ignore">Article Text</field>
   		<field type="hiddentext" name="fulltext" translate="1" ebuttons="readmore">Fulltext</field>
