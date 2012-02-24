@@ -70,8 +70,8 @@ defined('_JEXEC') or die('Restricted access'); ?>
 <div style="clear:both;" ></div>
 <div id="splashfooter" style="width: 780px; background-color: #c9c9c9; border-top: 1px solid #aaaaaa; margin-bottom: 2px;">
 <form id="jfusersplashform" action="index.php" style="width: 100%; padding: 4px; background-color: #fff; border: none;" name="adminform" method="post">
-	<input id="splash-usersplashstate" type="checkbox" value="1" <?php echo ($this->usersplash == 1 ? 'checked="checked"' : '');?> /><?php echo JText::_('Show this screen if JoomFish cpanel is opened.')?>
-	<input id="splash-btn-close" class="button" type="button" value="<?php echo JText::_( 'CLOSE' );?>" style="float: right; margin-right: 20px; cursor: pointer;"/>
+	<input id="splash-usersplashstate" type="checkbox" value="1" <?php echo ($this->usersplash == 1 ? 'checked="checked"' : '');?> /><?php echo JText::_('SHOW_SPLASH_SCREEN')?>
+	<input id="splash-btn-close" class="button" type="button" value="<?php echo JText::_( 'JFCLOSE' );?>" style="float: right; margin-right: 20px; cursor: pointer;"/>
 	<input type="hidden" id="usersplashstate" name="params[usersplash]" value="<?php echo $this->usersplash;?>" />
 	<input type="hidden" name="option" value="com_joomfish" />
 	<input type="hidden" name="task" value="cpanel.saveconfig" />
