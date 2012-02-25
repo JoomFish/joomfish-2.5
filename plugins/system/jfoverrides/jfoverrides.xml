@@ -10,7 +10,7 @@
 	<version>2.5.0 alpha</version>
 	<description>WHEN_ACTIVATED_THIS_PLUGIN_PROVIDES_NECESSARY_JOOMLA_OVERRIDES</description>
 	<files>
-		<filename plugin="jfrouter">jfoverrides.php</filename>
+		<filename plugin="jfoverrides">jfoverrides.php</filename>
 		<filename>index.html</filename>
 		<filename>classes/index.html</filename>
 		<filename>classes/contentlanguage.php</filename>
