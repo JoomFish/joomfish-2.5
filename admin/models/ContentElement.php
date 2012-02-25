@@ -447,7 +447,7 @@ class ContentElement
 			}
 
 			// TODO set source language
-			$where[] = 'c.language="*" OR c.language='. $db->quote($this->_defaultlang);
+			$where[] = '(c.language="*" OR c.language='. $db->quote($this->_defaultlang).')';
 
 			foreach ($contentTable->Fields as $tableField)
 			{
@@ -523,6 +523,7 @@ class ContentElement
 			}
 			//echo "sql = <pre>" . str_replace("#__", $db->getPrefix(), $sql) . "</pre><br />";
 		}
+		FB::dump($sql);
 		return $sql;
 
 	}
