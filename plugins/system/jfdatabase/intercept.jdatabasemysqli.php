@@ -239,6 +239,20 @@ class interceptDB extends JDatabaseMySQLi
 	{
 		if ($this->skipjf) return parent::query();
 		$jfmCount = 0;
+		$jfManager = JoomFishManager::getInstance();
+		$defaultlang = $jfManager->getDefaultLanguage();
+		if (is_a($this->sql, "JDatabaseQueryMySQLi") && !isset($this->sql->jfprocessed)) {
+			$elements = $this->sql->where->getElements();
+			foreach ( $elements as &$element) {
+				if(strstr($element, 'language')) {
+					//str_ireplace("\,\'\*\'", "\,\'\*\',\'".$defaultlang."'", $value);
+					$element = str_ireplace(",'*'" , ",'*','".$defaultlang."'" , $element);
+				}
+			}
+		$this->sql->clear('where');	
+		$this->sql->where($elements);
+		}
+		
 		// NEW SYSTEM disabled for now - the query handling for joins etc. is too complex
 		if (false && is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
 		{
