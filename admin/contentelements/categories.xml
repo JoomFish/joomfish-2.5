@@ -10,10 +10,12 @@
   		<field type="referenceid" name="id" translate="0">ID</field>
   		<field type="titletext" name="title" translate="1" >Title</field>
   		<field type="text" name="alias" translate="1" posthandler="filterTitle">Alias</field>
+  		<field type="text" name="extension" translate="0">extension</field>
   		<field type="htmltext" name="description" translate="1" ebuttons="readmore,pagebreak">Description</field>
   		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
   		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
-  	</table>
+		<filter>c.id > 1 </filter>
+	</table>
   	<component>
   		<form>com_categories#categories#cid#task#!edit</form>
   	</component>
@@ -26,5 +28,6 @@
   <translationfilters>
   	  <keyword>title</keyword>
   	  <published>published</published>
+		<extension>extension</extension>
   </translationfilters>
 </joomfish>
