@@ -59,9 +59,16 @@ class plgSystemJFOverrides extends JPlugin
 	public function onAfterInitialise()
 	{	
 		if(!defined('JFOVERRIDES_PLUGIN_LOCATION')) define('JFOVERRIDES_PLUGIN_LOCATION', dirname(__FILE__));
-		/** Override JAccess **/
-		$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/language.php', 'JFormFieldLanguage');
-		$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/contentlanguage.php', 'JFormFieldContentLanguage');
+		if(JFactory::getApplication()->isAdmin()) {			
+			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/language.php', 'JFormFieldLanguage');
+			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/contentlanguage.php', 'JFormFieldContentLanguage');
+		} else {
+			//JFactory::getApplication()->setLanguageFilter(false);
+			jimport('joomla.application.menu');
+			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/menu.php', 'JMenuSite', true);
+			JMenuSite::getInstance('site');
+		}
+
 	}
 	
 	/**
