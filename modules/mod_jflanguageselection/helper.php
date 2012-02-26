@@ -235,7 +235,7 @@ if (!defined('JFMODULE_CLASS'))
 				$sefLang = TableJFLanguage::createByShortcode($code, false);
 				$registry->setValue("joomfish.sef_lang", $sefLang->code);
 
-				$menu = JSite::getMenu();
+				$menu = JFactory::getApplication('site')->getMenu();
 				$items = $menu->getMenu();
 
 				// Should really do this with classes and clones - this is a proof of concept
@@ -375,7 +375,7 @@ if (!defined('JFMODULE_CLASS'))
 					return false;
 				}
 				
-				$tempmenu = JSite::getMenu();
+				$tempmenu = JFactory::getApplication('site')->getMenu();
 				$activemenu = $tempmenu->getActive();
 				if ($activemenu && isset($activemenu->id) && $activemenu->id > 0 && array_key_exists($activemenu->id, $menu))
 				{
@@ -390,11 +390,12 @@ if (!defined('JFMODULE_CLASS'))
 				}
 				
 				JFModuleHTML::_setupMenuRoutes($menu);
-				$instance["raw"] = $menu;
+				//$instance["raw"] = $menu;
+				$instance["raw"] = array("rows"=>$menu, "originals"=>$currentLangMenuItems);
 				// This is really annoying in PHP5 - an array of stdclass objects is copied as an array of references
 				// I tried doing this as a stdclass and cloning but it didn't seek to work.
 				$instance["raw"] = serialize($instance["raw"]);
-				$instance[$lang]["rows"] = unserialize($instance["raw"]);
+				$instance[$lang] = unserialize($instance["raw"]);
 				
 				
 			}
