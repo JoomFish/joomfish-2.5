@@ -76,7 +76,7 @@ class translationExtensionFilter extends translationFilter
 			
 			//$options[] = JHTML::_('select.option', '', '- '. JText::_('JCATEGORY' ).' '.JText::_( 'JSELECT').' -' );
 			
-			$options[] = JHTML::_('select.option', '',JText::_('JOPTION_FROM_COMPONENT'));
+			$options[] = JHTML::_('select.option', $this->filterNullValue,JText::_('JOPTION_FROM_COMPONENT'));
 			
 			$lang = &JFactory::getLanguage();
 			$rows = $db->loadObjectList();
