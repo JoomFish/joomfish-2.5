@@ -130,6 +130,15 @@ class  TranslationObjectMenu extends TranslationObject
 		//$path = $table->rebuild($table->id,  $table->lft, $table->level, $newPath);;
 
 	}
+	
+	/*
+	 * Unset home attribute on copy, we can only have one home in single menu tree
+	*/
+	public function unsetHomeOr(&$row) {
+	
+		$row->home = "0";
+		$row->jfc_home = "0";
+	}
 
 }
 

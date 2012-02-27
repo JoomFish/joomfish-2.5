@@ -10,12 +10,13 @@
   		<field type="referenceid" name="id" translate="0">ID</field>
   		<field type="titletext" name="title" translate="1">Name</field>
   		<field type="text" name="alias" translate="1" posthandler="filterTitle">Menu Alias</field>
-  		<field type="params" name="params" translate="1"  prehandler="fetchUrlRequest" >Params</field>
-  		<field type="readonlytext" name="link" translate="1"  posthandler="saveUrlParams" prehandler="checkUrlType">Link</field>
+  		<field type="params" name="params" translate="1" >Params</field>
+  		<field type="readonlytext" name="link" translate="1"  posthandler="saveUrlParams">Link</field>
   		<field type="readonlytext" name="path" translate="1"  posthandler="saveMenuPath" >Path</field>
   		<field type="text" name="type" translate="0">Menu Type</field>
   		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
   		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+  		<field type="hiddentext" name="home" translate="1" prehandleroriginal="unsetHomeOr">Homepage</field>
 		<filter>c.client_id = 0 </filter>
   	</table>
   	<component>
@@ -25,6 +26,7 @@
 		<target>native</target>
 		<tableclass>Menu</tableclass>
 		<publishedfield>published</publishedfield>
+		<translationObjectModel>TranslationObjectMenu</translationObjectModel>
 	</treatment>
   </reference>
   <translationfilters>
