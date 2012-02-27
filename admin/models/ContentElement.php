@@ -523,7 +523,6 @@ class ContentElement
 			}
 			//echo "sql = <pre>" . str_replace("#__", $db->getPrefix(), $sql) . "</pre><br />";
 		}
-		FB::dump($sql);
 		return $sql;
 
 	}
