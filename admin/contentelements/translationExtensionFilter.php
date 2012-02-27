@@ -66,36 +66,13 @@ class translationExtensionFilter extends translationFilter
 			return "";
 		$ExtensionOptions = array();
 		$ExtensionOptions[] = JHTML::_('select.option', $this->filterNullValue,JText::_('JOPTION_FROM_COMPONENT')); //JHTML::_('select.option', $this->filterNullValue, JText::_('ALL_EXTENSIONS'));
-		/*
-		$sql = "SELECT DISTINCT cat.extension FROM #__categories as cat";
-		$db->setQuery($sql);
 		
-		
-		$categoryExtension = (strpos($categoryExtension,'com_') === false) ? 'com_'.strtolower($categoryExtension) : strtolower($categoryExtension);
-			
-			
-			//$options[] = JHTML::_('select.option', '', '- '. JText::_('JCATEGORY' ).' '.JText::_( 'JSELECT').' -' );
-			
-			$options[] = JHTML::_('select.option', $this->filterNullValue,JText::_('JOPTION_FROM_COMPONENT'));
-			
-			$lang = &JFactory::getLanguage();
-			$rows = $db->loadObjectList();
-			foreach($rows as $row)
-			{
-				$extension = $row->text;
-				$lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, null, false, false) || $lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, $lang->getDefault(), false, false);
-				$text = JText::_(strtoupper($row->text) ) <> strtoupper($row->text) ? JText::_(strtoupper($row->text) ) : $row->text;
-				$row->text = $text;
-			}
-			$options = array_merge( $options, $rows );
-			$select .= JHTML::_('select.genericlist', $options, 'categoryExtension', 'class="inputbox" size="1" onchange="Javascript:change_extension();"', 'value', 'text', $categoryExtension );
-		
-		
-		*/
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT category.extension');
 		$query->from('#__categories as category');
-		$query->where('id > \'1\'');
+		//$query->where('id > \'1\'');
+		//$query->where('parent_id > 0');
+		$query->where('level > 0');
 		$query->where('extension <> \'\'');
 		$db->setQuery($query);
 		
@@ -106,9 +83,25 @@ class translationExtensionFilter extends translationFilter
 		$lang = JFactory::getLanguage();
 		foreach ($cats as $cat)
 		{
-			$extension = $cat->extension;
-			$lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, null, false, false) || $lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, $lang->getDefault(), false, false);
-			$text = JText::_(strtoupper($extension) ) <> strtoupper($extension) ? JText::_(strtoupper($extension) ) : $extension;
+			//$extension = $cat->extension;
+			// The extension can be in the form com_foo.section
+			$parts = explode('.', $cat->extension);
+			$component = $parts[0];
+			$section = (count($parts) > 1) ? $parts[1] : null;
+			//FB::dump($component);
+
+			$lang->load($component, JPATH_BASE, null, false, false)
+		||	$lang->load($component, JPATH_ADMINISTRATOR.'/components/'.$component, null, false, false)
+		||	$lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)
+		||	$lang->load($component, JPATH_ADMINISTRATOR.'/components/'.$component, $lang->getDefault(), false, false);
+			//FB::dump($lang);
+			//$lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, null, false, false) || $lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, $lang->getDefault(), false, false);
+			$text = JText::_(strtoupper($component) ) <> strtoupper($component) ? JText::_(strtoupper($component) ) : $component;
+			if($section)
+			{
+				$text = JText::_(strtoupper($component).'_'.strtoupper($section) ) <> (strtoupper($component).'_'.strtoupper($section) ) ? JText::_(strtoupper((strtoupper($component).'_'.strtoupper($section) )) ) : $component;
+				//FB::dump($section_text);
+			}
 			//$row->text = $text;
 			$ExtensionOptions[] = JHTML::_('select.option', $cat->extension, $text);
 			$catcount++;
