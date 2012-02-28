@@ -26,9 +26,9 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: TranslationFilter.php 239M 2011-06-22 06:28:53Z (local) $
+ * $Id: TranslationExtensionFilter.php  $
  * @package joomfish
- * @subpackage Models
+ * @subpackage TranslationFilters
  *
  */
 defined('_JEXEC') or die('Restricted access');
@@ -65,7 +65,7 @@ class translationExtensionFilter extends translationFilter
 		if (!$this->filterField)
 			return "";
 		$ExtensionOptions = array();
-		$ExtensionOptions[] = JHTML::_('select.option', $this->filterNullValue,JText::_('JOPTION_FROM_COMPONENT')); //JHTML::_('select.option', $this->filterNullValue, JText::_('ALL_EXTENSIONS'));
+		$ExtensionOptions[] = JHTML::_('select.option', $this->filterNullValue,JText::_('JOPTION_FROM_COMPONENT'));
 		
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT category.extension');
@@ -76,33 +76,29 @@ class translationExtensionFilter extends translationFilter
 		$query->where('extension <> \'\'');
 		$db->setQuery($query);
 		
-		
-		
 		$cats = $db->loadObjectList();
 		$catcount = 0;
 		$lang = JFactory::getLanguage();
 		foreach ($cats as $cat)
 		{
-			//$extension = $cat->extension;
 			// The extension can be in the form com_foo.section
 			$parts = explode('.', $cat->extension);
 			$component = $parts[0];
 			$section = (count($parts) > 1) ? $parts[1] : null;
-			//FB::dump($component);
 
 			$lang->load($component, JPATH_BASE, null, false, false)
 		||	$lang->load($component, JPATH_ADMINISTRATOR.'/components/'.$component, null, false, false)
 		||	$lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)
 		||	$lang->load($component, JPATH_ADMINISTRATOR.'/components/'.$component, $lang->getDefault(), false, false);
-			//FB::dump($lang);
-			//$lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, null, false, false) || $lang->load(strtolower($extension.'.sys'), JPATH_ADMINISTRATOR, $lang->getDefault(), false, false);
-			$text = JText::_(strtoupper($component) ) <> strtoupper($component) ? JText::_(strtoupper($component) ) : $component;
-			if($section)
-			{
-				$text = JText::_(strtoupper($component).'_'.strtoupper($section) ) <> (strtoupper($component).'_'.strtoupper($section) ) ? JText::_(strtoupper((strtoupper($component).'_'.strtoupper($section) )) ) : $component;
-				//FB::dump($section_text);
+			
+			// if the component section string exits, let's use it
+			if ($lang->hasKey($component_section_key = $component.($section?"_$section":''))) {
+				$text = JText::_($component_section_key);
 			}
-			//$row->text = $text;
+			// Else use the component string
+			else {
+				$text = JText::_(strtoupper($component));
+			}
 			$ExtensionOptions[] = JHTML::_('select.option', $cat->extension, $text);
 			$catcount++;
 		}
@@ -111,9 +107,7 @@ class translationExtensionFilter extends translationFilter
 		$Extensionlist["html"] = JHTML::_('select.genericlist', $ExtensionOptions, 'extension_filter_value', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $this->filter_value);
 
 		return $Extensionlist;
-
 	}
-
 }
 
 ?>
