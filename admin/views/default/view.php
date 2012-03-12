@@ -169,9 +169,9 @@ class JoomfishViewDefault extends JView {
 	/**
 	 * Method to use a tooltip independ from JElements
 	 *
-	 * @param string $label	title of the lable
-	 * @param string $description	of the lable
-	 * @param string $control_name	name of the control the lable is related to
+	 * @param string $label	title of the label
+	 * @param string $description	of the label
+	 * @param string $control_name	name of the control the label is related to
 	 * @param string $name	of the control
 	 * @return string
 	 */

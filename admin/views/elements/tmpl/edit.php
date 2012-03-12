@@ -95,7 +95,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 			<tr>
 				<th><?php echo JText::_( 'DBFIELDNAME' );?></th>
 				<th><?php echo JText::_( 'DBFIELDTYPE' );?></th>
-				<th><?php echo JText::_( 'DBFIELDLABLE' );?></th>
+				<th><?php echo JText::_( 'DBFIELDLABEL' );?></th>
 				<th><?php echo JText::_( 'TRANSLATE' );?></th>
 			</tr>
 			<?php
@@ -105,7 +105,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 		  <tr class="<?php echo "row$k"; ?>">
 				<td><?php echo $tableField->Name ? $tableField->Name : "&nbsp;";?></td>
 				<td><?php echo $tableField->Type ? $tableField->Type : "&nbsp;";?></td>
-				<td><?php echo $tableField->Lable ? $tableField->Lable : "&nbsp;";?></td>
+				<td><?php echo $tableField->Label ? $tableField->Label : "&nbsp;";?></td>
 				<td><?php echo $tableField->Translate ? JText::_('JYES') : JText::_('JF_NO');?></td>
 			</tr>
 				<?php
@@ -137,7 +137,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 				if( $sqlFields!='' ) $sqlFields .= ',';
 				$sqlFields .= '`' .$tableField->Name. '`';
 				?>
-				<th nowrap><?php echo $tableField->Lable;?></th>
+				<th nowrap><?php echo $tableField->Label;?></th>
 				<?php
 			}
 			?>

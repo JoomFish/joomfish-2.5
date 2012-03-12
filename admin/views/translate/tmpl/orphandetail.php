@@ -51,7 +51,7 @@ $this->_JoomlaHeader("Orphan Detail");
    <input type="hidden" name="catid" value="<?php echo $catid;?>" />
    <table width="100%" border="1" cellpadding="4" cellspacing="2" class="adminForm">
 	<tr align="center" valign="middle">
-	      <th width="10%" align="left" valign="top"><?php echo JText::_( 'DBFIELDLABLE' );?></th>
+	      <th width="10%" align="left" valign="top"><?php echo JText::_( 'DBFIELDLABEL' );?></th>
 	      <th width="12%" align="left" valign="top"><?php echo JText::_( 'ORIGINAL' );?></th>
 	      <th width="78%" align="left" valign="top"><?php echo JText::_( 'TRANSLATION' );?></th>
         </tr>

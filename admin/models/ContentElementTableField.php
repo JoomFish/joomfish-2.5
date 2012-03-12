@@ -47,7 +47,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class ContentElementTablefield {
 	public $Type='';
 	public $Name='';
-	public $Lable='';
+	public $Label='';
 	public $Translate=false;
 	public $Option='';
 	public $Length=30;
@@ -82,7 +82,7 @@ class ContentElementTablefield {
 	public function __construct ( $tablefieldElement ) {
 		$this->Type = trim( $tablefieldElement->getAttribute( 'type' ) );
 		$this->Name = trim( $tablefieldElement->getAttribute( 'name' ) );
-		$this->Lable = trim( $tablefieldElement->textContent );
+		$this->Label = trim( $tablefieldElement->textContent );
 		$this->Translate = trim( $tablefieldElement->getAttribute( 'translate' ) );
 		$this->Option = trim( $tablefieldElement->getAttribute( 'option' ) );
 		$this->Length = intval( $tablefieldElement->getAttribute( 'length' ) );
