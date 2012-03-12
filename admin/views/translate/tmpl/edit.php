@@ -225,7 +225,7 @@ else {
 					else {
 				?>
 		    <tr class="<?php echo "row$k"; ?>">
-		      <th colspan="3"><?php echo JText::_( 'DBFIELDLABEL' ) .': '. $field->Lable;?></th>
+		      <th colspan="3"><?php echo JText::_( 'DBFIELDLABEL' ) .': '. $field->Label;?></th>
 		    </tr>
 	      	<?php
 	      	if (strtolower($field->Type)!='params'){
