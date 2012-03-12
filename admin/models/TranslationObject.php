@@ -551,9 +551,9 @@ class TranslationObject implements iJFTranslatable
 					{
 						$fieldContent = new jfContent($db);
 						// id for translation
-						$fieldContent->id = $row->id;
+						$fieldContent->id = intval($row->jfc_id);
 						$fieldContent->language_id = $this->language_id;
-						$fieldContent->reference_id = intval($row->jfc_id);
+						$fieldContent->reference_id = $row->id;
 						$fieldContent->reference_table = $elementTable->Name;
 						$fieldContent->reference_field = $fieldname;
 						if (isset($row->$transfieldname))
