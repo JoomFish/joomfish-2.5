@@ -241,7 +241,7 @@ class interceptDB extends JDatabaseMySQLi
 		$jfmCount = 0;
 		$jfManager = JoomFishManager::getInstance();
 		$defaultlang = $jfManager->getDefaultLanguage();
-		if (is_a($this->sql, "JDatabaseQueryMySQLi") && !isset($this->sql->jfprocessed) && isset($this->sql->where)) {
+		if (is_a($this->sql, "JDatabaseQueryMySQLi") && !isset($this->sql->jfprocessed) && (isset($this->sql->where) || (property_exists( $this->sql,'where') && is_a($this->sql->where, "JDatabaseQueryElement") ) )) {
 			$elements = $this->sql->where->getElements();
 			foreach ( $elements as &$element) {
 				if(strstr($element, 'language')) {
