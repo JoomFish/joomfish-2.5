@@ -80,10 +80,10 @@ class plgSystemJFDatabase extends JPlugin
 		$conf = JFactory::getConfig();
 		$conf->setValue("jfdatabase.params", $this->params);
 
-		if (JFactory::getApplication()->isAdmin())
+		/*if (JFactory::getApplication()->isAdmin())
 		{
 			return;
-		}
+		}*/
 
 		$this->config = array(
 			'adapter' => "inheritor"
@@ -116,7 +116,14 @@ class plgSystemJFDatabase extends JPlugin
 	}
 
 	function onAfterRoute()
-	{
+	{	
+		
+		if (JFactory::getApplication()->isAdmin())
+		{
+			// This plugin is only relevant for use within the frontend!
+			return;
+		}
+		
 		// NEW SYSTEM
 		// amend editing page but only for native elements
 		//if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
@@ -262,15 +269,30 @@ SCRIPT;
 		$this->doAfterSave($context, $table, $isNew, $tablename);
 	}
 	
-	public function onMenuAfterSave($context, &$article, $isNew)
-	{
-		$this->doAfterSave($context, $article, $isNew, "menu");
+	public function onMenuAfterSave($context, &$table, $isNew, $elementTable)
+	{	
+		$data = JRequest::getVar("jform", array());
+		
+		foreach ($elementTable->Fields AS $Field) {
+			if ($Field->Name == "home" && $Field->translationContent->original_text == "1") {
+				$db = JFactory::getDbo();
+
+			$query = $db->getQuery(true);
+			$query->update('#__menu');
+			$query->set($db->quoteName('home').' = 1');
+			$query->where('id = ' .(int) $table->id);
+			$db->setQuery($query);
+			$db->query();
+			}
+		}
+		
+		$this->doAfterSave($context, $table, $isNew, "menu");
 
 	}
 
-	public function onModuleAfterSave($context, &$table, $isNew)
+	public function onModuleAfterSave($context, &$table, $isNew, $elementTable)
 	{
-		$this->doAfterSave($context, $article, $isNew, "modules");
+		$this->doAfterSave($context, $table, $isNew, "modules");
 
 		// For modules must also save module/menu assignments
 
@@ -498,4 +520,3 @@ SCRIPT;
 	}
 
 }
-

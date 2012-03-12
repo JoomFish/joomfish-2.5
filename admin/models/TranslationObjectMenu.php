@@ -134,11 +134,11 @@ class  TranslationObjectMenu extends TranslationObject
 	/*
 	 * Unset home attribute on copy, we can only have one home in single menu tree
 	*/
-	public function unsetHomeOr(&$row) {
 	
-		$row->home = "0";
-		$row->jfc_home = "0";
+	public function unsetHomeTr($field, &$row) {
+		if($row->home == "1") {
+			$row->jfc_home = "0";
+		}
 	}
 
 }
-

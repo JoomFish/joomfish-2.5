@@ -800,18 +800,20 @@ class TranslationObject implements iJFTranslatable
 				
 				// Save the translation map 
 				$this->generateTranslationMap($table, $isNew, $this->contentElement->getTableName(), $elementTable);
-				/*
-				// contient has its own plugin!
+	
 				if ($tableclass == "Menu")
 				{
 					$dispatcher = JDispatcher::getInstance();
-					$dispatcher->trigger("onMenuAfterJFSave", array("com_menu,menu", &$table, $isNew, $elementTable));
+					$dispatcher->trigger("onMenuAfterSave", array("com_menu,menu", &$table, $isNew, $elementTable));
 				}
 				else if ($tableclass == "Module")
 				{
 					$dispatcher = JDispatcher::getInstance();
-					$dispatcher->trigger("onModuleAfterJFSave", array("com_modules,module", &$table, $isNew, $elementTable));
-				}
+					$dispatcher->trigger("onModuleAfterSave", array("com_modules,module", &$table, $isNew, $elementTable));
+				}			
+				
+				/*
+				// contient has its own plugin!
 				else if ($tableclass == "Content")
 				{
 					$dispatcher = JDispatcher::getInstance();
