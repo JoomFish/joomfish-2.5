@@ -185,9 +185,11 @@ class LanguagesModelLanguages extends JFModel
 		$params = JComponentHelper::getParams('com_languages');
 		$params->set($client->name, $jfLang->lang_code);
 	
-		$table =& JTable::getInstance('component');
-		$table->loadByOption( 'com_languages' );
-	
+		//$table =& JTable::getInstance('component');
+		$table =& JTable::getInstance('extension');
+		//$table->loadByOption( 'com_languages' );
+		$table->load($table->find(array("element"=>'com_languages')));
+		
 		$table->params = $params->toString();
 	
 		// pre-save checks
