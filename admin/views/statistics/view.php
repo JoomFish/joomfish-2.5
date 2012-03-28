@@ -87,7 +87,7 @@ class StatisticsViewStatistics extends JoomfishViewDefault
 		$htmlOutput = '';
 
 		$htmlOutput = '<table cellpadding="4" cellspacing="0" border="0" width="100%" class="adminlist">';
-		$htmlOutput .= '<tr><th>' .JText::_( 'CONTENT' ). '</th><th>' .JText::_( 'CONTENT' ). '</th><th>' .JText::_( 'CONTENT' ). '</th><th>' .JText::_( 'CONTENT' ). '</th>';
+		$htmlOutput .= '<tr><th>' .JText::_('CONTENT'). '</th><th>' .JText::_('TABLE_EXIST'). '</th><th>' .JText::_('ORIGINAL_TOTAL'). '</th><th>' .JText::_('ORPHANS'). '</th>';
 		if(is_array($langCodes)) {
 			foreach ($langCodes as $code) {
 				$htmlOutput .= '<th>' .$code. '</th>';
@@ -97,10 +97,10 @@ class StatisticsViewStatistics extends JoomfishViewDefault
 
 		$ceName = '';
 		foreach ($originalStatus as $statusRow ) {
-			$href = 'index.php?option=com_joomfish&amp;task=overview&amp;act=translate&amp;catid='.$statusRow['catid'];
+			$href = 'index.php?option=com_joomfish&amp;task=translate.overview&amp;catid='.$statusRow['catid'];
 			$htmlOutput .= '<tr>';
 			$htmlOutput .= '<td><a href="' .$href. '" target="_blank">' .$statusRow['name']. '</a></td>';
-			$htmlOutput .= '<td style="text-align: center;">' .($statusRow['missing_table'] ? JText::_( 'MISSING' ) : JText::_( 'MISSING' )). '</td>';
+			$htmlOutput .= '<td style="text-align: center;">' .($statusRow['missing_table'] ? JText::_( 'MISSING' ) : JText::_( 'VALID' )). '</td>';
 			$htmlOutput .= '<td style="text-align: center;">' .$statusRow['total']. '</td>';
 			$htmlOutput .= '<td style="text-align: center;">' .$statusRow['orphans']. '</td>';
 			if(is_array($langCodes)) {
@@ -135,8 +135,8 @@ class StatisticsViewStatistics extends JoomfishViewDefault
 		$htmlOutput = '';
 
 		$htmlOutput .= '<table cellpadding="4" cellspacing="0" border="0" width="100%" class="adminlist">';
-		$htmlOutput .= '<tr><th>' .JText::_( 'CONTENT' ). '</th><th>' .JText::_( 'CONTENT' ). '</th><th>' .JText::_( 'CONTENT' ). '</th><th>' .JText::_('TITLE_PUBLISHED'). '</th><th>' .JText::_( 'CONTENT' ). '</th><th>' .JText::_( 'CONTENT' ). '</th></tr>';
-
+		$htmlOutput .= '<tr><th>' .JText::_('CONTENT'). '</th><th>' .JText::_('LANGUAGE'). '</th><th>' .JText::_('TRANSLATION_TOTAL'). '</th><th>' .JText::_('TITLE_PUBLISHED'). '</th><th>' .JText::_('VALID'). '</th><th>' .JText::_('UNVALID'). '</th></tr>';
+		
 		foreach ($translationStatus as $statusRow ) {
 			$href = 'index.php?option=com_joomfish&amp;task=translate.overview&amp;catid='.$statusRow['catid'].'&amp;language_id='.$statusRow['language_id'];
 			$htmlOutput .= '<tr>';
