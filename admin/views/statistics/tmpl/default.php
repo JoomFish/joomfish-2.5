@@ -49,9 +49,9 @@ defined('_JEXEC') or die('Restricted access'); ?>
 		<td width="55%" valign="top">
 			<div id="cpanel">
 				<?php
-				$link = 'index3.php?option=com_joomfish&amp;task=statistics.check&amp;type=translation_status';
+				$link = 'index.php?option=com_joomfish&task=statistics.check&type=translation_status&tmpl=component';
 				$this->_quickiconButton( $link, 'icon-48-checktranslations.png', JText::_( 'CHECK_TRANSLATION_STATUS' ), '/administrator/components/com_joomfish/assets/images/', 'ajaxFrame', "updateResultDiv('" .JText::_( 'CHECK_TRANSLATION_STATUS' ). "', 'text');" );
-				$link = 'index3.php?option=com_joomfish&amp;task=statistics.check&amp;type=original_status';
+				$link = 'index.php?option=com_joomfish&task=statistics.check&type=original_status&tmpl=component';
 				$this->_quickiconButton( $link, 'icon-48-checktranslations.png', JText::_( 'CHECK_ORIGINAL_STATUS' ), '/administrator/components/com_joomfish/assets/images/', 'ajaxFrame', "updateResultDiv('" .JText::_( 'CHECK_ORIGINAL_STATUS' ). "', 'text');" );
 				?>
 			</div>

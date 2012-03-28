@@ -235,7 +235,7 @@ else {
 		      <td align="left" valign="top" id="original_value_<?php echo $field->Name?>">
 		      <?php
 		      if (preg_match("/<form/i",$field->originalValue)){
-		      	$ovhref = JRoute::_("index3.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->translationObject->id."&lang=".$select_language_id);
+		      	$ovhref = JRoute::_("index.php?option=com_joomfish&task=translate.originalvalue&field=".$field->Name."&cid=".$this->translationObject->id."&lang=".$select_language_id.'&tmpl=component');
 		      	echo '<a class="modal" rel="{handler: \'iframe\', size: {x: 700, y: 500}}" href="'.$ovhref.'" >'.JText::_("Content contains form - click here to view in popup window").'</a>';
 		      }
 		      else {

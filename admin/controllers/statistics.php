@@ -96,7 +96,7 @@ class StatisticsController extends JController  {
 
 				$htmlResult = $this->_view->renderTranslationStatusTable($translationStatus, $message);
 				if( $phase<=3 ) {
-					$link = 'index3.php?option=com_joomfish&task=statistics.check&type=translation_status&phase=' .$phase;
+					$link = 'index.php?option=com_joomfish&task=statistics.check&type=translation_status&phase=' .$phase .'&tmpl=component';
 
 					if( $statecheck_i > -1) {
 						$link .= '&statecheck_i='.$statecheck_i;
@@ -122,7 +122,7 @@ class StatisticsController extends JController  {
 				$htmlResult = $this->_view->renderOriginalStatusTable($originalStatus, $message, $langCodes);
 
 				if( $phase<=2 ) {
-					$link = 'index3.php?option=com_joomfish&task=statistics.check&type=original_status&phase=' .$phase;
+					$link = 'index.php?option=com_joomfish&task=statistics.check&type=original_status&phase=' .$phase .'&tmpl=component';
 
 					if( $statecheck_i > -1) {
 						$link .= '&statecheck_i='.$statecheck_i;

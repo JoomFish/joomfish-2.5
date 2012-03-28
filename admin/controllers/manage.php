@@ -104,7 +104,7 @@ class ManageController extends JController  {
 					$htmlResult = $this->_view->renderCopyInformation($original2languageInfo, $message, $langlist);
 				} elseif( $phase == 2 || $phase == 3 ) {
 					$htmlResult = $this->_view->renderCopyProcess($original2languageInfo, $message);
-					$link = 'index3.php?option=com_joomfish&task=manage.copy&type=original_language&phase=' .$phase. '&language_id=' .$language_id. '&state_catid=' .$state_catid. '&overwrite=' .$overwrite;
+					$link = 'index.php?option=com_joomfish&task=manage.copy&type=original_language&phase=' .$phase. '&language_id=' .$language_id. '&state_catid=' .$state_catid. '&overwrite=' .$overwrite .'&tmpl=component';
 				} else {
 					$htmlResult = $this->_view->renderCopyProcess($original2languageInfo, $message);
 					$session->set('original2languageInfo', null );

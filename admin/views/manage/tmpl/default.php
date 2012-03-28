@@ -44,7 +44,7 @@ defined('_JEXEC') or die('Restricted access'); ?>
   function executeCopyOriginal( toLanguage, confirmCheck, copyCat  ) {
   		if( toLanguage == null || toLanguage.value == -1 ) return;
 
-		var link = 'index3.php?option=com_joomfish&task=manage.copy&type=original_language&phase=2';
+		var link = 'index.php?option=com_joomfish&task=manage.copy&type=original_language&phase=2&tmpl=component';
   		if( confirmCheck.checked == true ) {
 			if( !window.confirm( '<?php echo JText::_('CONFIRM_COPY_TO', true);?>' ) ) return;
 			link += '&overwrite=1';
@@ -75,13 +75,13 @@ defined('_JEXEC') or die('Restricted access'); ?>
 		<td width="45%" valign="top">
 			<div id="cpanel">
 				<?php
-				$link = 'index3.php?option=com_joomfish&amp;task=manage.copy&amp;type=original_language';
+				$link = 'index.php?option=com_joomfish&task=manage.copy&type=original_language&tmpl=component';
 				$this->_quickiconButton( $link, 'icon-48-manage-translations.png', JText::_( 'COPY_ORIGINAL_TO_LANGUAGE' ), '/administrator/components/com_joomfish/assets/images/', 'ajaxFrame', "updateResultDiv('" .JText::_('Processing', 'text'). "');" );
 /*
 				echo '<div style="clear: both;" />';
-				$link = 'index3.php?option=com_joomfish&amp;task=copy&amp;act=manage&amp;type=translation_language';
+				$link = 'index.php?option=com_joomfish&amp;task=copy&amp;act=manage&amp;type=translation_language&tmpl=component';
 				HTML_joomfish::_quickiconButton( $link, 'dbrestore.png', JText::_( 'COPY_TRANSLATION_TO_LANGAGE' ), '/administrator/images/', 'ajaxFrame', "updateResultDiv('" .JText::_('Processing', 'text'). "');" );
-				$link = 'index3.php?option=com_joomfish&amp;task=update&amp;act=manage&amp;type=original_value';
+				$link = 'index.php?option=com_joomfish&amp;task=update&amp;act=manage&amp;type=original_value&tmpl=component';
 				HTML_joomfish::_quickiconButton( $link, 'query.png', JText::_( 'UPDATE_ORIGINAL_VALUES' ), '/administrator/images/', 'ajaxFrame', "updateResultDiv('" .JText::_( 'UPDATE_ORIGINAL_VALUES' ). "', 'text');" );
 */
 				?>
