@@ -180,14 +180,12 @@ class LanguagesModelLanguages extends JFModel
 		$jfLang->load($lang_id);
 		
 		// We define that the default language can only be changed for the Joomla Client - not the admin
-		$client	=& JApplicationHelper::getClientInfo(0);
+		$client	= JApplicationHelper::getClientInfo(0);
 	
 		$params = JComponentHelper::getParams('com_languages');
 		$params->set($client->name, $jfLang->lang_code);
 	
-		//$table =& JTable::getInstance('component');
-		$table =& JTable::getInstance('extension');
-		//$table->loadByOption( 'com_languages' );
+		$table = JTable::getInstance('extension');
 		$table->load($table->find(array("element"=>'com_languages')));
 		
 		$table->params = $params->toString();
