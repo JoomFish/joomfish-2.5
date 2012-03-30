@@ -258,16 +258,27 @@ class StatisticsModelStatistics extends JModel
 		switch ($phase) {
 			case 1:
 				$originalStatus = array();
-
-				$sql = "select distinct CONCAT('".$db->getPrefix()."',reference_table) from #__jf_content";
-				$db->setQuery( $sql );
-				$tablesWithTranslations = $db->loadResultArray();
+			
+				$sqljf = "select distinct CONCAT('".$db->getPrefix()."',reference_table) from #__jf_content";
+				
+				$sqlnative = "select distinct CONCAT('".$db->getPrefix()."',reference_table) from #__jf_translationmap";
+				
+				
+				$db->setQuery($sqljf);
+				$rowsjf = $db->loadResultArray();
+				$db->setQuery($sqlnative);
+				$rowsnative = $db->loadResultArray();
+				
+				$tablesWithTranslations = array_merge($rowsjf,$rowsnative);
 
 				$sql = "SHOW TABLES";
 				$db->setQuery( $sql );
 				$tables = $db->loadResultArray();
 
 				$allContentElements = $jfManager->getContentElements();
+				
+				$jfManager = JoomFishManager::getInstance();
+				$defaultlang = $jfManager->getDefaultLanguage();
 
 				foreach ($allContentElements as $catid=>$ce){
 					$ceInfo = array();
@@ -278,9 +289,14 @@ class StatisticsModelStatistics extends JModel
 					$ceInfo['message'] = '';
 
 					$tablename = $db->getPrefix().$ce->referenceInformation["tablename"];
+					
 					if (in_array($tablename,$tables)){
 						// get total count of table entries
-						$db->setQuery( 'SELECT COUNT(*) FROM ' .$tablename );
+						$sql = "SELECT COUNT(*) FROM " .$tablename;
+						if ($ce->getTarget() == "native") {
+							$sql .= " WHERE language = '*' OR language = '" . $defaultlang . "'" ;
+						}
+						$db->setQuery( $sql); 
 						$ceInfo['total'] = $db->loadResult();
 
 						if( in_array($tablename,$tablesWithTranslations) ) {
@@ -320,17 +336,38 @@ class StatisticsModelStatistics extends JModel
 						$stateRow =& $originalStatus[$statecheck_i];
 
 						foreach ($languages as $lang) {
-							$sql = "SELECT * FROM #__jf_content as jfc" .
+							
+							/*$sql = "SELECT * FROM #__jf_content as jfc" .
 							"\n  WHERE jfc.language_id=" .$lang->lang_id .
 							"\n    AND jfc.reference_table='" .$stateRow['catid'] ."'".
 							"\n    AND jfc.published=1" .
-							"\n	 GROUP BY reference_id";
+							"\n	 GROUP BY reference_id";*/
+							
+							$contentElement = $jfManager->getContentElement( $stateRow['catid'] );
+							if ($contentElement->getTarget() == "native") {
+								$sql = "SELECT * FROM #__jf_translationmap AS jftm" .
+										"\n JOIN #__".$stateRow['catid']." AS jtab ON jtab.id = jftm.translation_id" .
+										"\n WHERE jftm.reference_table='"  .$stateRow['catid'].  "'" .
+										"\n   AND jftm.language ='" .$lang->lang_code . "'" .
+										"\n AND jtab.".$contentElement->getPublishedField()." > 0" .
+										"\n GROUP BY jftm.reference_id";
+							} else {
+								$sql = "select *" .
+										"\n from #__jf_content as jfc" .
+										"\n where jfc.published=1" .
+										"\n and jfc.reference_table='" .$stateRow['catid']. "'".
+										"\n and jfc.language_id=" .$lang->lang_id.
+										"\n group by reference_ID";
+							}
+							
 							$db->setQuery($sql);
 							$rows = $db->loadRowList();
 							$key = 'langentry_' .$lang->getLanguageCode();
 							$stateRow[$key] = count($rows);
 						}
 					}
+					
+
 
 					if ($statecheck_i<count($originalStatus)-1) {
 						$statecheck_i ++;
