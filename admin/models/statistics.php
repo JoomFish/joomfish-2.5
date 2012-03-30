@@ -337,12 +337,6 @@ class StatisticsModelStatistics extends JModel
 
 						foreach ($languages as $lang) {
 							
-							/*$sql = "SELECT * FROM #__jf_content as jfc" .
-							"\n  WHERE jfc.language_id=" .$lang->lang_id .
-							"\n    AND jfc.reference_table='" .$stateRow['catid'] ."'".
-							"\n    AND jfc.published=1" .
-							"\n	 GROUP BY reference_id";*/
-							
 							$contentElement = $jfManager->getContentElement( $stateRow['catid'] );
 							if ($contentElement->getTarget() == "native") {
 								$sql = "SELECT * FROM #__jf_translationmap AS jftm" .
