@@ -38,7 +38,15 @@ class JFormFieldContentLanguage extends JFormFieldList
 	 * @since   11.1
 	 */
 	protected function getOptions()
-	{
-		return JHtml::_('contentlanguage.existing');
+	{	
+		$basicoptions = JHtml::_('contentlanguage.existing');
+		
+		// set default
+		if (!isset($this->value) || empty ($this->value)) {
+			$jfManager = JoomFishManager::getInstance();
+			$this->value = $jfManager->getDefaultLanguage();
+		}
+		
+		return $basicoptions;
 	}
 }

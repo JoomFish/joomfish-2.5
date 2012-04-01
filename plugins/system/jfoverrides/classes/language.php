@@ -45,6 +45,12 @@ class JFormFieldLanguage extends JFormFieldList
 		{
 			$client = 'site';
 		}
+		
+		// set default
+		if (!isset($this->value) || empty ($this->value)) {
+			$jfManager = JoomFishManager::getInstance();
+			$this->value = $jfManager->getDefaultLanguage();
+		}
 
 		// Merge any additional options in the XML definition.
 		$options = JLanguageHelper::createLanguageList($this->value, constant('JPATH_' . strtoupper($client)), true, true);
