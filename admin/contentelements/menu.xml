@@ -17,7 +17,7 @@
   		<field type="checked_out_by" name="checked_out" translate="0">Check out by</field>
   		<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
   		<field type="hiddentext" name="home" translate="1" prehandlertranslation="unsetHomeTr">Homepage</field>
-		<filter>c.client_id = 0 </filter>
+		<filter>c.client_id = 0 AND c.lft > 0 </filter>
   	</table>
   	<component>
   		<form>com_menus#menu#cid#task#!edit</form>
