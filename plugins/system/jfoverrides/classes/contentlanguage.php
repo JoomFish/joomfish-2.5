@@ -42,7 +42,7 @@ class JFormFieldContentLanguage extends JFormFieldList
 		$basicoptions = JHtml::_('contentlanguage.existing');
 		
 		// set default
-		if (!isset($this->value) || empty ($this->value)) {
+		if (!isset($this->value) || empty ($this->value) || $this->value == '*') {
 			$jfManager = JoomFishManager::getInstance();
 			$this->value = $jfManager->getDefaultLanguage();
 		}
