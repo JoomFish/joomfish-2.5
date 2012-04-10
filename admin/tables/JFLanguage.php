@@ -276,7 +276,11 @@ class TableJFLanguage extends JTable  {
 		}
 		
 		foreach (get_object_vars($this->jfLanguageExt) as $key => $value) {
+			if ($key == 'params') {
+				$value = new JRegistry($value);
+			}
 			$this->set($key, $value);
+			
 		}
 		
 		$this->checkFrontendLanguage();
@@ -417,7 +421,8 @@ class TableJFLanguage extends JTable  {
 		$langParameter = new JRegistry($this->params);
 		$langParameter->set('MetaDesc', $this->jLanguageTable->get('metadesc'));
 		$langParameter->set('MetaKeys',$this->jLanguageTable->get('metakey'));
-		$this->params = $langParameter->toString();
+		$langParameter->set('sitename', $this->jLanguageTable->get('sitename', ''));
+		//$this->params = $langParameter->toString();
 		
 		$src->params = $this->params;
 		$this->jfLanguageExt->bind($src, $ignore);

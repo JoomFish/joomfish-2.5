@@ -140,6 +140,7 @@ class LanguagesModelLanguages extends JFModel
 				$params = new JRegistry($data['params'][$i]);
 				$jfLang->set('metadesc', $params->get('MetaDesc', ''));
 				$jfLang->set('metakey', $params->get('MetaKeys', ''));
+				$jfLang->set('sitename', $params->get('sitename', ''));
 				
 				if( !$jfLang->store() ) {
 					$this->setError($jfLang->getError());
@@ -229,7 +230,7 @@ class LanguagesModelLanguages extends JFModel
 			$sql .= ' ORDER BY ' .$filter_order .' '. $filter_order_Dir;
 		}
 		$db->setQuery( $sql	);
-		$contentlanguages = $db->loadObjectList('lang_id');
+		$contentlanguages = $db->loadObjectList('lang_code');
 		
 		// check for published Site Languages
 		$query	= $db->getQuery(true);
