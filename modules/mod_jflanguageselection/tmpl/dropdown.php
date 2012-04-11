@@ -39,7 +39,7 @@ if ( count($langActive)>0 ) {
 	$noscriptString='';
 	foreach( $langActive as $language )
 	{
-		$href = JFModuleHTML::_createHRef ($language, $params);
+		$href = JFModuleHTML::createHRef ($language, $params);
 		if( $language->code == $curLanguage->getTag() && !$show_active ) {
 			continue;		// Not showing the active language
 		}
@@ -56,7 +56,7 @@ if ( count($langActive)>0 ) {
 
 		$langOption=JFModuleHTML::makeOption( $href, $language->title_native, $disabled );
 		$langOptions[] = $langOption;
-		$href = JFModuleHTML::_createHRef ($language, $params);
+		$href = JFModuleHTML::createHRef ($language, $params);
 		$noscriptString .= '<a href="' .$href. '"><span lang="' .$language->getLanguageCode(). '" xml:lang="' .$language->getLanguageCode(). '">' .$language->title_native. '</span></a>&nbsp;';
 	}
 

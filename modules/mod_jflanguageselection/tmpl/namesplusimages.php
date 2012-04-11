@@ -45,7 +45,7 @@ foreach( $langActive as $language )
 		}
 	}
 
-	$href = JFModuleHTML::_createHRef ($language, $params);
+	$href = JFModuleHTML::createHRef ($language, $params);
 
 	if (isset($language->disabled) && $language->disabled){
 		$outString .= '<li' .$langActive. ' style="opacity:0.5" class="opaque">';

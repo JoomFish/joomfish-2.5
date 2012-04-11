@@ -44,7 +44,7 @@ foreach( $langActive as $language )
 		}
 	}
 
-	$href = JFModuleHTML::_createHRef ($language, $params);
+	$href = JFModuleHTML::createHRef ($language, $params);
 	$langImg = JFModuleHTML::getLanguageImageSource($language);
 	
 	if (isset($language->disabled) && $language->disabled){

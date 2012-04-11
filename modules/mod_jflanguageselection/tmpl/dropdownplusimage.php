@@ -45,7 +45,7 @@ if ( count($langActive)>0 ) {
 		if( $language->code == $curLanguage->getTag() && !$show_active ) {
 			continue;		// Not showing the active language
 		}
-		$href = JFModuleHTML::_createHRef ($language, $params);
+		$href = JFModuleHTML::createHRef ($language, $params);
 		$langImg = JFModuleHTML::getLanguageImageSource($language);
 		
 		if ($language->code == $curLanguage->getTag() ){
