@@ -2,10 +2,10 @@
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
  * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
- * 
- * All rights reserved.  The Joom!Fish project is a set of extentions for 
- * the content management system Joomla!. It enables Joomla! 
- * to manage multi lingual sites especially in all dynamic information 
+ *
+ * All rights reserved.  The Joom!Fish project is a set of extentions for
+ * the content management system Joomla!. It enables Joomla!
+ * to manage multi lingual sites especially in all dynamic information
  * which are stored in the database.
  *
  * This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
  * @subpackage jfrouter
  * @version 2.0
  *
-*/
+ */
 
 /** ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
@@ -52,14 +52,14 @@ if(JFile::exists(JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers'
 	require_once( JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers' .DS. 'defines.php' );
 	JLoader::register('JoomfishManager', JOOMFISH_ADMINPATH .DS. 'classes' .DS. 'JoomfishManager.class.php' );
 	JLoader::register('JoomFishVersion', JOOMFISH_ADMINPATH .DS. 'version.php' );
-	JLoader::register('JoomFish', JOOMFISH_PATH .DS. 'helpers' .DS. 'joomfish.class.php' );	
+	JLoader::register('JoomFish', JOOMFISH_PATH .DS. 'helpers' .DS. 'joomfish.class.php' );
 } else {
 	JError::raiseNotice('no_jf_extension', JText::_('Joom!Fish extension not installed correctly. Plugin not executed'));
 	return;
 }
 /**
-* Language Determination and basic routing for Joomfish
-*/
+ * Language Determination and basic routing for Joomfish
+ */
 class plgSystemJFRouter extends JPlugin{
 
 	/**
@@ -105,9 +105,9 @@ class plgSystemJFRouter extends JPlugin{
 
 		$registry = JFactory::getConfig();
 
-		// Find language without loading strings		
+		// Find language without loading strings
 		$locale	= $registry->getValue('config.language');
-		
+
 		// Attention - we need to access the site default values
 		// #12943 explains that a user might overwrite the orignial settings based on his own profile
 		$langparams = JComponentHelper::getParams('com_languages');
@@ -124,7 +124,7 @@ class plgSystemJFRouter extends JPlugin{
 
 		// get instance of JoomFishManager to obtain active language list and config values
 		$jfm =  JoomFishManager::getInstance();
-	
+
 		$client_lang = '';
 		$lang_known = false;
 		$jfcookie = JRequest::getVar('jfcookie', null ,"COOKIE");
@@ -155,7 +155,7 @@ class plgSystemJFRouter extends JPlugin{
 		}
 
 		if ( !$lang_known && $determitLanguage &&
-		key_exists( 'HTTP_ACCEPT_LANGUAGE', $_SERVER ) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ) {
+				key_exists( 'HTTP_ACCEPT_LANGUAGE', $_SERVER ) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ) {
 
 			switch ($newVisitorAction) {
 				// usesing the first defined Joom!Fish language
@@ -281,7 +281,7 @@ class plgSystemJFRouter extends JPlugin{
 			$registry->setValue("joomfish_language",$jfLang);
 
 			$href = JRoute::_($href,false);
-			
+				
 			header( 'HTTP/1.1 303 See Other' );
 			header( "Location: ". $href );
 			exit();
@@ -291,22 +291,24 @@ class plgSystemJFRouter extends JPlugin{
 			$locale = $jfLang->code;
 		} else {
 			$jfLang = TableJFLanguage::createByJoomla( $locale );
-		if( !$jfLang->active ) {
-			?>
-			<div style="background-color: #c00; color: #fff">
-				<p style="font-size: 1.5em; font-weight: bold; padding: 10px 0px 10px 0px; text-align: center; font-family: Arial, Helvetica, sans-serif;">
-				Joom!Fish config error: Default language is inactive!<br />&nbsp;<br />
-				Please check configuration, try to use first active language</p>
-			</div>
-			<?php
-			$activeLanguages = $jfm->getActiveLanguages();
-			if( count($activeLanguages) > 0 ) {
-				$jfLang = $activeLanguages[0];
-				$locale = $jfLang->code;
-			}
-			else {
-				// No active language defined - using system default is only alternative!
-			}
+			if( !$jfLang->active ) {
+				?>
+<div style="background-color: #c00; color: #fff">
+	<p
+		style="font-size: 1.5em; font-weight: bold; padding: 10px 0px 10px 0px; text-align: center; font-family: Arial, Helvetica, sans-serif;">
+		Joom!Fish config error: Default language is inactive!<br />&nbsp;<br />
+		Please check configuration, try to use first active language
+	</p>
+</div>
+<?php
+$activeLanguages = $jfm->getActiveLanguages();
+if( count($activeLanguages) > 0 ) {
+	$jfLang = $activeLanguages[0];
+	$locale = $jfLang->code;
+}
+else {
+	// No active language defined - using system default is only alternative!
+}
 			}
 			$client_lang = ($jfLang->shortcode!='') ? $jfLang->shortcode : $jfLang->iso;
 		}
@@ -319,11 +321,7 @@ class plgSystemJFRouter extends JPlugin{
 			setcookie( "jfcookie", "", time() - 1800, "/" );
 			setcookie( "jfcookie[lang]", $client_lang, time()+24*3600, '/' );
 		}
-		
-		if( defined("_JLEGACY") ) {
-			$GLOBALS['iso_client_lang'] = $client_lang;
-			$GLOBALS['mosConfig_lang'] = $jfLang->code;
-		}
+
 
 		$registry->setValue("config.multilingual_support", true);
 		JFactory::getApplication()->setUserState('application.lang',$jfLang->code);
@@ -336,11 +334,11 @@ class plgSystemJFRouter extends JPlugin{
 		$lang = JFactory::getLanguage();
 		if ($jfLang->code != $lang->getTag()){
 			// Must not assign by reference in order to overwrite the existing reference to the static instance of the language
-			 JFactory::$language=false;
+			JFactory::$language=false;
 			$lang = JFactory::getLanguage();
 		}
 		// no need to set locale for this ISO code its done by JLanguage
-		
+
 		// overwrite with the valued from $jfLang
 		$jfparams = JComponentHelper::getParams("com_joomfish");
 		$overwriteGlobalConfig =  $jfparams->get( 'overwriteGlobalConfig', 0 );
@@ -350,7 +348,7 @@ class plgSystemJFRouter extends JPlugin{
 			$paramarray = $params->toArray();
 			foreach ($paramarray as $key=>$val) {
 				$registry->setValue("config.".$key,$val);
-	
+
 				if (defined("_JLEGACY")){
 					$name = 'mosConfig_'.$key;
 					$GLOBALS[$name] = $val;
@@ -365,7 +363,7 @@ class plgSystemJFRouter extends JPlugin{
 
 	/**
 	 * Custom handlers to deal with bad component routers e.g. for contact
-	 */ 
+	 */
 	public static function procesCustomBuildRule($router, &$uri){
 		$option = $uri->getVar("option","");
 		if (strpos($option,"com_")!==0) return;
@@ -379,7 +377,7 @@ class plgSystemJFRouter extends JPlugin{
 			}
 		}
 	}
-	
+
 	function parseJFRule($router, &$uri){
 		//echo "got here too lang = ".$uri->getVar("lang","")."<br/>";
 		$route = $uri->getPath();
@@ -424,7 +422,7 @@ class plgSystemJFRouter extends JPlugin{
 		else {
 			// Consider stripping base path from URI
 			/*
-			$live_site = JURI::base();
+			 $live_site = JURI::base();
 			$livesite_uri = new JURI($live_site);
 			$livesite_path = $livesite_uri->getPath();
 			$route = str_replace($livesite_path,"",$route);
@@ -490,7 +488,7 @@ class plgSystemJFRouter extends JPlugin{
 					}
 					// does the segment match the prefix
 					if ($segcompare==$prefix){
-																				
+
 						// This section forces the current url static to include the language string which means the base tag is correct - but ONLY on the home page
 						// restricting this to the homepage means no risk for image paths etc.
 						$homepage = true;
@@ -549,7 +547,7 @@ function routeJFRule($router, &$uri){
 			$params = JPluginHelper::getPlugin("system", "jfrouter");
 			$params = new JRegistry($params->params);
 		}
-		
+
 		$sefordomain = $params->get("sefordomain","sefprefix");
 
 		if ($sefordomain == "domain"){
@@ -572,7 +570,7 @@ function routeJFRule($router, &$uri){
 				$uri->setHost($subdomains[$lang]);
 				$uri->delVar("lang");
 				$registry->setValue("joomfish.sef_host",$subdomains[$lang]);
-				
+
 				plgSystemJFRouter::procesCustomBuildRule($router, $uri);
 				return;
 			}
@@ -620,7 +618,7 @@ function routeJFRule($router, &$uri){
 				}
 			}
 		}
-		
+
 	}
 	return;
 }

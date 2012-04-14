@@ -35,18 +35,21 @@
 defined('_JEXEC') or die('Restricted access');
 
 JLoader::register('JFModel', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'JFModel.php');
+JLoader::register('TableJFLanguage', JOOMFISH_ADMINPATH .DS. 'tables' .DS. 'JFLanguage.php' );
 
 /**
  * This class provides routing mappings for languages
- * 
+ *
  * @package		Joom!Fish
  * @subpackage	JFModel
  */
 
 class JFModelRoute extends JFModel {
-	
+
 	private static $_instance = null;
-	
+
+	private $_conf;
+
 	public static function getInstance() {
 		if (!isset($_instance) ) {
 			$_instance = new JFModelRoute();
@@ -54,332 +57,323 @@ class JFModelRoute extends JFModel {
 		return $_instance;
 	}
 
-/**
- * internal function to generate a new href link
- * @param	TableJFLanguage	the language
- * @return	string	new href string
- */
-public function createHRef($language, $modparams)
-{
-	// NB I pass the language in order to ensure I use the standard language cache files
-	$db = JFactory::getDBO();
-	$pfunc = $db->_profile();
+	public function __construct() {
+		$this->_conf = JFactory::getConfig();
+	}
 
-	$uri = JURI::getInstance();
-	$currenturl = $uri->toString();
+	/*
+	 * Function to route given url
+	*
+	*/
 
-	$code = $language->getLanguageCode();
-	$app = JFactory::getApplication();
-	$router = $app->getRouter();
 
-	$vars = $router->getVars();
-	$href = "index.php";
-	$hrefVars = '';
-
-	// set lang to correct value
-	$vars['lang'] = $code;
-	$filter = JFilterInput::getInstance();
-
-	foreach ($vars as $k => $v)
+	public function routeUrl($href, $code=null)
 	{
-		if ($hrefVars != "")
+		// Treat change of language specially because of problems if menu alias is translated
+
+		$language 	= $this->_conf->getValue("joomfish_language", null);
+
+		if ($language != null)
 		{
-			$hrefVars .= "&";
-		}
-		if (is_array($v))
-		{
-			$arrayValue = $filter->clean($v, 'array');
-			$arrayVars = '';
-			foreach (array_keys($arrayValue) as $akey)
-			{
-				if ($arrayVars != '')
-				{
-					$arrayVars .= "&";
-				}
-				$arrayVars .= $k . '[' . $akey . ']=' . $filter->clean($arrayValue[$akey]);
-			}
-			$hrefVars .= $arrayVars;
+			$jfLang = $language->getLanguageCode();
 		}
 		else
 		{
-			$hrefVars .= $k . '=' . $filter->clean($v);
+			$jfLang = null;
+			$lang = JFactory::getLanguage();
+			$language = new stdClass();
+			$language->code = $lang->getDefault();
 		}
-	}
 
-	// Add the existing variables
-	if ($hrefVars != "")
-	{
-		$href .= '?' . $hrefVars;
-	}
+		if (!is_null($code) && $code != $jfLang)
+		{
+			$sefLang = TableJFLanguage::createByShortcode($code, false);
+			$this->_conf->setValue("joomfish.sef_lang", $sefLang->code);
 
-	$params = JComponentHelper::getParams("com_joomfish");
-	if ($modparams->get("cache_href", 1))
-	{
-		// special Joomfish database cache
-		//$jfm = JoomFishManager::getInstance();
-		//$cache = $jfm->getCache($language->code);
-		//$url = $cache->get(array("JFModuleHTML", '_createHRef2'), array($currenturl, $href, $code));
-		$cache 	= JFactory::getCache('com_joomfish', 'callback');
-		$url = $cache->get(array($this, "createHRef2" ),  array($currenturl, $href, $code));
+			$menu = JFactory::getApplication('site')->getMenu();
+			$items = unserialize(serialize($menu->getMenu()));
+			//$items = $menu->getMenu();
 
-	}
-	else
-	{
-		$url = $this->createHRef2($currenturl, $href, $code);
-	}
-	$db->_profile($pfunc);
-	return $url;
+			// route url with translated menu items, first swap the whole menu with translated version
+			$menu->set('_items', $this->_getJFMenuItems($sefLang->code, false, $items));
+			// now run this item trough the routing
+			$url = $this->_cachedGetRoute($href, $sefLang->code);
 
-}
+			// reset items back to untraslated value
+			$menu->set('_items', $items);
+			$this->_conf->setValue("joomfish.sef_lang", false);
 
-public function createHRef2($currenturl, $href, $code)
-{
-	// Treat change of language specially because of problems if menu alias is translated
-	$registry = JFactory::getConfig();
-	$language = $registry->getValue("joomfish_language", null);
-	if ($language != null)
-	{
-		$jfLang = $language->getLanguageCode();
-	}
-	else
-	{
-		$jfLang = null;
-		$lang = JFactory::getLanguage();
-		$language = new stdClass();
-		$language->code = $lang->getDefault();
-	}
-
-	if (!is_null($code) && $code != $jfLang)
-	{
-		$registry = JFactory::getConfig();
-		$sefLang = TableJFLanguage::createByShortcode($code, false);
-		$registry->setValue("joomfish.sef_lang", $sefLang->code);
-
-		$menu = JFactory::getApplication('site')->getMenu();
-		$items = $menu->getMenu();
-
-		// Should really do this with classes and clones - this is a proof of concept
-		//changeClass($menu, "JFMenuSite");
-		//echo "_items is protected - this is not efficient !!<br/>";
-
-		$menu->set('_items', $this->_getJFMenu($sefLang->code, false, $menu->getMenu()));
-		$url = $this->_route($href, $sefLang);
-		// restore the items
-		//$menu->set('_items', JFModuleHTML::getJFMenu($language->code, true));
-		$menu->set('_items', $items);
-		$registry->setValue("joomfish.sef_lang", false);
-
-		/*
-		 $menu  = JSite::getMenu(true);
-		if (version_compare(phpversion(), '5.0') >= 0) {
-		$keepmenu = clone($menu);
 		}
-		else {
-		$keepmenu = $menu;
+		else
+		{
+			$url = $this->_cachedGetRoute($href, $language->code);
 		}
-		$menu = new JMenuSite();
-		$url = JRoute::_( $href );
-		$registry->setValue("joomfish.sef_lang", false);
-		$menu = $keepmenu;
+
 		return $url;
-		*/
-	}
-	else
-	{
-		$url = $this->_route($href, $language);
+
 	}
 
-	return $url;
-
-}
-
-private function _route($href, $sefLang)
-{
-	$jfm = JoomFishManager::getInstance();
-	$conf = JFactory::getConfig();
-	$code = $sefLang->code;
-	if ($jfm->getCfg("transcaching", 1) && $code !== $conf->getValue('config.defaultlang'))
+	private function _cachedGetRoute($href, $code)
 	{
-		$cache = $jfm->getCache($code);
-		// add ssl flag into cache determination
+		$jfm = JoomFishManager::getInstance();
 		$uri = JURI::getInstance();
-		$url = $cache->get(array($this, 'getRoute'), array($href, $code, $uri->isSSL()));
-	}
-	else
-	{
-		$url = $this->getRoute($href, $code);
-	}
-	return $url;
-
-}
-
-public function getRoute($href, $code="")
-{
-	// I may need to use absolute URL here is using subdomains for language switching
-	// this forces a full absolute URL
-	// Make secure to force router to add schema and host
-	// TODO watch that Joomla if introduces a new https host in the config that it is handled correctly
-	$ssl = 1;
-	$registry = JFactory::getConfig();
-	$registry->setValue("joomfish.sef_host", false);
-	// Annoying thing is that this 'caches' the prefix as a static so we can't change the domain easily
-	$url = JRoute::_($href, true, $ssl);
-	$currenthost = $registry->getValue("joomfish.current_host", false);
-	$sefhost = $registry->getValue("joomfish.sef_host", false);
-	if ($sefhost && $currenthost)
-	{
-		$url = str_replace($currenthost, $sefhost, $url);
-	}
-	// if not secure then return url to unsecure state
-	$uri = JURI::getInstance();
-	if (!$uri->isSSL())
-	{
-		$url = str_replace("https://", "http://", $url);
-	}
-	$registry->setValue("joomfish.sef_host", false);
-	return $url;
-
-}
-
-private function _getJFMenu($lang, $getOriginals=true, $currentLangMenuItems=false)
-{
-	static $instance;
-	if (!isset($instance))
-	{
-		$instance = array();
-
-		if (!$currentLangMenuItems)
+		
+		if ($jfm->getCfg("transcaching", 1) && $code !== $this->_conf->getValue('config.defaultlang'))
 		{
-			JError::raiseWarning('SOME_ERROR_CODE', "Error translating Menus - missing currentLangMenuItems");
-			return false;
+			$cache = $jfm->getCache($code);
+			// add ssl flag into cache determination
+			$url = $cache->get(array($this, 'getRoute'), array($href, $uri->isSSL()));
+		}
+		else
+		{
+			$url = $this->getRoute($href, $uri->isSSL());
+		}
+		
+		return $url;
+
+	}
+	
+	/*
+	 * get route for given href string
+	 * 
+	 * @param url string (index.php?var1=x&var2=y..)
+	 * @param is this a secure url
+	 * @return routed url
+	 */
+
+	public function getRoute($href, $ssl=0)
+	{
+		// I may need to use absolute URL here is using subdomains for language switching
+		// this forces a full absolute URL
+		// Make secure to force router to add schema and host
+		// TODO watch that Joomla if introduces a new https host in the config that it is handled correctly
+
+
+		//$this->_conf->setValue("joomfish.sef_host", false);
+
+		// Annoying thing is that this 'caches' the prefix as a static so we can't change the domain easily
+		$url = JRoute::_($href, true, $ssl);
+		$currenthost = $this->_conf->getValue("joomfish.current_host", false);
+		
+		// joomfish sef prefix
+		$sefhost = $this->_conf->getValue("joomfish.sef_host", false);
+		
+		if ($sefhost && $currenthost)
+		{
+			$url = str_replace($currenthost, $sefhost, $url);
 		}
 
-		$registry = JFactory::getConfig();
+		/*if ($ssl == 0)
+		{
+			$url = str_replace("https://", "http://", $url);
+		}*/
+		
+		$this->_conf->setValue("joomfish.sef_host", false);
 
-		// This is really annoying in PHP5 - an array of stdclass objects is copied as an array of references
-		// I tried doing this as a stdclass and cloning but it didn't seek to work.
-		$instance["raw"] = serialize($currentLangMenuItems);
+		return $url;
 
-		$defLang = $registry->getValue("config.jflang");
-		$instance[$defLang]["originals"] = unserialize($instance["raw"]);
 	}
 
-	if (!isset($instance[$lang]))
+	private function _getJFMenuItems($lang, $getOriginals=true, $currentLangMenuItems=false)
 	{
-
-		$db = JFactory::getDBO();
-
-		$query	= $db->getQuery(true);
-
-		$query->select('m.id, m.menutype, m.title, m.alias, m.path AS route, m.link, m.type, m.level');
-		$query->select('m.browserNav, m.access, m.params, m.home, m.img, m.template_style_id, m.component_id, m.parent_id');
-		$query->select('m.language');
-		$query->select('e.element as component');
-		$query->from('#__menu AS m');
-		$query->leftJoin('#__extensions AS e ON m.component_id = e.extension_id');
-		$query->where('m.published = 1');
-		$query->where('m.parent_id > 0');
-		$query->where('m.client_id = 0');
-		$query->order('m.lft');
-
-		$user = JFactory::getUser();
-		$groups = implode(',', $user->getAuthorisedViewLevels());
-		$query->where('m.access IN (' . $groups . ')');
-
-		// Set the query
-		$db->setQuery($query);
-
-		if (!($menu = $db->loadObjectList('id', 'stdClass', true, $lang)))
+		static $instance;
+		
+		if (!isset($instance))
 		{
-			JError::raiseWarning('SOME_ERROR_CODE', "Error loading Menus: " . $db->getErrorMsg());
-			return false;
-		}
+			$instance = array();
 
-		$tempmenu = JFactory::getApplication('site')->getMenu();
-		$activemenu = $tempmenu->getActive();
-		if ($activemenu && isset($activemenu->id) && $activemenu->id > 0 && array_key_exists($activemenu->id, $menu))
-		{
-			$newmenu = array();
-			$newmenu[$activemenu->id] = $menu[$activemenu->id];
-			while ($activemenu->parent_id != 0 && array_key_exists($activemenu->parent_id, $menu))
+			if (!$currentLangMenuItems)
 			{
-				$activemenu = $menu[$activemenu->parent_id];
-				$newmenu[$activemenu->id] = $activemenu;
-			}
-			$menu = $newmenu;
-		}
-
-		$this->_setupMenuRoutes($menu);
-		//$instance["raw"] = $menu;
-		$instance["raw"] = array("rows"=>$menu, "originals"=>$currentLangMenuItems);
-		// This is really annoying in PHP5 - an array of stdclass objects is copied as an array of references
-		// I tried doing this as a stdclass and cloning but it didn't seek to work.
-		$instance["raw"] = serialize($instance["raw"]);
-		$instance[$lang] = unserialize($instance["raw"]);
-
-
-	}
-	if ($getOriginals)
-	{
-		return $instance[$lang]["originals"];
-	}
-	else
-	{
-		return $instance[$lang]["rows"];
-	}
-
-}
-
-private function _setupMenuRoutes(&$menus)
-{
-	if ($menus)
-	{
-		uasort($menus, array("self", "_menusort"));
-		// first pass translate the route
-		foreach ($menus as $key => $menu)
-		{
-			$menus[$key]->route = $menus[$key]->alias;
-		}
-		foreach ($menus as $key => $menu)
-		{
-			//Get parent information
-			$parent_route = '';
-			$parent_tree = array();
-			if (($parent = $menus[$key]->parent_id) && (isset($menus[$parent])) &&
-					(is_object($menus[$parent])) && (isset($menus[$parent]->route)) && isset($menus[$parent]->tree))
-			{
-				$parent_route = $menus[$parent]->route . '/';
-				$parent_tree = $menus[$parent]->tree;
+				JError::raiseWarning('SOME_ERROR_CODE', "Error translating Menus - missing currentLangMenuItems");
+				return false;
 			}
 
-			//Create tree
-			array_push($parent_tree, $menus[$key]->id);
-			$menus[$key]->tree = $parent_tree;
 
-			//Create route
-			$route = $parent_route . $menus[$key]->alias;
-			$menus[$key]->route = $route;
+			// This is really annoying in PHP5 - an array of stdclass objects is copied as an array of references
+			// I tried doing this as a stdclass and cloning but it didn't seek to work.
+			$instance["raw"] = serialize($currentLangMenuItems);
 
-			//Create the query array
-			$url = str_replace('index.php?', '', $menus[$key]->link);
-			if (strpos($url, '&amp;') !== false)
+			$defLang = $this->_conf->getValue("config.jflang");
+			$instance[$defLang]["originals"] = unserialize($instance["raw"]);
+		}
+
+		if (!isset($instance[$lang]))
+		{
+
+			$db = JFactory::getDBO();
+
+			$query	= $db->getQuery(true);
+
+			$query->select('m.id, m.menutype, m.title, m.alias, m.path AS route, m.link, m.type, m.level');
+			$query->select('m.browserNav, m.access, m.params, m.home, m.img, m.template_style_id, m.component_id, m.parent_id');
+			$query->select('m.language');
+			$query->select('e.element as component');
+			$query->from('#__menu AS m');
+			$query->leftJoin('#__extensions AS e ON m.component_id = e.extension_id');
+			$query->where('m.published = 1');
+			$query->where('m.parent_id > 0');
+			$query->where('m.client_id = 0');
+			$query->order('m.lft');
+
+			$user = JFactory::getUser();
+			$groups = implode(',', $user->getAuthorisedViewLevels());
+			$query->where('m.access IN (' . $groups . ')');
+
+			// Set the query
+			$db->setQuery($query);
+			$testquery = (string)$query;
+			if (!($menu = $db->loadObjectList('id', 'stdClass', true, $lang)))
 			{
-				$url = str_replace('&amp;', '&', $url);
+				JError::raiseWarning('SOME_ERROR_CODE', "Error loading Menus: " . $db->getErrorMsg());
+				return false;
 			}
 
-			parse_str($url, $menus[$key]->query);
+			$activemenu = JFactory::getApplication('site')->getMenu()->getActive();
+			
+			
+			// translacija zamenja komplet menu item, torej se sfuka id, parent id..
+			if ($activemenu && isset($activemenu->id) && $activemenu->id > 0 && array_key_exists($activemenu->id, $menu))
+			{
+				$newmenu = array();
+				$newmenu[$activemenu->id] = $menu[$activemenu->id];
+				while ($activemenu->parent_id != 0 && array_key_exists($activemenu->parent_id, $menu))
+				{
+					$activemenu = $menu[$activemenu->parent_id];
+					$newmenu[$activemenu->id] = $activemenu;
+				}
+				$menu = $newmenu;
+			}
+
+			$this->_setupMenuRoutes($menu);
+			//$instance["raw"] = $menu;
+			$instance["raw"] = array("rows"=>$menu, "originals"=>$currentLangMenuItems);
+			// This is really annoying in PHP5 - an array of stdclass objects is copied as an array of references
+			// I tried doing this as a stdclass and cloning but it didn't seek to work.
+			$instance["raw"] = serialize($instance["raw"]);
+			$instance[$lang] = unserialize($instance["raw"]);
+
+
 		}
+		if ($getOriginals)
+		{
+			return $instance[$lang]["originals"];
+		}
+		else
+		{
+			return $instance[$lang]["rows"];
+		}
+
+	}
+	
+	/*
+	 * Re-route menus - find if any menus we are using in the route path are translated
+	 */
+	
+	private function _setupMenuRoutes(&$menus)
+	{
+		if ($menus)
+		{
+			uasort($menus, array("self", "_menusort"));
+			// first pass translate the route
+			foreach ($menus as $key => $menu)
+			{
+				$menus[$key]->route = $menus[$key]->alias;
+			}
+			foreach ($menus as $key => $menu)
+			{
+				//Get parent information
+				$parent_route = '';
+				$parent_tree = array();
+				if (($parent = $menus[$key]->parent_id) && (isset($menus[$parent])) &&
+						(is_object($menus[$parent])) && (isset($menus[$parent]->route)) && isset($menus[$parent]->tree))
+				{
+					$parent_route = $menus[$parent]->route . '/';
+					$parent_tree = $menus[$parent]->tree;
+				}
+
+				//Create tree
+				array_push($parent_tree, $menus[$key]->id);
+				$menus[$key]->tree = $parent_tree;
+
+				//Create route
+				$route = $parent_route . $menus[$key]->alias;
+				$menus[$key]->route = $route;
+
+				//Create the query array
+				$url = str_replace('index.php?', '', $menus[$key]->link);
+				if (strpos($url, '&amp;') !== false)
+				{
+					$url = str_replace('&amp;', '&', $url);
+				}
+
+				parse_str($url, $menus[$key]->query);
+			}
+		}
+
+	}
+	/*
+	 * Function to create safe href from request url and given language code
+	 * @param code language code
+	 * @return url string
+	 */
+
+	public function getHrefFromRequest($code) {
+
+		$vars =  JFactory::getApplication()->getRouter()->getVars();
+		// set lang to correct value
+		$vars['lang'] = $code;
+
+		$href = "index.php";
+		$hrefVars = '';
+
+
+		$filter = JFilterInput::getInstance();
+
+		foreach ($vars as $k => $v)
+		{
+			if ($hrefVars != "")
+			{
+				$hrefVars .= "&";
+			}
+			if (is_array($v))
+			{
+				$arrayValue = $filter->clean($v, 'array');
+				$arrayVars = '';
+				foreach (array_keys($arrayValue) as $akey)
+				{
+					if ($arrayVars != '')
+					{
+						$arrayVars .= "&";
+					}
+					$arrayVars .= $k . '[' . $akey . ']=' . $filter->clean($arrayValue[$akey]);
+				}
+				$hrefVars .= $arrayVars;
+			}
+			else
+			{
+				$hrefVars .= $k . '=' . $filter->clean($v);
+			}
+		}
+
+		// Add the existing variables
+		if ($hrefVars != "")
+		{
+			$href .= '?' . $hrefVars;
+		}
+		
+		return $href;
+
 	}
 
-}
 
-private static function _menusort(&$a, $b)
-{
-	if ($a->level == $b->level)
-		return 0;
-	return ($a->level > $b->level) ? +1 : -1;
 
-}
+	private static function _menusort(&$a, $b)
+	{
+		if ($a->level == $b->level)
+			return 0;
+		return ($a->level > $b->level) ? +1 : -1;
+
+	}
 
 
 
