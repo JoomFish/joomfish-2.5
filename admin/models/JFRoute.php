@@ -67,12 +67,67 @@ class JFModelRoute extends JFModel {
 	*/
 
 
-	public function routeUrl($href, $code=null)
+	public function rerouteCurrentUrlCached($code=null, $cachable=false)
 	{
 		// Treat change of language specially because of problems if menu alias is translated
 
-		$language 	= $this->_conf->getValue("joomfish_language", null);
+		$language	= $this->_conf->getValue("joomfish_language", null);
+		$uri 		= JRequest::getURI();
+		
+		if ($cachable == true) {
+			$cache 	= JFactory::getCache('com_joomfish', 'callback');
+			$url 	= $cache->get(array($jfrouter, "rerouteCurrentUrl" ),  array($code), md5(serialize(array($code, $uri))));
+		} else {
+			$url 	= $this->rerouteCurrentUrl($code);
+		}
 
+		return $url;
+
+	}
+	
+	/* Reroute current url to the translated one
+	 * @param short language code
+	 */
+	
+	public function rerouteCurrentUrl($code)
+	{	
+
+		$vars		= $this->getSafeVariablesFromRoutedRequest();
+		$router		= JFactory::getApplication()->getRouter();
+		$uri = JURI::getInstance();
+		
+		// 1. save current lang code for later
+		$currentlang = $vars['lang'];
+		
+		// 2. set lang code in router and JURI vars to $code, push it to the router
+		$vars['lang'] = $code;
+		$uri->setVar('lang', $code);
+		$router->setVars($vars, false);
+		
+		// TODO 3. swap menu values with translated ones
+		
+		
+		// 4. route vars 
+		$varstring = 'index.php?'.$uri->buildQuery($vars);
+		$routedurl = JRoute::_($varstring, true, $uri->isSSL());
+		//$currenturl= $uri->toString(array('path', 'query'));
+		
+		
+		// 5. reset everything to the previous state so we don't affect anything
+		$vars['lang'] = $currentlang;
+		$uri->setVar('lang', $currentlang);
+		$router->setVars($vars, false);
+		
+		$this->prefixToHost($routedurl);
+		
+		return $routedurl;
+		
+		
+		
+		
+		
+		/*$language 	= $this->_conf->getValue("joomfish_language", null);
+	
 		if ($language != null)
 		{
 			$jfLang = $language->getLanguageCode();
@@ -84,64 +139,44 @@ class JFModelRoute extends JFModel {
 			$language = new stdClass();
 			$language->code = $lang->getDefault();
 		}
-
+	
 		if (!is_null($code) && $code != $jfLang)
 		{
 			$sefLang = TableJFLanguage::createByShortcode($code, false);
 			$this->_conf->setValue("joomfish.sef_lang", $sefLang->code);
-
+	
 			$menu = JFactory::getApplication('site')->getMenu();
 			$items = unserialize(serialize($menu->getMenu()));
 			//$items = $menu->getMenu();
-
+	
 			// route url with translated menu items, first swap the whole menu with translated version
 			$menu->set('_items', $this->_getJFMenuItems($sefLang->code, false, $items));
 			// now run this item trough the routing
 			$url = $this->_cachedGetRoute($href, $sefLang->code);
-
+	
 			// reset items back to untraslated value
 			$menu->set('_items', $items);
 			$this->_conf->setValue("joomfish.sef_lang", false);
-
+	
 		}
 		else
 		{
 			$url = $this->_cachedGetRoute($href, $language->code);
 		}
-
-		return $url;
-
+	
+		return $url; */
+	
 	}
 
-	private function _cachedGetRoute($href, $code)
-	{
-		$jfm = JoomFishManager::getInstance();
-		$uri = JURI::getInstance();
-		
-		if ($jfm->getCfg("transcaching", 1) && $code !== $this->_conf->getValue('config.defaultlang'))
-		{
-			$cache = $jfm->getCache($code);
-			// add ssl flag into cache determination
-			$url = $cache->get(array($this, 'getRoute'), array($href, $uri->isSSL()));
-		}
-		else
-		{
-			$url = $this->getRoute($href, $uri->isSSL());
-		}
-		
-		return $url;
-
-	}
 	
 	/*
-	 * get route for given href string
+	 * if joomfish sef hosts are active replace prefix with sef host
 	 * 
-	 * @param url string (index.php?var1=x&var2=y..)
-	 * @param is this a secure url
-	 * @return routed url
+	 * @param absolute url including host 
+	 * @return fixed url
 	 */
 
-	public function getRoute($href, $ssl=0)
+	public function prefixToHost(&$url)
 	{
 		// I may need to use absolute URL here is using subdomains for language switching
 		// this forces a full absolute URL
@@ -152,7 +187,6 @@ class JFModelRoute extends JFModel {
 		//$this->_conf->setValue("joomfish.sef_host", false);
 
 		// Annoying thing is that this 'caches' the prefix as a static so we can't change the domain easily
-		$url = JRoute::_($href, true, $ssl);
 		$currenthost = $this->_conf->getValue("joomfish.current_host", false);
 		
 		// joomfish sef prefix
@@ -162,11 +196,6 @@ class JFModelRoute extends JFModel {
 		{
 			$url = str_replace($currenthost, $sefhost, $url);
 		}
-
-		/*if ($ssl == 0)
-		{
-			$url = str_replace("https://", "http://", $url);
-		}*/
 		
 		$this->_conf->setValue("joomfish.sef_host", false);
 
@@ -311,58 +340,37 @@ class JFModelRoute extends JFModel {
 		}
 
 	}
-	/*
-	 * Function to create safe href from request url and given language code
-	 * @param code language code
-	 * @return url string
+	
+	
+	/* 
+	 * get cleaned variables from routed request
+	 * @return array of vars
 	 */
-
-	public function getHrefFromRequest($code) {
-
+	public function getSafeVariablesFromRoutedRequest() {
+		
 		$vars =  JFactory::getApplication()->getRouter()->getVars();
-		// set lang to correct value
-		$vars['lang'] = $code;
-
-		$href = "index.php";
-		$hrefVars = '';
-
-
 		$filter = JFilterInput::getInstance();
+		
+		$cleanvars = array();
+		
+		foreach ($vars as $k => $v) {
 
-		foreach ($vars as $k => $v)
-		{
-			if ($hrefVars != "")
-			{
-				$hrefVars .= "&";
-			}
 			if (is_array($v))
 			{
 				$arrayValue = $filter->clean($v, 'array');
-				$arrayVars = '';
+				$arrayVars = array();
+				
 				foreach (array_keys($arrayValue) as $akey)
 				{
-					if ($arrayVars != '')
-					{
-						$arrayVars .= "&";
-					}
-					$arrayVars .= $k . '[' . $akey . ']=' . $filter->clean($arrayValue[$akey]);
+					$arrayVars [$akey] = $filter->clean($arrayValue[$akey]);
 				}
-				$hrefVars .= $arrayVars;
-			}
-			else
-			{
-				$hrefVars .= $k . '=' . $filter->clean($v);
-			}
-		}
-
-		// Add the existing variables
-		if ($hrefVars != "")
-		{
-			$href .= '?' . $hrefVars;
+				$cleanvars[$k]	= $arrayVars;
+			} else {
+				$cleanvars[$k]	= $filter->clean($v);
+			}	
 		}
 		
-		return $href;
-
+		return $cleanvars;
 	}
 
 

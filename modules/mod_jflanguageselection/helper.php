@@ -157,21 +157,19 @@ if (!defined('JFMODULE_CLASS'))
 		 * @param 	Module parameters
 		 * @return	string	new href string
 		 */
-		public static function createHRef($language, $modparams) {
+		public static function createHRef( $language, $modparams) {
 
 			$code 		= $language->getLanguageCode();
 			$jfrouter 	= JFModelRoute::getInstance();
-			$href		= $jfrouter->getHrefFromRequest($code);
 
 			if ($modparams->get("cache_href", 1))
-			{
-				$cache 	= JFactory::getCache('com_joomfish', 'callback');
-				$url = $cache->get(array($jfrouter, "routeUrl" ),  array($href, $code));
+			{	
+				$url = $jfrouter->rerouteCurrentUrlCached($code, false);
 					
 			}
 			else
 			{
-				$url = $jfrouter->routeUrl($href, $code);
+				$url = $jfrouter->rerouteCurrentUrl($code);
 			}
 				
 			return $url;
@@ -183,4 +181,3 @@ if (!defined('JFMODULE_CLASS'))
 	}
 
 }
-

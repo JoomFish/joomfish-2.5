@@ -81,7 +81,7 @@ class interceptDB extends JDatabaseMySQLi
 		
 	}
 
-	function loadObjectList($key='', $class="stdClass", $translate=true, $language=null, $asObject = true)
+	function loadObjectList($key='', $class="stdClass", $translate=true, $language=null, $asObject = true, $onlytransFields = true)
 	{		
 		if ($this->skipjf) return parent::loadObjectList($key, $class);
 		$pfunc = $this->profile();
@@ -154,7 +154,7 @@ class interceptDB extends JDatabaseMySQLi
 			// $cache = $jfManager->getCache($language);			
 			// $jfdata = $cache->get(array("JoomFish", 'translateListArrayCached'), array($jfdata, $language, $fields));
 			$cache 	= JFactory::getCache('com_joomfish', 'callback');		
-			$jfdata = $cache->get("JoomFish::translateListArrayCached", array($jfdata, $language, $fields));
+			$jfdata = $cache->get("JoomFish::translateListArrayCached", array(&$jfdata, $language, $fields, $onlytransFields));
 			$this->orig_limit = 0;
 			$this->orig_offset = 0;
 		}
@@ -162,7 +162,7 @@ class interceptDB extends JDatabaseMySQLi
 		{
 			$this->orig_limit =  $this->get("limit");
 			$this->orig_offset = $this->get("offset");
-			JoomFish::translateListArray($jfdata, $language, $fields);
+			JoomFish::translateListArray($jfdata, $language, $fields, $onlytransFields);
 			$this->orig_limit = 0;
 			$this->orig_offset = 0;
 		}
@@ -223,7 +223,7 @@ class interceptDB extends JDatabaseMySQLi
 						continue;
 					}
 					// is this field translateable 
-					if (isset($field->orgname) && $field->orgname!="" && $this->translateableFields($table,array($field->orgname)))
+					if (isset($field->orgname) && $field->orgname!=""&& $this->testTranslateableFields($table,array($field->orgname)))
 					{
 						$doTranslate = true;
 						break;
@@ -242,7 +242,7 @@ class interceptDB extends JDatabaseMySQLi
 		$jfManager = JoomFishManager::getInstance();
 		$defaultlang = $jfManager->getDefaultLanguage();
 		if (is_a($this->sql, "JDatabaseQueryMySQLi") && !isset($this->sql->jfprocessed) && ($this->sql->where !== null && is_a($this->sql->where, "JDatabaseQueryElement")) ) {
-
+			
 			$elements = $this->sql->where->getElements();
 			foreach ( $elements as &$element) {
 				if(strstr($element, 'language')) {
@@ -250,9 +250,8 @@ class interceptDB extends JDatabaseMySQLi
 					$element = str_ireplace(",'*'" , ",'*','".$defaultlang."'" , $element);
 				}
 			}
-			
-			$this->sql->clear('where');	
-			$this->sql->where($elements);
+		$this->sql->clear('where');	
+		$this->sql->where($elements);
 		}
 		
 		// NEW SYSTEM disabled for now - the query handling for joins etc. is too complex

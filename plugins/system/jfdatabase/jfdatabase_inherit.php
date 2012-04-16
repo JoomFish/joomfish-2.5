@@ -149,18 +149,50 @@ class JFDatabase extends interceptDB {
 	 * @param type $table
 	 * @param type $fieldnames 
 	 */
-	public function translateableFields($tableName,$fieldnames)
-	{
-		$jfManager = JoomFishManager::getInstance();
-		if (!$jfManager) return false;
-		$contentElement = $jfManager->getContentElement( $tableName );
-		$elementTable = $contentElement->getTable();
-		foreach ($elementTable->Fields as $field){
-			if ($field->Translate && in_array($field->Name, $fieldnames)){
+	public function testTranslateableFields($tableName,$fieldnames)
+	{	
+		
+		foreach ($fieldnames as $fieldname) {
+			$translatablefields = $this->getTranslateableFields($tableName);
+			if ($translatablefields == array()) {
+				return false;
+			}
+			
+			if (in_array($fieldname, $translatablefields)) {
 				return true;
 			}
 		}
+		
 		return false;
+	}
+	
+	
+	/**
+	 *Public function to get translatable field names for a table.
+	 * @param type $table
+	 * @return an array of field names
+	 */
+	public function getTranslateableFields($tableName)
+	{
+		static $_tranfields =  array();
+
+		if (!isset($_tranfields[$tableName])) {
+				
+			$_tranfields[$tableName] = array();
+
+			$jfManager = JoomFishManager::getInstance();
+			if (!$jfManager) return false;
+
+			$elementTable = $jfManager->getContentElement( $tableName )->getTable();
+
+			foreach ($elementTable->Fields as $field){
+				if ($field->Translate){
+					$_tranfields[$tableName][] = $field->Name;
+				}
+			}
+		}
+
+		return $_tranfields[$tableName];
 	}
 	
 	/**
@@ -713,4 +745,3 @@ class JFDatabase extends interceptDB {
 	 */
 	// function queryBatch( $abort_on_error=true, $p_transaction_safe = false)
 }
-

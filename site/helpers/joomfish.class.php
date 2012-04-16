@@ -62,7 +62,7 @@ class JoomFish
 	 * @param JFLanguage $language
 	 * @param array $tableArray
 	 */
-	public static function translateListCached($rows, $language, $tableArray)
+	public static function translateListCached(&$rows, $language, $tableArray)
 	{
 		JoomFish::translateList($rows, $language, $tableArray);
 		return $rows;
@@ -377,9 +377,9 @@ class JoomFish
 	 * @param JFLanguage $language
 	 * @param array $tableArray
 	 */
-	public static function translateListArrayCached($rows, $language, $tableArray)
+	public static function translateListArrayCached(&$rows, $language, $tableArray, $onlytransFields = true)
 	{
-		JoomFish::translateListArray($rows, $language, $tableArray);
+		JoomFish::translateListArray($rows, $language, $tableArray, $onlytransFields);
 		return $rows;
 
 	}
@@ -390,7 +390,7 @@ class JoomFish
 	 * @param JFLanguage $language
 	 * @param array $tableArray
 	 */
-	public static function translateListArray(&$rows, $language, $fields)
+	public static function translateListArray(&$rows, $language, $fields, $onlytransFields = true)
 	{
 		if (!isset($rows) || !is_array($rows) || count($rows)==0)
 			return $rows;
@@ -435,7 +435,7 @@ class JoomFish
 						$fieldnames[] = $fieldinfo->orgname;
 					}
 				}
-				if (!$db->translateableFields($table,$fieldnames))
+				if (!$db->testTranslateableFields($table,$fieldnames))
 					continue;
 				
 				// get primary key for tablename
@@ -466,7 +466,7 @@ class JoomFish
 				}
 				else
 				{
-					JoomFish::nativeTranslateListArrayWithIDs($rows, $idstring, $table, $reftable, $language, $keycol, $idkey, $fielddata, $querySQL);
+					JoomFish::nativeTranslateListArrayWithIDs($rows, $idstring, $table, $reftable, $language, $keycol, $idkey, $fielddata, $querySQL, true, $onlytransFields);
 				}
 			}
 		}
@@ -532,8 +532,9 @@ class JoomFish
 	 * @param array $tableArray
 	 * @param string $querySQL
 	 * @param boolean $allowfallback
+	 * @param boolean only translate translatable fields
 	 */
-	public static function translateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, & $fielddata, $querySQL, $allowfallback=true)
+	public static function translateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, & $fielddata, $querySQL, $allowfallback=true, $onlytransFields = true)
 	{
 
 		$registry = JFactory::getConfig();
@@ -662,10 +663,10 @@ class JoomFish
 			if ($allowfallback && count($fallbackrows) > 0)
 			{
 				$fallbackids = implode($fallbackids, ",");
-				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $fallbacklanguage, $keycol, $fielddata, $querySQL, false);
+				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $fallbacklanguage, $keycol, $fielddata, $querySQL, false, $onlytransFields);
 			}
 
-			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table, $language, $keycol, $fielddata, $querySQL, $allowfallback));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table, $language, $keycol, $fielddata, $querySQL, $allowfallback, $onlytransFields));
 		}
 
 	}
@@ -681,7 +682,7 @@ class JoomFish
 	 * @param string $querySQL
 	 * @param boolean $allowfallback
 	 */
-	public static function nativeTranslateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $pk, & $fielddata, $querySQL, $allowfallback=true)
+	public static function nativeTranslateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $pk, & $fielddata, $querySQL, $allowfallback=true, $onlytransFields = true)
 	{
 
 		$registry = JFactory::getConfig();
@@ -743,8 +744,10 @@ class JoomFish
 			;
 			$db->setQuery($sql);
 			$translations = $db->loadObjectList("reference_id", 'stdClass', false);
+			
 			if (count($translations) > 0)
-			{
+			{	
+				
 				$fieldmap = null;
 				foreach (array_keys($rows) as $key)
 				{
@@ -758,31 +761,27 @@ class JoomFish
 						$translation = $translations[$refid];
 						//  go on only it this is the matching row
 						if ($translation->reference_id == $refid)
-						{
+						{	
+							$row_to_translate['original_id'] = $refid;
+							
 							foreach ($fielddata[$tablealias]["fields"] as $fieldcount => $field)
-							{
+							{	
+								
+								
 								$fieldname = $field->orgname;
-								if (isset($translation->$fieldname)){
+								
+								$transTest = ($onlytransFields && !$db->testTranslateableFields($reference_table,array($field->orgname))) ? false : true;
+								
+								if (isset($translation->$fieldname) && $transTest) {
 									$row_to_translate[$fieldcount] = $translation->$fieldname;
+									if ($fieldname == $refid) {
+										
+									}
 								}
 							}
 						}
 
-						// NEW SYSTEM check fallback process for native stored data
-						/*
-						  if (!$rowTranslationExists)
-						  {
-						  if ($allowfallback && isset($row_to_translate[$keycol]))
-						  {
-						  $fallbackrows[$key] = & $row_to_translate;
-						  $fallbackids[$key] = $row_to_translate[$keycol];
-						  }
-						  else
-						  {
-						  //$results = $dispatcher->trigger('onMissingTranslation', array (&$row_to_translate, $language,$reference_table, $fielddata, $querySQL));
-						  }
-						  }
-						 */
+
 					}
 				}
 			}
@@ -808,7 +807,7 @@ class JoomFish
 			if ($allowfallback && count($fallbackrows) > 0)
 			{
 				$fallbackids = implode($fallbackids, ",");
-				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $fallbacklanguage, $keycol, $fielddata, $querySQL, false);
+				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $fallbacklanguage, $keycol, $fielddata, $querySQL, false, $onlytransFields);
 			}
 
 			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table, $language, $keycol, $fielddata, $querySQL, $allowfallback));
