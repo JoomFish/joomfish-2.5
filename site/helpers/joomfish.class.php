@@ -774,9 +774,6 @@ class JoomFish
 								
 								if (isset($translation->$fieldname) && $transTest) {
 									$row_to_translate[$fieldcount] = $translation->$fieldname;
-									if ($fieldname == $refid) {
-										
-									}
 								}
 							}
 						}

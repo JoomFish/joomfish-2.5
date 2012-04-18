@@ -115,7 +115,7 @@ class JFModelRoute extends JFModel {
 		
 		// get translated menu
 		$menu		= JFactory::getApplication()->getMenu();
-		$menu->load(); // force re-loading of the menu
+		$menu->__construct(); // force re-loading of the menu
 		
 		// fix item routes for this item as routing is based on active menu $item->route
 		// and translated query doesn't change menu routes
