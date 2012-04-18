@@ -7,7 +7,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 JLoader::register('JoomFishManager', JPATH_ADMINISTRATOR  . '/components/com_joomfish/classes/JoomfishManager.class.php' );
-
+JLoader::register('JFModelRoute', JPATH_ADMINISTRATOR  . '/components/com_joomfish/models/JFRoute.php' );
 /**
  * JMenu class
  *
@@ -23,7 +23,9 @@ class JMenuSite extends JMenu
 	 * @return array
 	 */
 	public function load()
-	{
+	{	
+		// @Todo cache this
+		
 		// Initialise variables.
 		$db		= JFactory::getDbo();
 		$app	= JApplication::getInstance('site');
@@ -63,6 +65,19 @@ class JMenuSite extends JMenu
 
 			parse_str($url, $item->query);
 		}
+		
+		
+		
+		// @Todo move this to plugin
+		JFModelRoute::getInstance()->fixMenuItemRoutes($this->_items, null);
+		
+		// throw away everything that is not * or default as the rest is there only for translations
+		foreach($this->_items as &$item) {
+			if ($item->language != '*' && $item->language != JoomFishManager::getInstance()->getDefaultLanguage() ) {
+				unset($this->_items[(string)$item->id]);
+			}
+		}
+
 	}
 
 	/**

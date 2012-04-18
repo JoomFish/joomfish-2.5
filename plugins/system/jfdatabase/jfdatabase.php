@@ -127,7 +127,7 @@ class plgSystemJFDatabase extends JPlugin
 		// NEW SYSTEM
 		// amend editing page but only for native elements
 		//if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
-		if (!in_array(JRequest::getCmd('option'), array("com_content","com_modules", "com_categories"))) return;
+		if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
 		
 		$reference_id = JRequest::getInt("id");
 		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit" && $reference_id > 0)
