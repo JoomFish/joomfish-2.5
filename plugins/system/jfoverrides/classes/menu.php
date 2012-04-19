@@ -17,7 +17,9 @@ jimport('joomla.application.component.model');
  * @since		1.5
  */
 class JMenuSite extends JMenu
-{
+{	
+	public static $_menuitems = array();
+	
 	/**
 	 * Loads the entire menu table into memory.
 	 *
@@ -26,6 +28,12 @@ class JMenuSite extends JMenu
 	public function load()
 	{	
 		// @Todo cache this
+		$jlanguage = JFactory::getConfig()->getValue('language');
+		
+		if(isset(self::$_menuitems[$jlanguage])) {
+			$this->_items = self::$_menuitems[$jlanguage];
+			return;
+		}
 		
 		// Initialise variables.
 		$db		= JFactory::getDbo();
@@ -78,6 +86,8 @@ class JMenuSite extends JMenu
 				unset($this->_items[(string)$item->id]);
 			}
 		}
+		
+		self::$_menuitems[$jlanguage] = $this->_items;
 
 	}
 
