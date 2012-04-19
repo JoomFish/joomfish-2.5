@@ -46,16 +46,7 @@ JLoader::register('TableJFLanguage', JOOMFISH_ADMINPATH .DS. 'tables' .DS. 'JFLa
 
 class JFModelRoute extends JFModel {
 
-	private static $_instance = null;
-
 	private $_conf;
-
-	public static function getInstance() {
-		if (!isset($_instance) ) {
-			$_instance = new JFModelRoute();
-		}
-		return $_instance;
-	}
 
 	public function __construct() {
 		$this->_conf = JFactory::getConfig();

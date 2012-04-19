@@ -160,7 +160,7 @@ if (!defined('JFMODULE_CLASS'))
 		public static function createHRef( $language, $modparams) {
 
 			$code 		= $language->getLanguageCode();
-			$jfrouter 	= JFModelRoute::getInstance();
+			$jfrouter 	= JModel::getInstance('JFModelRoute');
 
 			if ($modparams->get("cache_href", 1))
 			{	

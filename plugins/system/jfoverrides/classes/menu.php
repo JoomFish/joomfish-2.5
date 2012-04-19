@@ -8,6 +8,7 @@
 defined('_JEXEC') or die;
 JLoader::register('JoomFishManager', JPATH_ADMINISTRATOR  . '/components/com_joomfish/classes/JoomfishManager.class.php' );
 JLoader::register('JFModelRoute', JPATH_ADMINISTRATOR  . '/components/com_joomfish/models/JFRoute.php' );
+jimport('joomla.application.component.model');
 /**
  * JMenu class
  *
@@ -69,7 +70,7 @@ class JMenuSite extends JMenu
 		
 		
 		// @Todo move this to plugin
-		JFModelRoute::getInstance()->fixMenuItemRoutes($this->_items, null);
+		JModel::getInstance('JFModelRoute')->fixMenuItemRoutes($this->_items, null);
 		
 		// throw away everything that is not * or default as the rest is there only for translations
 		foreach($this->_items as &$item) {
