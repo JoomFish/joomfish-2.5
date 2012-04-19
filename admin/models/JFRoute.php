@@ -86,7 +86,7 @@ class JFModelRoute extends JFModel {
 	 * @param short language code
 	 */
 	
-	public function rerouteCurrentUrl($code)
+	public function rerouteCurrentUrl($code=null)
 	{	
 
 		$vars		= $this->getSafeVariablesFromRoutedRequest();
@@ -97,7 +97,7 @@ class JFModelRoute extends JFModel {
 		$uri 		= JURI::getInstance();
 		
 		/////// 1. save current lang codes for later ///////////////////////////////////////////
-		$currentlang 		= $vars['lang'];
+		$currentlang 		= isset($vars['lang']) ? $vars['lang'] : null;
 		$currentJoomlaLang 	= $this->_conf->get('language');
 		
 		/////// 2. set lang code in router and JURI vars to $code, push it to the router
@@ -235,7 +235,8 @@ class JFModelRoute extends JFModel {
 	public function switchJFLanguageShortcode($code, $switchjoomlatoo=true) {
 		$language	= JoomFishManager::getInstance()->getLanguageByShortcode($code);
 		$this->_conf->set('joomfish_language', $language);
-		$this->_conf->set('jflang', $language->code);
+		$targetcode = is_object($language) ? $language->code : null;
+		$this->_conf->set('jflang', $targetcode);
 		if ($switchjoomlatoo===true) {
 			$this->switchJoomlaLanguageLongcode($language->code);
 		}

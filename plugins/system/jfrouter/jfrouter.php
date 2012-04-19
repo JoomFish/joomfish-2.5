@@ -348,11 +348,6 @@ else {
 			$paramarray = $params->toArray();
 			foreach ($paramarray as $key=>$val) {
 				$registry->setValue("config.".$key,$val);
-
-				if (defined("_JLEGACY")){
-					$name = 'mosConfig_'.$key;
-					$GLOBALS[$name] = $val;
-				}
 			}
 		}
 
