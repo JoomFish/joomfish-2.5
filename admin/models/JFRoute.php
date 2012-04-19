@@ -128,6 +128,7 @@ class JFModelRoute extends JFModel {
 		$this->switchJFLanguageShortcode($currentlang, false);
 		$this->switchJoomlaLanguageLongcode($currentJoomlaLang);
 		JFactory::$language = null;
+		$menu->__construct();
 		
 		// fix url if we are using sef domains
 		$this->prefixToHost($routedurl);
