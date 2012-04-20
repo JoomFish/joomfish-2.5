@@ -402,7 +402,7 @@ class JFDatabase extends interceptDB {
 			return parent::loadRow();
 		}
 		$result=null;
-		$result = $this->loadObject( $translate, $language );
+		$result = $this->loadObject( "stdClass", $translate, $language );
 
 		$pfunc = $this->profile();
 
