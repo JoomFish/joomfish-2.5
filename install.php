@@ -83,7 +83,6 @@ class com_JoomfishInstallerScript
 				$where .= $columnElement ."='".$attributes['module']."'";
 			}
 			
-			$where = 
 			
 			$query->where($where);
             $query->where("$columnType='plugin' OR $columnType='module'");
@@ -197,11 +196,14 @@ class com_JoomfishInstallerScript
          * method to run after an install/update/uninstall method
          *
          * @return void
-         *
+         **/
         function postflight($type, $parent) 
-        {
+        {		
                 // $parent is the class calling this method
                 // $type is the type of change (install, update or discover_install)
-                echo '<p>' . JText::_('COM_JOOMFISH_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
-        }*/
+                if ($type == 'install' || $type == 'update') {
+                	JLoader::import( 'classes.JCacheStorageJFDB',JPATH_ADMINISTRATOR.'/components/com_joomfish');
+                	$result = JCacheStorageJfdb::setupDB();
+                }
+        }
 }
