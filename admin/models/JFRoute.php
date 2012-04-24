@@ -454,7 +454,7 @@ class JFModelRoute extends JFModel {
 			$this->_conf->setValue("config.multilingual_support", true);
 
 			JFactory::getApplication()->setUserState('application.lang',$jfLang->code);
-			$this->switchJFLanguageLongcode($jflang->code, true);
+			$this->switchJFLanguageLongcode($jfLang->code, true);
 
 			$href = JRoute::_($href,false);
 
@@ -517,7 +517,7 @@ class JFModelRoute extends JFModel {
 
 		// overwrite with the valued from $jfLang
 		$jfparams = JComponentHelper::getParams("com_joomfish");
-		$overwriteGlobalConfig =  $jfparams->get( 'overwriteGlobalConfig', 0 );
+		$overwriteGlobalConfig =  $jfparams->get( 'overwriteGlobalConfig', 0 );  // TODO check where this value is set, seems not to be working 
 		if($overwriteGlobalConfig ) {
 			// We should overwrite additional global variables based on the language parameter configuration
 			$params = new JRegistry($jfLang->params);
