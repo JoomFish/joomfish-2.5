@@ -36,7 +36,7 @@
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
 class interceptDB extends JDatabaseMySQLi
-{
+{	
 
 	/**
 	 * This special constructor reuses the existing resource from the existing db connecton
@@ -81,15 +81,12 @@ class interceptDB extends JDatabaseMySQLi
 		
 	}
 
-	function loadObjectList($key='', $class="stdClass", $translate=true, $language=null, $asObject = true, $onlytransFields = true)
-	{		
+	public function loadObjectList($key='', $class="stdClass", $translate=true, $language=null, $asObject = true, $onlytransFields = true)
+	{	
+		$this->translate = $translate;
+			
 		if ($this->skipjf) return parent::loadObjectList($key, $class);
 		$pfunc = $this->profile();
-		
-		if (!$translate)
-		{
-			return parent::loadObjectList($key, $class);
-		}
 		
 		 // we can't call the query twice!
 		
@@ -122,7 +119,7 @@ class interceptDB extends JDatabaseMySQLi
 			}
 		}
 		else
-		{
+		{	
 			while ($row = mysqli_fetch_row($cur))
 			{
 				$jfdata[] = $row;
@@ -236,11 +233,22 @@ class interceptDB extends JDatabaseMySQLi
 	}
 
 	public function query()
-	{
+	{	
+		$sql = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
+		
 		if ($this->skipjf) return parent::query();
+		if($this->translate === false || !stristr($sql, 'SELECT')) {
+			return parent::query();
+		}
+		
 		$jfmCount = 0;
 		$jfManager = JoomFishManager::getInstance();
 		$defaultlang = $jfManager->getDefaultLanguage();
+		
+
+		
+
+		
 		if (is_a($this->sql, "JDatabaseQueryMySQLi") && !isset($this->sql->jfprocessed) && ($this->sql->where !== null && is_a($this->sql->where, "JDatabaseQueryElement")) ) {
 			
 			$elements = $this->sql->where->getElements();
@@ -252,10 +260,94 @@ class interceptDB extends JDatabaseMySQLi
 			}
 		$this->sql->clear('where');	
 		$this->sql->where($elements);
+		
 		}
 		
+		
+		$table = str_ireplace('#__', '', $this->getTableName());
+		
+		//$key = $jfManager->getPrimaryKey($table);   obsolete
+		$ce = $jfManager->getContentElement($table);
+		$key = is_object($ce) ? $ce->getReferenceId() : false;
+		$isnative = (is_object($ce) && $ce->getTarget() == 'native') ? true : false;
+		
+		// last check - do we have content element for this and is this table native??
+		if ($key === false || $isnative === false) {
+			return parent::query();
+		}
+		
+		
+		if ( $this->translate === true && is_a($this->sql, "JDatabaseQueryMySQLi") && !isset($this->sql->jfprocessed) && ($this->sql->select !== null && is_a($this->sql->select, "JDatabaseQueryElement") ) ) {
+				
+			$elements2 = $this->sql->select->getElements();
+			$keyfound = false;
+			$asfound = false;
+			foreach ( $elements2 as $element2) {
+				// is there id column or * in the select query
+				if(stristr($element2, ' '.$key.',') || strstr($element2, '*') || stristr($element2, '.'.$key.',' ) || stristr($element2, ' '.$key.' ,' ) || stristr($element2, '.'.$key.' ,' ) ) {
+					$keyfound = true;
+				}
+				
+				// is any column named as soemthing else or has table prepended, then do join
+				if(stristr($element2, ' AS ') || stristr($element2, '.') ) {
+					$asfound = true;
+				}
+				
+			}
+			
+			if ($keyfound === false && $asfound == true) {
+				// OUR JOIN NEEDS TO BE FIRST FOR "USING" TO WORK PROPERLY
+				if (is_array($this->sql->join) ) {
+					$joinelements = array();
+					$joinprevious = $this->sql->join;
+
+					$this->sql->clear('join');
+					$this->sql->innerJoin($table. ' AS jfself USING (' .$key. ')');
+					foreach ($joinprevious AS $joinprev) {
+						$name = JoomlaProtectedFixDatabaseQueryElement::getInstance($joinprev)->get('name');
+						$type = str_ireplace(' JOIN','', $name);
+						$elements = $joinprev->getElements();
+						$this->sql->join($type, $elements);
+					}
+					
+				} else {
+					$this->sql->innerJoin($table. ' AS jfself USING (' .$key. ')');
+				}
+
+				$this->sql->select('jfself.'.$key.' AS '.$key);
+			} else if ($keyfound === false && $asfound === false) {
+				$this->sql->select($key);
+			}
+
+		} else if ($this->translate === true && is_string($this->sql)  && !isset($this->sql->jfprocessed) && stristr($this->sql, 'SELECT') && stristr($this->sql, 'FROM')) {
+			$keyfound = false;
+			$asfound = false;
+			
+			preg_match('/SELECT(.*?)FROM/i', $this->sql, $selectstring);
+			$selectstring = $selectstring[0];
+			if(stristr($selectstring, ' '.$key.',') || strstr($selectstring, '*') || stristr($selectstring, '.'.$key.',' || stristr($selectstring, ' '.$key.' ,' ) || stristr($selectstring, '.'.$key.' ,' ))) {
+				$keyfound = true;
+			}
+			if(stristr($selectstring, ' AS ') || stristr($selectstring, '.') ) {
+				$asfound = true;
+			}
+			
+			
+			if ($keyfound === false  && $asfound == true) {
+				//$this->sql = preg_replace('/SELECT(.*?)FROM/i', 'SELECT '. $selectstring . ', jfself.'.$key.' AS '.$key .' FROM', $this->sql  );
+				$this->sql = preg_replace('/SELECT /i', 'SELECT jfself.'.$key.' AS '.$key .', ', $this->sql, 1);
+				// @todo make sure our join comes first, the same as with object queries
+				$this->sql .= ' JOIN ' .$table. ' AS jfself USING ('.$key.')';
+			} else if ($keyfound === false && $asfound === false) {
+				$this->sql = preg_replace('/SELECT /i', 'SELECT '.$key. ', ', $this->sql, 1);
+			}
+			
+
+		}
+		
+
 		// NEW SYSTEM disabled for now - the query handling for joins etc. is too complex
-		if (false && is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
+		/*if (false && is_a($this->sql, "JDatabaseQuery") && !isset($this->sql->jfprocessed))
 		{
 			// Do the from first
 			$sql = $this->replacePrefix((string) $this->sql);
@@ -313,9 +405,41 @@ class interceptDB extends JDatabaseMySQLi
 			if ($jfmCount>0){
 				$this->sql->jfprocessed = true;
 			}
-		}
-		return parent::query();
+		} */
+		
+		//$sqlfinal = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
+		
+		$result = parent::query();
+		
+		return $result;
 
 	}
 
+}
+
+/*
+ * Get and set JDatabaseQueryElement properties that are declared as protected. 
+ * Pass JDatabaseQueryElement object to constructor
+ */
+
+class JoomlaProtectedFixDatabaseQueryElement extends JDatabaseQueryElement {
+	
+	public $obj;
+	
+	public static function getInstance(JDatabaseQueryElement $obj) {
+		return new JoomlaProtectedFixDatabaseQueryElement($obj);
+	}
+	
+	public function __construct(JDatabaseQueryElement $obj) {
+		$this->obj = $obj;
+	}
+	
+	public function get($name) {
+		return $this->obj->$name;
+	}
+	
+	public function set($name, $value) {
+		$this->obj->$name = $value;
+	}
+	
 }

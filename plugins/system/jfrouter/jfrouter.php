@@ -92,9 +92,6 @@ class plgSystemJFRouter extends JPlugin{
 		
 		// attach build rules for language SEF
 		$router->attachBuildRule(array($this, 'routeJFRule'));
-		
-		// attach parse rules for language SEF
-		//$router->attachParseRule(array($this, 'parseRule'));
 
 		// This gets the language from the router before any other part of Joomla can load the language !!
 		$uri = JURI::getInstance();
@@ -192,7 +189,9 @@ class plgSystemJFRouter extends JPlugin{
 
 			$segments = explode('/', $route);
 			$seg=0;
-				
+
+
+			
 			while ($seg<count($segments)){
 				if (strlen($segments[$seg])==0) {
 					$seg++;
@@ -201,7 +200,7 @@ class plgSystemJFRouter extends JPlugin{
 				foreach ($sefprefixes as $prefix) {
 					list($langid,$prefix) = explode("::",$prefix,2);
 					// explode off any suffix
-					if (strpos($segments[$seg],".")>0){
+					if (strpos($segments[$seg],".")>0 && $segments[$seg] != 'index.php'){
 						$segcompare = substr($segments[$seg],0, strpos($segments[$seg],"."));
 						// Trap for pdf, feed of html info in the extension
 						if (strpos($segments[$seg],$prefix.".")===0){
@@ -226,6 +225,8 @@ class plgSystemJFRouter extends JPlugin{
 							}
 						}
 					}
+					
+
 					// does the segment match the prefix
 					if ($segcompare==$prefix){
 
@@ -243,6 +244,7 @@ class plgSystemJFRouter extends JPlugin{
 						}
 
 						unset($segments[$seg]);//array_shift($segments);
+
 						$uri->setPath(implode("/",$segments));
 
 						$lang = $langs[$langid]->shortcode;
@@ -258,6 +260,11 @@ class plgSystemJFRouter extends JPlugin{
 
 				$seg++;
 			}
+			
+			
+			
+			
+			
 		}
 		JModel::getInstance('JFModelRoute')->discoverJFLanguage();
 		return array();
