@@ -263,8 +263,8 @@ class interceptDB extends JDatabaseMySQLi
 		
 		}
 		
-		
-		$table = str_ireplace('#__', '', $this->getTableName());
+		$tablewithprefix = $this->getTableName();
+		$table = str_ireplace('#__', '', $tablewithprefix );
 		
 		//$key = $jfManager->getPrimaryKey($table);   obsolete
 		$ce = $jfManager->getContentElement($table);
@@ -289,7 +289,7 @@ class interceptDB extends JDatabaseMySQLi
 				}
 				
 				// is any column named as soemthing else or has table prepended, then do join
-				if(stristr($element2, ' AS ') || stristr($element2, '.') ) {
+				if(preg_match('/FROM(.*?) AS/i',$element2) || stristr($element2, '.') ) {
 					$asfound = true;
 				}
 				
@@ -302,7 +302,7 @@ class interceptDB extends JDatabaseMySQLi
 					$joinprevious = $this->sql->join;
 
 					$this->sql->clear('join');
-					$this->sql->innerJoin($table. ' AS jfself USING (' .$key. ')');
+					$this->sql->innerJoin($tablewithprefix. ' AS jfself USING (' .$key. ')');
 					foreach ($joinprevious AS $joinprev) {
 						$name = JoomlaProtectedFixDatabaseQueryElement::getInstance($joinprev)->get('name');
 						$type = str_ireplace(' JOIN','', $name);
@@ -311,7 +311,7 @@ class interceptDB extends JDatabaseMySQLi
 					}
 					
 				} else {
-					$this->sql->innerJoin($table. ' AS jfself USING (' .$key. ')');
+					$this->sql->innerJoin($tablewithprefix. ' AS jfself USING (' .$key. ')');
 				}
 
 				$this->sql->select('jfself.'.$key.' AS '.$key);
@@ -328,7 +328,7 @@ class interceptDB extends JDatabaseMySQLi
 			if(stristr($selectstring, ' '.$key.',') || strstr($selectstring, '*') || stristr($selectstring, '.'.$key.',' || stristr($selectstring, ' '.$key.' ,' ) || stristr($selectstring, '.'.$key.' ,' ))) {
 				$keyfound = true;
 			}
-			if(stristr($selectstring, ' AS ') || stristr($selectstring, '.') ) {
+			if(preg_match('/FROM(.*?) AS/i',$selectstring) || stristr($selectstring, '.') ) {
 				$asfound = true;
 			}
 			
@@ -337,7 +337,7 @@ class interceptDB extends JDatabaseMySQLi
 				//$this->sql = preg_replace('/SELECT(.*?)FROM/i', 'SELECT '. $selectstring . ', jfself.'.$key.' AS '.$key .' FROM', $this->sql  );
 				$this->sql = preg_replace('/SELECT /i', 'SELECT jfself.'.$key.' AS '.$key .', ', $this->sql, 1);
 				// @todo make sure our join comes first, the same as with object queries
-				$this->sql .= ' JOIN ' .$table. ' AS jfself USING ('.$key.')';
+				$this->sql .= ' JOIN ' .$tablewithprefix. ' AS jfself USING ('.$key.')';
 			} else if ($keyfound === false && $asfound === false) {
 				$this->sql = preg_replace('/SELECT /i', 'SELECT '.$key. ', ', $this->sql, 1);
 			}
@@ -407,7 +407,7 @@ class interceptDB extends JDatabaseMySQLi
 			}
 		} */
 		
-		//$sqlfinal = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
+		$sqlfinal = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
 		
 		$result = parent::query();
 		
