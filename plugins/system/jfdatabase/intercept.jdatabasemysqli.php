@@ -336,8 +336,15 @@ class interceptDB extends JDatabaseMySQLi
 			if ($keyfound === false  && $asfound == true) {
 				//$this->sql = preg_replace('/SELECT(.*?)FROM/i', 'SELECT '. $selectstring . ', jfself.'.$key.' AS '.$key .' FROM', $this->sql  );
 				$this->sql = preg_replace('/SELECT /i', 'SELECT jfself.'.$key.' AS '.$key .', ', $this->sql, 1);
-				// @todo make sure our join comes first, the same as with object queries
-				$this->sql .= ' JOIN ' .$tablewithprefix. ' AS jfself USING ('.$key.')';
+				
+				//make sure our join comes first
+				$replacejoin = preg_match('/( left| right| inner| outer| join| where)/i',$this->sql,$matches);
+				if ($replacejoin) {
+					$this->sql = preg_replace('/( left| right| inner| outer| join| where)/i',' JOIN ' .$tablewithprefix. ' AS jfself USING ('.$key.') '.$matches[0],$this->sql);
+				} else {
+					$this->sql .= ' JOIN ' .$tablewithprefix. ' AS jfself USING ('.$key.') ';
+				}
+
 			} else if ($keyfound === false && $asfound === false) {
 				$this->sql = preg_replace('/SELECT /i', 'SELECT '.$key. ', ', $this->sql, 1);
 			}
@@ -407,7 +414,7 @@ class interceptDB extends JDatabaseMySQLi
 			}
 		} */
 		
-		$sqlfinal = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
+		//$sqlfinal = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
 		
 		$result = parent::query();
 		
