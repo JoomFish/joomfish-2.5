@@ -36,10 +36,6 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 
-if(!JFactory::getApplication()->isAdmin()) {
-	return;
-}
-
 class plgSystemJFOverrides extends JPlugin
 {
 
@@ -65,6 +61,7 @@ class plgSystemJFOverrides extends JPlugin
 		} else {
 			//JFactory::getApplication()->setLanguageFilter(false);
 			jimport('joomla.application.menu');
+			//JLoader::import('joomla.application.menu', JFOVERRIDES_PLUGIN_LOCATION.'/classes' );
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/menu.php', 'JMenuSite', true);
 			JMenuSite::getInstance('site');
 		}
