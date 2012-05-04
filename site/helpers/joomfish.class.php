@@ -684,7 +684,6 @@ class JoomFish
 	 */
 	public static function nativeTranslateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $pk, & $fielddata, $querySQL, $allowfallback=true, $onlytransFields = true)
 	{
-
 		$registry = JFactory::getConfig();
 		$defaultLang = $registry->getValue("config.defaultlang");
 		$language = (isset($language) && $language != '') ? $language : $defaultLang;
@@ -735,7 +734,7 @@ class JoomFish
 			$published = $jfm->getContentElement($reference_table)->getPublishedField();
 			$published = $user->authorise('core.publish', 'com_joomfish') ? "\n	AND $published=1" : "";
 			
-			$sql = "SELECT tab.*, tmap.reference_id FROM #__$reference_table as tab"
+			$sql = "SELECT tab.*, tmap.reference_id, tmap.translation_id FROM #__$reference_table as tab"
 					. "\n LEFT JOIN #__jf_translationmap AS tmap ON tmap.reference_table = " . $db->quote($reference_table) . "   AND tmap.translation_id = tab.$pk AND tmap.language= " . $db->quote($languages[$language]->code)
 					. "\n  WHERE tmap.reference_id IN($ids)"
 					//. "\nWHERE tab.language=" . $db->quote($languages[$language]->code)
@@ -749,8 +748,9 @@ class JoomFish
 			{	
 				
 				$fieldmap = null;
+				$rowsToUnset = array();
 				foreach (array_keys($rows) as $key)
-				{
+				{	
 					// assign by reference since not an object
 					$row_to_translate = & $rows[$key];
 					$rowTranslationExists = false;
@@ -776,10 +776,23 @@ class JoomFish
 									$row_to_translate[$fieldcount] = $translation->$fieldname;
 								}
 							}
+						
+							$rowsToUnset[] = $translation->translation_id; // we cannot unset here as this foreach will set index again if unset element comes after current one!
 						}
 
 
 					}
+					
+					
+				}
+				
+				// loop again and remove duplicates
+				// @todo try to merge above loops 
+				foreach (array_keys($rows) as $key) {
+					if (in_array($rows[$key][$keycol], $rowsToUnset)) {
+						unset ($rows[$key]);
+					}
+						
 				}
 			}
 			else
@@ -799,7 +812,7 @@ class JoomFish
 				  }
 				 */
 			}
-
+			
 
 			if ($allowfallback && count($fallbackrows) > 0)
 			{
@@ -807,7 +820,7 @@ class JoomFish
 				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $fallbacklanguage, $keycol, $fielddata, $querySQL, false, $onlytransFields);
 			}
 
-			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table, $language, $keycol, $fielddata, $querySQL, $allowfallback));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table, $language, $keycol, $fielddata, $querySQL, $allowfallback, $onlytransFields));
 		}
 
 	}
