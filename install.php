@@ -92,7 +92,7 @@ class com_JoomfishInstallerScript
             // set plugin ordering, first increase all plugins ordering numbers
             $query = $db->getQuery(true);
             $query->update($tableExtensions);
-            $query->set($db->nameQuote("ordering").'='.$db->nameQuote("ordering").'+5');
+            $query->set($db->nameQuote("ordering").'='.$db->nameQuote("ordering").'+3');
             $query->where($columnType.'='.$db->quote("plugin"));
             $query->where($db->nameQuote("folder").'='.$db->quote("system"));
             $db->setQuery((string)$query);
