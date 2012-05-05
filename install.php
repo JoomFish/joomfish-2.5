@@ -107,7 +107,10 @@ class com_JoomfishInstallerScript
             WHERE ".$db->nameQuote("element")." IN (".$db->quote("jfrouter").",".$db->quote("jfdatabase").",".$db->quote("jfoverrides").")";
             $db->setQuery($query);
             $db->query();
-            
+			// Reorder table #__extensions where type=plugin and folder=system
+			$table = new JTableExtension($db);
+			$whereOrder = $db->nameQuote("folder").'='.$db->quote("system").' AND '.$columnType.'='.$db->quote("plugin");
+			$table->reorder($whereOrder);
         }
  
         /**
