@@ -89,6 +89,23 @@ class com_JoomfishInstallerScript
             $db->setQuery((string)$query);
             $db->query();
             
+            // set plugin ordering, first increase all plugins ordering numbers
+            $query = $db->getQuery(true);
+            $query->update($tableExtensions);
+            $query->set($db->nameQuote("ordering").'='.$db->nameQuote("ordering").'+5');
+            $db->setQuery((string)$query);
+            $db->query();
+            // now set out plugins to the right order
+            $query = "UPDATE ".$tableExtensions."
+            SET ".$db->nameQuote("ordering")." = CASE ".$db->nameQuote("element")."
+            WHEN ".$db->quote("jfrouter")." THEN 0
+            WHEN ".$db->quote("jfdatabase")." THEN 1
+            WHEN ".$db->quote("jfoverrides")." THEN 2
+            END
+            WHERE ".$db->nameQuote("element")." IN (".$db->quote("jfrouter").",".$db->quote("jfdatabase").",".$db->quote("jfoverrides").")";
+            $db->setQuery($query);
+            $db->query();
+            
         }
  
         /**
