@@ -89,7 +89,7 @@ class com_JoomfishInstallerScript
             $db->setQuery((string)$query);
             $db->query();
             
-            // set plugin ordering, first increase all plugins ordering numbers
+            // Set plugin ordering: first increase all plugins ordering numbers
             $query = $db->getQuery(true);
             $query->update($tableExtensions);
             $query->set($db->nameQuote("ordering").'='.$db->nameQuote("ordering").'+3');
@@ -97,7 +97,8 @@ class com_JoomfishInstallerScript
             $query->where($db->nameQuote("folder").'='.$db->quote("system"));
             $db->setQuery((string)$query);
             $db->query();
-            // now set out plugins to the right order
+            
+            // Now set our plugins to the right order
             $query = "UPDATE ".$tableExtensions."
             SET ".$db->nameQuote("ordering")." = CASE ".$db->nameQuote("element")."
             WHEN ".$db->quote("jfrouter")." THEN 0
@@ -107,8 +108,9 @@ class com_JoomfishInstallerScript
             WHERE ".$db->nameQuote("element")." IN (".$db->quote("jfrouter").",".$db->quote("jfdatabase").",".$db->quote("jfoverrides").")";
             $db->setQuery($query);
             $db->query();
+            
 			// Reorder table #__extensions where type=plugin and folder=system
-			$table = new JTableExtension($db);
+			$table = JTable::getInstance('extension');
 			$whereOrder = $db->nameQuote("folder").'='.$db->quote("system").' AND '.$columnType.'='.$db->quote("plugin");
 			$table->reorder($whereOrder);
         }
