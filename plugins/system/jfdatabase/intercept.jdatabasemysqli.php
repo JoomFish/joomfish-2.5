@@ -85,7 +85,8 @@ class interceptDB extends JDatabaseMySQLi
 	{	
 		$this->translate = $translate;
 			
-		if ($this->skipjf) return parent::loadObjectList($key, $class);
+		if ($this->skipjf || $translate === false) return parent::loadObjectList($key, $class);
+		
 		$pfunc = $this->profile();
 		
 		 // we can't call the query twice!
