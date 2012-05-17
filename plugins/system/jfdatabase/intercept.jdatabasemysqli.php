@@ -86,7 +86,6 @@ class interceptDB extends JDatabaseMySQLi
 		$this->translate = $translate;
 			
 		if ($this->skipjf || $translate === false) return parent::loadObjectList($key, $class);
-		
 		$pfunc = $this->profile();
 		
 		 // we can't call the query twice!
@@ -257,6 +256,7 @@ class interceptDB extends JDatabaseMySQLi
 				if(strstr($element, 'language')) {
 					//str_ireplace("\,\'\*\'", "\,\'\*\',\'".$defaultlang."'", $value);
 					$element = str_ireplace(",'*'" , ",'*','".$defaultlang."'" , $element);
+					$jfmCount++;
 				}
 			}
 		$this->sql->clear('where');	
@@ -285,12 +285,12 @@ class interceptDB extends JDatabaseMySQLi
 			$asfound = false;
 			foreach ( $elements2 as $element2) {
 				// is there id column or * in the select query
-				if(stristr($element2, ' '.$key.',') || strstr($element2, '*') || stristr($element2, '.'.$key.',' ) || stristr($element2, ' '.$key.' ,' ) || stristr($element2, '.'.$key.' ,' ) ) {
+				if(stristr($element2, ' '.$key.' ') || stristr($element2, ','.$key) || stristr($element2, ' '.$key.',') || strstr($element2, '*') || stristr($element2, '.'.$key.',') || stristr($element2, ' '.$key.' ,' ) || stristr($element2, '.'.$key.' ,' )) {							
 					$keyfound = true;
 				}
 				
 				// is any column named as soemthing else or has table prepended, then do join
-				if(preg_match('/FROM(.*?) AS/i',$element2) || stristr($element2, '.') ) {
+				if(preg_match('/FROM(.*?) AS/is',$element2) || stristr($element2, '.') ) {
 					$asfound = true;
 				}
 				
@@ -316,20 +316,22 @@ class interceptDB extends JDatabaseMySQLi
 				}
 
 				$this->sql->select('jfself.'.$key.' AS '.$key);
+				$jfmCount++;
 			} else if ($keyfound === false && $asfound === false) {
 				$this->sql->select($key);
+				$jfmCount++;
 			}
 
 		} else if ($this->translate === true && is_string($this->sql)  && !isset($this->sql->jfprocessed) && stristr($this->sql, 'SELECT') && stristr($this->sql, 'FROM')) {
 			$keyfound = false;
 			$asfound = false;
 			
-			preg_match('/SELECT(.*?)FROM/i', $this->sql, $selectstring);
+			preg_match('/SELECT(.*?)FROM/is', $this->sql, $selectstring);
 			$selectstring = $selectstring[0];
-			if(stristr($selectstring, ' '.$key.',') || strstr($selectstring, '*') || stristr($selectstring, '.'.$key.',' || stristr($selectstring, ' '.$key.' ,' ) || stristr($selectstring, '.'.$key.' ,' ))) {
+			if(stristr($selectstring, ' '.$key.' ') || stristr($selectstring, ','.$key) || stristr($selectstring, ' '.$key.',') || strstr($selectstring, '*') || stristr($selectstring, '.'.$key.',') || stristr($selectstring, ' '.$key.' ,' ) || stristr($selectstring, '.'.$key.' ,' )) {
 				$keyfound = true;
 			}
-			if(preg_match('/FROM(.*?) AS/i',$selectstring) || stristr($selectstring, '.') ) {
+			if(preg_match('/FROM(.*?) AS/is',$selectstring) || stristr($selectstring, '.') ) {
 				$asfound = true;
 			}
 			
@@ -341,13 +343,16 @@ class interceptDB extends JDatabaseMySQLi
 				//make sure our join comes first
 				$replacejoin = preg_match('/( left| right| inner| outer| join| where)/i',$this->sql,$matches);
 				if ($replacejoin) {
-					$this->sql = preg_replace('/( left| right| inner| outer| join| where)/i',' JOIN ' .$tablewithprefix. ' AS jfself USING ('.$key.') '.$matches[0],$this->sql);
+					$this->sql = preg_replace('/( left| right| inner| outer| join| where)/i',' JOIN ' .$tablewithprefix. ' AS jfself USING ('.$key.') '.$matches[0],$this->sql, 1);
 				} else {
 					$this->sql .= ' JOIN ' .$tablewithprefix. ' AS jfself USING ('.$key.') ';
 				}
+				$jfmCount++;
 
 			} else if ($keyfound === false && $asfound === false) {
-				$this->sql = preg_replace('/SELECT /i', 'SELECT '.$key. ', ', $this->sql, 1);
+				//$this->sql = preg_replace('/SELECT /i', 'SELECT '.$key. ', ', $this->sql, 1);
+				$this->sql = preg_replace('/ FROM/is', ','.$key. ' FROM', $this->sql, 1);
+				$jfmCount++;
 			}
 			
 
@@ -415,10 +420,13 @@ class interceptDB extends JDatabaseMySQLi
 			}
 		} */
 		
-		//$sqlfinal = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
+		$sqlfinal = (is_a($this->sql, "JDatabaseQueryMySQLi")) ? (string)$this->sql : $this->sql;
 		
 		$result = parent::query();
 		
+		/*if ($jfmCount>0){
+				$this->sql->jfprocessed = true;
+			}*/
 		return $result;
 
 	}
