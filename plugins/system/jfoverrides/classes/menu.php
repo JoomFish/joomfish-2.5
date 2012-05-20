@@ -81,9 +81,13 @@ class JMenuSite extends JMenu
 		JModel::getInstance('JFModelRoute')->fixMenuItemRoutes($this->_items, null);
 		
 		// throw away everything that is not * or default as the rest is there only for translations
+		$deflang = JoomFishManager::getInstance()->getDefaultLanguage();
+		
 		foreach($this->_items as &$item) {
-			if ($item->language != '*' && $item->language != JoomFishManager::getInstance()->getDefaultLanguage() ) {
+			if ($item->language != '*' && $item->language != $deflang ) {
 				unset($this->_items[(string)$item->id]);
+			} else if ($item->language == $deflang) {
+				$item->language = '*'; // either this or override JRouterSite line 222 that has * hardcoded
 			}
 		}
 		

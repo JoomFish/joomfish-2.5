@@ -67,6 +67,7 @@ class JFDatabase extends interceptDB {
 	public $orig_offset	= 0;
 
 	public $skipjf = 0;
+	public $translate = true;
 	
 	private $tableFields = null;
 
@@ -204,7 +205,11 @@ class JFDatabase extends interceptDB {
 	{
 		if ($this->skipjf) return parent::getNumRows($cur);
 		$count = parent::getNumRows($cur);
-		if (!$translate) return $count;
+		
+		if (!$translate) {
+			//$this->translate = false;
+			return $count;
+		}
 
 		// setup Joomfish plugins
 		$dispatcher	   = JDispatcher::getInstance();
@@ -242,12 +247,15 @@ class JFDatabase extends interceptDB {
 	*/
 	function loadResult( $translate=true, $language=null ) {
 		if ($this->skipjf) return parent::loadResult();
+		$this->translate = $translate;
+		
 		if (!$translate){
 			$this->skipSetRefTables=true;
 			$result = parent::loadResult();
-			$this->skipSetRefTables=false;
+			$this->skipSetRefTables=false;					
 			return $result;
 		}
+		
 		$result=null;
 		$ret=null;
 
@@ -272,9 +280,12 @@ class JFDatabase extends interceptDB {
 	 * @access	public
 	 */
 	function loadResultArray($numinarray = 0,  $translate=true, $language=null){
+		
 		if ($this->skipjf)  return parent::loadResultArray($numinarray);
+		$this->translate = $translate;
 		if (!$translate){
-			return parent::loadResultArray($numinarray);
+			$reslt 				= parent::loadResultArray($numinarray);
+			return $reslt;
 		}
 		$results=array();
 		$ret=array();
@@ -317,9 +328,13 @@ class JFDatabase extends interceptDB {
 	*/
 	function loadAssoc( $translate=true, $language=null) {
 		if ($this->skipjf) return parent::loadAssoc();
+		$this->translate = $translate;
+		
 		if (!$translate){
-			return parent::loadAssoc();
+			$rslt = parent::loadAssoc();
+			return $rslt;
 		}
+		
 		$result=null;
 		$result = $this->_loadObject( $translate, $language );
 
@@ -343,11 +358,15 @@ class JFDatabase extends interceptDB {
 	function loadAssocList( $key='', $translate=true, $language=null )
 	{
 		if ($this->skipjf) return parent::loadAssocList($key);
-		if (!$translate){
-			return parent::loadAssocList($key);
+		$this->translate = $translate;
+		
+		if (!$translate){	
+			$reslt 				= parent::loadAssocList($key);
+			return $reslt;
 		}
+		
 		$result=null;
-		$rows = $this->loadObjectList($key, 'stdClass',$translate, $language );
+		$rows = $this->loadObjectList($key, 'stdClass', $translate, $language );
 
 		$pfunc = $this->profile();
 		$results = array();
@@ -371,7 +390,8 @@ class JFDatabase extends interceptDB {
 	*/
 	function loadObject($class="stdClass", $translate=true, $language=null ) {
 		if ($this->skipjf) return parent::loadObject($class);
-		$objects = $this->loadObjectList("",'stdClass',$translate,$language);
+		
+		$objects = $this->loadObjectList("",$class,$translate,$language);
 		if (!is_null($objects) && count($objects)>0){
 			return $objects[0];
 		}
@@ -385,7 +405,7 @@ class JFDatabase extends interceptDB {
 	 * @param string $language
 	 */
 	function _loadObject( $translate=true, $language=null ) {
-		return $this->loadObject();
+		return $this->loadObject('stdClass', $translate, $language);
 	}
 
 	/**
@@ -397,9 +417,13 @@ class JFDatabase extends interceptDB {
 	function loadRow( $translate=true, $language=null)
 	{
 		if ($this->skipjf) return parent::loadRow();
+		$this->translate = $translate;
+		
 		if (!$translate){
-			return parent::loadRow();
+			$reslt = parent::loadRow();
+			return $reslt;
 		}
+		
 		$result=null;
 		$result = $this->loadObject( "stdClass", $translate, $language );
 
@@ -427,11 +451,16 @@ class JFDatabase extends interceptDB {
 	*/
 	function loadRowList( $key=null , $translate=true, $language=null)
 	{
-		if ($this->skipjf) return parent::loadRowList($key);
+		if ($this->skipjf) return parent::loadRowList($key);	
+		$this->translate = $translate;
+		
 		if (!$translate){
-			return parent::loadRowList($key);
+			$reslt 				= parent::loadRowList($key);
+			return $reslt;
 		}
+		
 		$results=array();
+		
 		if (is_null($key)) $key="";
 		$rows = $this->loadObjectList($key, 'stdClass', $translate, $language );
 
@@ -469,7 +498,9 @@ class JFDatabase extends interceptDB {
 	* @param	boolean	passthru without storing information in a translation table
 	*/
 	function insertObject( $table, &$object, $keyName = NULL, $verbose=false , $passthru=false) {
+		
 		if ($this->skipjf) return parent::insertObject( $table, $object, $keyName, $verbose);
+		
 		$jfManager = JoomFishManager::getInstance();
 		if( isset($jfManager)) {
 			$this->setLanguage($language);
@@ -639,6 +670,7 @@ class JFDatabase extends interceptDB {
 			$table = substr( $table, 0, strpos( $table, ' ' ) );
 		}
 		if (isset($dbprefix) && strlen($dbprefix)>0) $table = preg_replace( '/'.$dbprefix.'/', '', $table);
+		$table = preg_replace( "/\r/", "", $table) ;
 		$table = preg_replace( "/\n/", "", $table) ;
 
 		$pfunc = $this->profile($pfunc);
@@ -689,8 +721,7 @@ class JFDatabase extends interceptDB {
 			$language = $sefLang;
 		}
 		else {
-			$jlang = JFactory::getLanguage();
-			$language = $jlang->getTag();
+			$language = JFactory::getLanguage()->getTag();
 		}
 
 		$pfunc = $this->profile($pfunc);
@@ -731,6 +762,7 @@ class JFDatabase extends interceptDB {
 	function getListCount( $query )
 	{
 		if ($this->skipjf) return parent::_getListCount( $query );
+		if ($this->translate === false) return parent::_getListCount( $query );
 		$this->skipSetRefTables=true;
 		$this->db->setQuery( $query );
 		$this->db->query();

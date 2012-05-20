@@ -111,10 +111,12 @@ class JCacheStorageJfdb extends JCacheStorage
 		. "\n KEY ( `expire`,`groupname` )"
 		. "\n ) $charset";
 		$db->setQuery( $sql );
-		if (!$db->query()){
+		if (!$result = $db->query()){
 			JError::raiseError(500, JText::_() . $db->getErrorMsg());
 			//echo $db->_sql;
 		}
+		
+		return $result;
 	}
 
 	/**

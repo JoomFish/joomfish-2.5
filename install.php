@@ -83,13 +83,36 @@ class com_JoomfishInstallerScript
 				$where .= $columnElement ."='".$attributes['module']."'";
 			}
 			
-			$where = 
 			
 			$query->where($where);
             $query->where("$columnType='plugin' OR $columnType='module'");
             $db->setQuery((string)$query);
             $db->query();
             
+            // Set plugin ordering: first increase all plugins ordering numbers
+            $query = $db->getQuery(true);
+            $query->update($tableExtensions);
+            $query->set($db->nameQuote("ordering").'='.$db->nameQuote("ordering").'+3');
+            $query->where($columnType.'='.$db->quote("plugin"));
+            $query->where($db->nameQuote("folder").'='.$db->quote("system"));
+            $db->setQuery((string)$query);
+            $db->query();
+            
+            // Now set our plugins to the right order
+            $query = "UPDATE ".$tableExtensions."
+            SET ".$db->nameQuote("ordering")." = CASE ".$db->nameQuote("element")."
+            WHEN ".$db->quote("jfrouter")." THEN 0
+            WHEN ".$db->quote("jfdatabase")." THEN 1
+            WHEN ".$db->quote("jfoverrides")." THEN 2
+            END
+            WHERE ".$db->nameQuote("element")." IN (".$db->quote("jfrouter").",".$db->quote("jfdatabase").",".$db->quote("jfoverrides").")";
+            $db->setQuery($query);
+            $db->query();
+            
+			// Reorder table #__extensions where type=plugin and folder=system
+			$table = JTable::getInstance('extension');
+			$whereOrder = $db->nameQuote("folder").'='.$db->quote("system").' AND '.$columnType.'='.$db->quote("plugin");
+			$table->reorder($whereOrder);
         }
  
         /**
@@ -197,11 +220,14 @@ class com_JoomfishInstallerScript
          * method to run after an install/update/uninstall method
          *
          * @return void
-         *
+         **/
         function postflight($type, $parent) 
-        {
+        {		
                 // $parent is the class calling this method
                 // $type is the type of change (install, update or discover_install)
-                echo '<p>' . JText::_('COM_JOOMFISH_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
-        }*/
+                if ($type == 'install' || $type == 'update') {
+                	JLoader::import( 'classes.JCacheStorageJFDB',JPATH_ADMINISTRATOR.'/components/com_joomfish');
+                	$result = JCacheStorageJfdb::setupDB();
+                }
+        }
 }
