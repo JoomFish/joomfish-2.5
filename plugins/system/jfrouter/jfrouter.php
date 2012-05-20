@@ -25,7 +25,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfrouter.php 248 2012-02-10 14:35:53Z geraint $
+
  * @package joomfish
  * @subpackage jfrouter
  * @version 2.0

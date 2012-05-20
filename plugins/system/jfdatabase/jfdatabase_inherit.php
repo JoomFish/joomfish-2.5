@@ -25,7 +25,6 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfdatabase_inherit.php 242 2012-02-10 15:52:28Z geraint $
  * @package joomfish
  * @subpackage jfdatabase
  * @version 2.0

@@ -2,7 +2,7 @@
 <joomfish type="contentelement">
   <name>Menus</name>
   <author>A. Kempkens</author>
-  <version>2.5.0 alpha</version>
+  <version>2.5.0 beta 1</version>
   <description>Definition for the core menu manager</description>
   <copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
   <reference>

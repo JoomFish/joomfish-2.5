@@ -26,7 +26,6 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: CHANGELOG.php 238 2012-02-10 08:33:38Z alex $
  *
 */
 

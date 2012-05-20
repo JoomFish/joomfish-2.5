@@ -26,7 +26,6 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: ContentElement.php 247 2012-02-10 11:16:55Z geraint $
  * @package joomfish
  * @subpackage Models
  *

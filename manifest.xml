@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version="1.7.0" method="install">
+<extension type="component" version="2.5.0" method="install">
 	<name>COM_JOOMFISH</name>
 	<license>Open Source License, GPL v2 based</license>
 	<author>Joom!Fish Project</author>
 	<authorEmail>support@joomfish.net</authorEmail>
 	<authorUrl>http://www.joomfish.net</authorUrl>
-	<creationDate>January 2012</creationDate>
+	<creationDate>2012-05-20</creationDate>
 	<copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
-	<version>2.5.0 alpha</version>
+	<version>2.5.0 beta 1</version>
 	<description>COM_JOOMFISH_XML_DESCRIPTION</description>
 
 	<scriptfile>install.php</scriptfile>

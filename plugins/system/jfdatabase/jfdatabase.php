@@ -26,7 +26,6 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
- * $Id: jfdatabase.php 241 2012-02-10 15:42:55Z geraint $
  * @package joomfish
  * @subpackage jfdatabase
  * @version 2.0
