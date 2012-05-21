@@ -26,6 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
+ * $Id: translate.php 226 2012-02-10 07:29:41Z alex $
  * @package joomfish
  * @subpackage Models
  *
@@ -212,12 +213,14 @@ class JFModelRoute extends JFModel {
 				$arrayVars = array();
 				
 				foreach (array_keys($arrayValue) as $akey)
-				{
-					$arrayVars [$akey] = $filter->clean($arrayValue[$akey]);
+				{	
+					if (isset($arrayValue[$akey])) {
+						$arrayVars [$akey] = $filter->clean($arrayValue[$akey]);
+					}
 				}
 				$cleanvars[$k]	= $arrayVars;
-			} else {
-				$cleanvars[$k]	= $filter->clean($v);
+			} else if (isset($v)) {
+				$cleanvars[$k]	= ($filter->clean($v));
 			}	
 		}
 		
