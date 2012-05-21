@@ -25,7 +25,6 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
-
  * @package joomfish
  * @subpackage jfoverrides
  * @version 2.5
@@ -35,6 +34,10 @@
 /** ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+/*
+ * Load Joomla core classes overrides and
+ * fire various other plugin events
+ */
 
 class plgSystemJFOverrides extends JPlugin
 {
@@ -58,6 +61,7 @@ class plgSystemJFOverrides extends JPlugin
 		if(JFactory::getApplication()->isAdmin()) {			
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/language.php', 'JFormFieldLanguage');
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/contentlanguage.php', 'JFormFieldContentLanguage');
+			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/adminmenuhelper.php', 'ModMenuHelper');
 		} else {
 			//JFactory::getApplication()->setLanguageFilter(false);
 			jimport('joomla.application.menu');
