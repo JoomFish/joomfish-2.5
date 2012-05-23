@@ -26,6 +26,7 @@
  * The "GNU General Public License" (GPL) is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * -----------------------------------------------------------------------------
+ * $Id: TranslationObject.php 239M 2012-02-10 06:28:53Z (local) $
  * @package joomfish
  * @subpackage Models
  *
@@ -36,6 +37,18 @@ JLoader::register('iJFTranslatable', JOOMFISH_ADMINPATH . DS . 'models' . DS . '
 
 class  TranslationObjectMenu extends TranslationObject 
 {
+    
+    	// Post handlers
+	public function filterTitle(&$alias)
+	{
+		if ($alias == "")
+		{
+			$alias = JRequest::getString("refField_title");
+		}
+		$alias = JFilterOutput::stringURLSafe($alias);
+
+	}
+
 		// Post handlers
 
 	public function saveUrlParams(&$link, $fields, $formarray)
