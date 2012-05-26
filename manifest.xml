@@ -114,13 +114,15 @@
 		<extension name="jfalternative"  type="plugins" field="published" value="1">element='jfalternative'</extension>
 		<extension name="mod_translate"  type="modules" field="published" value="1">module='mod_translate'</extension>
 		//-->
-		<extension name="jfrouter"  type="plugins" field="published" value="1">element='jfrouter'</extension>
-		<extension name="jfrouter"  type="plugins" field="ordering" value="0">folder='system'</extension>
-		<extension name="jfdatabase"  type="plugins" field="published" value="1">element='jfdatabase'</extension>
-		<extension name="jfdatabase"  type="plugins" field="ordering" value="1">folder='system'</extension>
-		<extension name="mod_jflanguageselection"  type="modules" field="published" value="1">module='mod_jflanguageselection'</extension>
+		<extension name="jfrouter"  type="plugin" field="enabled" value="1">element='jfrouter'</extension>
+		<extension name="jfrouter"  type="plugin" field="ordering" value="0">folder='system'</extension>
+		<extension name="jfdatabase"  type="plugin" field="enabled" value="1">element='jfdatabase'</extension>
+		<extension name="jfdatabase"  type="plugin" field="ordering" value="1">folder='system'</extension>
+		<extension name="jfoverrides"  type="plugin" field="enabled" value="1">element='jfoverrides'</extension>
+		<extension name="jfoverrides"  type="plugin" field="ordering" value="2">folder='system'</extension>	
+		<module name="mod_jflanguageselection"  type="modules" field="published" value="1">module='mod_jflanguageselection'</module>
 	 	<performance name="mySQL Driver" type="database" check_function="mysqli_connect" check_true="mysqli" check_false="mysql" optimal_value="mysqli" link="index.php?option=com_config" />
-	 	<performance name="PHP Version" type="php" required="5.0.0" optimal_value="5.3.0" link="index.php?option=com_admin&amp;task=sysinfo" />
+	 	<performance name="PHP Version" type="php" required="5.0.0" optimal_value="5.3.0" link="index.php?option=com_admin&amp;view=sysinfo" />
 	 	<performance name="Cache" type="config" value="transcaching" optimal_value="1" link="index.php?option=com_joomfish" />
 	</check>
 </extension>
