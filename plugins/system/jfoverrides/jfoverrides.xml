@@ -13,6 +13,7 @@
 		<filename plugin="jfoverrides">jfoverrides.php</filename>
 		<filename>index.html</filename>
 		<filename>classes/index.html</filename>
+		<filename>classes/adminmenuhelper.php</filename>
 		<filename>classes/contentlanguage.php</filename>
 		<filename>classes/language.php</filename>
 		<filename>classes/menu.php</filename>

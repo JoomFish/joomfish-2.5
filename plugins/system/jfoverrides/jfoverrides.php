@@ -91,7 +91,7 @@ class plgSystemJFOverrides extends JPlugin
                 }
                 
             } else {
-                JError::raiseNotice(500, JText::_('PLG_SYSTEM_CREATE_MISSING_CLASS_FILE'.' '.$class.' '.$file), 'error');
+                JError::raiseNotice(500, JText::_('PLG_SYSTEM_JFOVERRIDES_MISSING_CLASS_FILE'.' '.$class.' '.$file), 'error');
                 return false;
             }
         }
