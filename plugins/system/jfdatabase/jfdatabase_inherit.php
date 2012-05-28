@@ -181,7 +181,7 @@ class JFDatabase extends interceptDB {
 			$_tranfields[$tableName] = array();
 
 			$jfManager = JoomFishManager::getInstance();
-			if (!$jfManager) return false;
+			if (!$jfManager->getContentElement( $tableName )) return false;
 
 			$elementTable = $jfManager->getContentElement( $tableName )->getTable();
 
