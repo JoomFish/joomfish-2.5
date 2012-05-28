@@ -191,7 +191,7 @@ class CPanelViewCPanel extends JoomfishViewDefault
 			<tr><td colspan="3"><strong><?php echo $name;?></strong></td></tr>
 						<?php
 					}
-
+					if (!is_null($contentElement)){
 					$translationClass = $contentElement->getTranslationObjectClass();
 					$translationObject = new TranslationObject( $ceInfo['language_id'], $contentElement );
 					$translationObject->loadFromContentID($ceInfo['reference_id']);
@@ -200,13 +200,14 @@ class CPanelViewCPanel extends JoomfishViewDefault
 
 					$link = 'index.php?option=com_joomfish&amp;task=translate.publish&amp;catid=' .$ceInfo['catid']. '&cid[]=0|' .$ceInfo['reference_id'].'|'.$ceInfo['language_id'];
 					$hrefPublish = '<a href="'.$link.'">'.JHTML::_('image','admin/publish_x.png', '', NULL, true).'</a>';
+					 
 					?>
 			<tr class="row<?php echo $k;?>">
 				<td align="left"><?php echo $hrefEdit;?></td>
 				<td style="text-align: center;"><?php echo $ceInfo['language'];?></td>
 					<td style="text-align: center;"><?php echo $hrefPublish;?></td>
 			</tr>
-					<?php
+					<?php }
 					$k = 1 - $k;
 				}
 			} else {

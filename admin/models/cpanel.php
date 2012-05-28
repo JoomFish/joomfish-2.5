@@ -28,7 +28,7 @@
  * @package joomfish
  * @subpackage Models
  *
-*/
+ */
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
@@ -48,7 +48,7 @@ class CPanelModelCPanel extends JModel
 	public function getName() {
 		return $this->_modelName;
 	}
-	
+
 	public function getUsersplash() {
 		$jfm = JoomFishManager::getInstance();
 		return $jfm->getCfg('usersplash', 1);
@@ -170,7 +170,7 @@ class CPanelModelCPanel extends JModel
 					$checkResult[$type][] = $check;
 					$checkResult[$type. '_state'] = $checkResult[$type. '_state'] & $check->result;
 					break;
-				
+
 				case 'module':
 					$check->description = JText::_($child->getAttribute('name'));
 					$mtype = $child->getAttribute('type');
@@ -178,23 +178,23 @@ class CPanelModelCPanel extends JModel
 					$value = $child->getAttribute('value');
 					$name = $child->getAttribute('name');
 					$condition = $child->textContent;
-					
+						
 					$sql = "SELECT $field, id FROM #__modules WHERE $condition";
 					$db->setQuery($sql);
 					$resultValue = $db->loadRow();
-					
+						
 					if( $resultValue != null ) {
 						$check->result = ($value == $resultValue[0]) ? true : false;
 						$check->resultText = $check->result ? JText::_($field) : JText::_('un'.$field);
-					
+							
 						$check->link = JURI::root().'administrator/index.php?option=com_modules&task=module.edit&hidemainmenu=1&id='.$resultValue[1];
 					} else {
 						$check->result = false;
 						$check->resultText = JText::_( 'NOT_INSTALLED' );
-					
+							
 						$check->link = '';
 					}
-					
+						
 					$checkResult['extension'][] = $check;
 					$checkResult['extension_state'] = $checkResult['extension_state'] & $check->result;
 					break;
@@ -247,14 +247,14 @@ class CPanelModelCPanel extends JModel
 					$checkResult[$type][] = $check;
 					$checkResult[$type. '_state'] = $checkResult[$type. '_state'] & $check->result;
 					break;
-					
+						
 				case 'performance':
 					$check->description = JText::_($child->getAttribute('name'));
 					$check->name = $child->getAttribute('name');
 					$check->type = $child->getAttribute('type');
 					$check->link = $child->getAttribute('link');
 					$check->link = ($check->link != '' && preg_match('/http:/i', $check->link)) ? JURI::root() .$check->link : $check->link;
-					
+						
 					if($check->type=='database') {
 						$checkfunction = $child->getAttribute('check_function');
 						$check_true = $child->getAttribute('check_true');
@@ -297,8 +297,8 @@ class CPanelModelCPanel extends JModel
 							$check->resultText = JText::sprintf('JF_PERFORMANCE_CONFIG_NOT_OPTIMAL', JText::_($check->value), $check->current, $check->optimal);
 						}
 					}
-					
-					
+						
+						
 					$checkResult[$type][] = $check;
 					$checkResult[$type. '_state'] = $checkResult[$type. '_state'] & $check->result;
 					break;
@@ -307,7 +307,7 @@ class CPanelModelCPanel extends JModel
 		return $checkResult;
 	}
 
-	
+
 	/**
 	 * Testing if old installation is found and upgraded?
 	 * This method is rebuild and checks now for old JoomFish installations not MambelFish anymore!
@@ -378,7 +378,7 @@ class CPanelModelCPanel extends JModel
 		foreach ($allContentElements as $catid=>$ce){
 			$tablename = $dbprefix.$ce->referenceInformation["tablename"];
 			if (in_array($tablename,$tables) &&
-			in_array($tablename,$tablesWithTranslations)){
+					in_array($tablename,$tablesWithTranslations)){
 				$db->setQuery( $ce->createOrphanSQL( -1, null, -1, -1,$tranFilters ) );
 				$rows = $db->loadObjectList();
 				if ($db->getErrorNum()) {
@@ -441,11 +441,12 @@ class CPanelModelCPanel extends JModel
 		$unpublishedTranslations = null;
 
 		$sql = "select jfc.reference_table, jfc.reference_id, jfc.language_id, jfl.title as language" .
-		"\n from #__jf_content as jfc, #__languages as jfl" .
-		"\n where jfl.published=0  and jfc.language_id = jfl.lang_id" .
-		"\n group by jfc.reference_table, jfc.reference_id, jfc.language_id" .
-		"\n limit 0, 50";
+				"\n from #__jf_content as jfc, #__languages as jfl" .
+				"\n where jfc.published=0  and jfc.language_id = jfl.lang_id" .
+				"\n group by jfc.reference_table, jfc.reference_id, jfc.language_id" .
+				"\n limit 0, 50";
 		$db->setQuery($sql);
+
 		if( $rows = $db->loadObjectList() ) {
 			foreach ($rows as $row) {
 				$unpublished = array();
@@ -457,7 +458,48 @@ class CPanelModelCPanel extends JModel
 				$unpublishedTranslations[] = $unpublished;
 			}
 		}
+
+
+		$sqlnative = $db->getQuery(true);
+
+		$sqlnative->select('jfc.reference_table,  jfc.reference_id, jfc.translation_id, jfc.language AS langcode, jfl.title AS language, jfl.lang_id AS language_id');
+		$sqlnative->from('#__jf_translationmap AS jfc');
+		$sqlnative->join('', '#__languages AS jfl ON jfc.language = jfl.lang_code');
+
+
+		$celements = JoomFishManager::getInstance()->getContentElements();
+		$where = array();
+
+		foreach ($celements AS $contentElement) {
+			if ($contentElement->getTarget() == "native") {
+					
+				$sqlnative->leftJoin('#__'.$contentElement->getTableName().' AS jf'.$contentElement->getTableName().
+						' ON jfc.reference_table=\''.$contentElement->getTableName().'\''.
+						' AND jf'.$contentElement->getTableName().'.'.$contentElement->getReferenceId().'= jfc.translation_id'.
+						' AND jf'.$contentElement->getTableName().'.'.$contentElement->getPublishedField().'=0');
+					
+				$where [] = 'jf'.$contentElement->getTableName().'.'.$contentElement->getPublishedField().'=0';
+				$sqlnative->select('jf'.$contentElement->getTableName().'.'.$contentElement->getPublishedField().' AS published');
+
+			}
+		}
+
+		$where = implode(' OR ', $where);
+		$sqlnative->where ($where);
+		$db->setQuery($sqlnative);
+
+		if( $rowsnative = $db->loadObjectList() ) {
+			foreach ($rowsnative as $row) {
+				$unpublished = array();
+				$unpublished['reference_table'] = $row->reference_table;
+				$unpublished['catid'] = $row->reference_table;
+				$unpublished['reference_id'] = $row->reference_id;
+				$unpublished['language_id'] = $row->language_id;
+				$unpublished['language'] = $row->language;
+				$unpublishedTranslations[] = $unpublished;
+			}
+		}
+
 		return $unpublishedTranslations;
 	}
 }
-?>
