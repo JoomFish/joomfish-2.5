@@ -247,7 +247,7 @@ class JoomFish
 		$fallbackrows = array();
 		$idarray = explode(",", $ids);
 		$fallbackids = array();
-		$allowfallback = false;
+
 		if (isset($languages[$language]) && $languages[$language]->fallback_code != "")
 		{
 			$fallbacklanguage = $languages[$language]->fallback_code;
@@ -525,7 +525,7 @@ class JoomFish
 	/**
 	 * Function to translate a section object
 	 * @param array $rows
-	 * @param array $ids
+	 * @param string $ids
 	 * @param string $reference_table
 	 * @param JFLanguage $language
 	 * @param string $refTablePrimaryKey
@@ -567,6 +567,7 @@ class JoomFish
 
 		// process fallback language
 		$fallbacklanguage = false;
+
 		$fallbackrows = array();
 		$idarray = explode(",", $ids);
 		$fallbackids = array();
@@ -674,7 +675,7 @@ class JoomFish
 	/**
 	 * Function to translate list of elements where the data is stord in Joomla native tables using language flag
 	 * @param array $rows
-	 * @param array $ids
+	 * @param string $ids
 	 * @param string $reference_table
 	 * @param JFLanguage $language
 	 * @param string $refTablePrimaryKey
@@ -694,7 +695,7 @@ class JoomFish
 		$dispatcher = JDispatcher::getInstance();
 		JPluginHelper::importPlugin('joomfish');
 
-		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $language, $keycol, & $fielddata, $querySQL, $allowfallback));
+		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $language, $keycol, $pk, $fielddata, $querySQL, $allowfallback, $onlytransFields));
 
 		// if onBeforeTranslation has cleaned out the list then just return at this point
 		if (strlen($ids) == 0)
@@ -709,8 +710,8 @@ class JoomFish
 
 		// process fallback language
 		$fallbacklanguage = false;
+
 		$fallbackrows = array();
-		$idarray = explode(",", $ids);
 		$fallbackids = array();
 		if (isset($languages[$language]) && $languages[$language]->fallback_code != "")
 		{
@@ -781,9 +782,21 @@ class JoomFish
 						}
 
 
-					}
+					} 
 					
+					if (!$rowTranslationExists)
+						{
+							if ($allowfallback && isset($row_to_translate[$keycol]))
+							{
+								$fallbackrows[$key] = & $row_to_translate;
+								$fallbackids[$key] = $row_to_translate[$keycol];
+							}
+							else
+							{
+								//$results = $dispatcher->trigger('onMissingTranslation', array (&$row_to_translate, $language,$reference_table, $fielddata, $querySQL));
+							}
 					
+						}
 				}
 				
 				// loop again and remove duplicates
@@ -795,32 +808,32 @@ class JoomFish
 						
 				}
 			}
-			else
+				else
 			{
-				// NEW SYSTEM check fallback process for native stored data
-				/*
-				  foreach( array_keys( $rows) as $key ) {
-				  // assign by reference since not an object
-				  $row_to_translate  =& $rows[$key];
-				  if ($allowfallback && isset($row_to_translate[$keycol])){
-				  $fallbackrows[$key] = & $row_to_translate;
-				  $fallbackids[$key] = $row_to_translate[$keycol];
-				  }
-				  else {
-				  //$results = $dispatcher->trigger('onMissingTranslation', array (&$row_to_translate, $language,$reference_table, $fielddata, $querySQL));
-				  }
-				  }
-				 */
+				foreach (array_keys($rows) as $key)
+				{
+					// assign by reference since not an object
+					$row_to_translate = & $rows[$key];
+					if ($allowfallback && isset($row_to_translate[$keycol]))
+					{
+						$fallbackrows[$key] = & $row_to_translate;
+						$fallbackids[$key] = $row_to_translate[$keycol];
+					}
+					else
+					{
+						//$results = $dispatcher->trigger('onMissingTranslation', array (&$row_to_translate, $language,$reference_table, $fielddata, $querySQL));
+					}
+				}
 			}
 			
 
 			if ($allowfallback && count($fallbackrows) > 0)
 			{
 				$fallbackids = implode($fallbackids, ",");
-				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $fallbacklanguage, $keycol, $fielddata, $querySQL, false, $onlytransFields);
+				JoomFish::nativeTranslateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $tablealias, $fallbacklanguage, $keycol, $pk, $fielddata, $querySQL, false, $onlytransFields);
 			}
 
-			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table, $language, $keycol, $fielddata, $querySQL, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table,  $language, $keycol, $pk, $fielddata, $querySQL, $allowfallback, $onlytransFields));
 		}
 
 	}
