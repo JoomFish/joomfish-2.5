@@ -77,7 +77,12 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		$this->assignRef('langlist'   , $langlist);
 		
 		$googleApikey =  $params->get("google_translate_key", "");
+		
 		$this->assignRef('googleApikey'   , $googleApikey);
+		
+		
+		$table = JRequest::getWord('table', null);
+		$this->assignRef('table'   , $table);
 	}
 	/**
 	 * Control Panel display function
@@ -212,4 +217,28 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		parent::display($tpl);
 
 	}
+	
+	protected function modal($tpl = null)
+	{
+		// hide the sub menu
+		$this->_hideSubmenu();
+		
+		$table 		= JRequest::getWord('table');	
+		$limit 		= JFactory::getApplication()->getUserStateFromRequest('global.list.limit', 'limit', JFactory::getApplication()->getCfg('list_limit'), 'int');
+		$limitstart = JFactory::getApplication()->getUserStateFromRequest("view{com_joomfish}limitstart", 'limitstart', 0);
+		$data		= $this->getModel('translate')->getSimpleOriginalItemList($table, $limitstart, $limit);
+		
+		// Create the pagination object
+		jimport('joomla.html.pagination');
+		$pageNav = new JPagination($data->total, $limitstart, $limit);
+		
+
+		// Assign data for view - should really do this as I go along
+		$this->assignRef('rows', $data->rows);
+		$this->assignRef('pageNav', $pageNav);
+			
+	
+	
+	}
+	
 }

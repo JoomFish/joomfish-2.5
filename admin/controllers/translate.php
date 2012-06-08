@@ -661,5 +661,19 @@ class TranslateController extends JController
 		exit();
 
 	}
+	
+	/** Presentation of the content's that must be translated
+	 */
+	function originallist()
+	{
+
+			// get the view
+			$this->view = $this->getView("translate", "html");
+	
+			// Set the layout
+			$this->view->setLayout('modal');
+	
+			parent::display();
+	}
 
 }

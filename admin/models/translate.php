@@ -146,6 +146,78 @@ class TranslateModelTranslate extends JFModel
 		return $message;
 
 	}
+	
+	/*
+	 * Get a list of originals ids and titles for modal selector
+	 */
+	public function getSimpleOriginalItemList($table, $limitstart, $limit) {
+		
+		$db				= JFactory::getDbo();
+		$jfManager 		= JoomFishManager::getInstance();
+		$contentElement = $jfManager->getContentElement($table);
+		$tableclass 	= $contentElement->getTableClass();
+		$primarykey		= $contentElement->getReferenceId();
+		
+		$table			= $contentElement->getTable();
+		
+		foreach ($table->Fields as $tableField)
+			{
+				if ($tableField->Type == "titletext") {
+					
+					if (strtolower($tableField->Name) != "title")
+					{
+						
+						$titlecolumn = $db->quoteName($tableField->Name) . ' as title';					
+					} else {
+						
+						$titlecolumn	= $db->quoteName($tableField->Name);
+					}
+				}
+			}
+		
+		
+		// Build up the rows for the table
+		$rows = null;
+		$total = 0;
+		$result = new stdClass();
+		
+		if (!$contentElement)
+		{
+			$table = "content";
+			$contentElement = $jfManager->getContentElement->getContentElement($table);
+		}
+		
+
+		$query	= $db->getQuery(true);
+		
+		$query->select($db->quoteName($primarykey).' AS id,'. $titlecolumn);
+		$query->from($db->quoteName('#__'.$tableclass).' AS c');
+
+		if ($table->Filter != '')
+		{
+			$query->where ($table->Filter);
+		}
+		
+		$query->where ('(c.language="*" OR c.language='. $db->quote($jfManager->getDefaultLanguage()).')');
+		
+		$db->setQuery($query, $limitstart, $limit);	
+		$rows = $db->loadObjectList();
+		
+		if ($db->getErrorNum())
+		{
+			JError::raiseWarning(200, JTEXT::_('No valid database connection: ') . $db->stderr());
+			// should not stop the page here otherwise there is no way for the user to recover
+			$rows = array();
+		}
+		
+		$count = count($rows);
+		
+		$result->total 	= $total;
+		$result->rows	= $rows;
+		
+		return $result;
+		
+	}
 
 }
 
