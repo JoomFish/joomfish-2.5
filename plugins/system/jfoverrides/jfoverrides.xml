@@ -17,6 +17,7 @@
 		<filename>classes/contentlanguage.php</filename>
 		<filename>classes/language.php</filename>
 		<filename>classes/menu.php</filename>
+		<filename>classes/menusmodelitem.php</filename>
 	</files>
 	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_system_jfoverrides.ini</language>

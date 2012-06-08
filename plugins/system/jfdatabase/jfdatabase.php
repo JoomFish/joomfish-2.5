@@ -96,7 +96,41 @@ class plgSystemJFDatabase extends JPlugin
 		{
 			JError::raiseNotice('no_jf_component', JText::_('Joom!Fish component not installed correctly. Plugin not executed'));
 		}
-
+		
+		// workaround for lame Joomla not triggering after save events WONT WORK, WE NEED TO DO IT AS OVERRIDE >>>> add AFTER SAVE
+		/*$option 		= JRequest::getCmd('option');
+		
+		if ((in_array($option, array("com_menus","com_modules", "com_categories"))) && JFactory::getApplication()->isAdmin() 
+				&& JRequest::getCmd("layout") == "edit" && in_array(JRequest::getCmd("task"), array('item.apply', 'item.save', 'item.save2new', 'item.save2copy' )) )
+		{	
+			
+			$tablename 		= rtrim(str_replace('com_', '', $option), 's');
+			$reference_id 	= JRequest::getInt("jfreference_id", 0);
+			$translation_id	= JRequest::getInt("jftranslation_id", 0);
+			$tableclass = JoomFishManager::getInstance()->getContentElement($tablename)->getTableClass();
+			$table = JTable::getInstance($tableclass);
+			
+			if (intval($translation_id) > 0)
+			{
+				$table->load(intval($translation_id));
+				$isNew = false;
+			}
+			else
+			{
+				// load the original and amend
+				$table->load(intval($reference_id));
+				$key = $table->getKeyName();
+				$table->$key = 0;
+				if (is_callable(array($table, "setLocation")))
+				{
+					//$table->setLocation($table->parent_id, 'last-child');
+					$table->setLocation(intval($reference_id), 'after');
+				}
+				$isNew = true;
+			}
+			
+			$this->onContentAfterSave($option.'.'.$tablename, $table, $isNew);
+		}*/
 	}
 
 	/**
@@ -113,23 +147,35 @@ class plgSystemJFDatabase extends JPlugin
 		$this->setupJFDatabase();
 
 	}
+	
+	/*public function onContentPrepareForm($form, $data)
+    {
+       
+                if (!($form instanceof JForm)) {
+                        $this->_subject->setError('JERROR_NOT_A_FORM');
+                        return false;
+                }
+       
+                // Add the registration fields to the form.
+                JForm::addFormPath(JOOMFISH_ADMINPATH . DS . 'models' .DS. 'fields');
+                $form->loadFile('translationitem', false);
+ 
+                return true;
+     }*/       
+
 
 	function onAfterRoute()
 	{	
-		
-		if (JFactory::getApplication()->isAdmin())
-		{
-			// This plugin is only relevant for use within the frontend!
-			return;
-		}
-		
+		return;
 		// NEW SYSTEM
 		// amend editing page but only for native elements
-		//if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
-		if (!in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
+		if (in_array(JRequest::getCmd('option'), array("com_content","com_menus","com_modules", "com_categories"))) return;
+		JFactory::getLanguage()->load('com_joomfish');
 		
-		$reference_id = JRequest::getInt("id");
-		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit" && $reference_id > 0)
+		$reference_id = JRequest::getInt("id", 0);
+		$default_lang = JoomFishManager::getInstance()->getDefaultLanguage();
+		
+		if (JFactory::getApplication()->isAdmin() && JRequest::getCmd("layout") == "edit")
 		{
 			$db = JFactory::getDbo();
 			$table = "content";
@@ -154,67 +200,178 @@ class plgSystemJFDatabase extends JPlugin
 				$original = $translations[0]->reference_id;
 			}
 
+			
+			// Load the modal behavior script.
+			JHtml::_('behavior.modal', 'a.modal');
+
+		// Build the script.
+		$script = array();
+		$script[] = '	function jfSelectArticle_'.$original.'(id, title) {';
+		$script[] = '		document.id("jfreference_id").value = id;';
+		$script[] = '		document.id("'.$original.'_name").value = title;';
+		$script[] = '		SqueezeBox.close();';
+		$script[] = '	}';
+
+		// Add the script to the document head.
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+
+
+		// Setup variables for display.
+		$html	= array();
+		$link	= 'index.php?option=com_joomfish&task=translate.originallist&view=translate&layout=modal&tmpl=component&table='.$table.'&function=jfSelectArticle_'.$original;
+
+		$db	= JFactory::getDBO();
+		$db->setQuery(
+			'SELECT title' .
+			' FROM #__'.$table .
+			' WHERE id = '.(int) $original
+		);
+		$title = $db->loadResult();
+
+		if ($error = $db->getErrorMsg()) {
+			JError::raiseWarning(500, $error);
+		}
+		
+		$jfreference_id = $original;
+		if (empty($title) && $reference_id == 0) {
+			$title = JText::_('COM_JOOMFISH_SELECT_AN_ITEM');
+		} else if (empty($title)) {
+			$db	= JFactory::getDBO();
+			$db->setQuery(
+					'SELECT title' .
+					' FROM #__'.$table .
+					' WHERE id = '.(int) $item_id
+			);
+			$title = $db->loadResult();
+			$jfreference_id = 0;
+			
+		}
+		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+
+		// The current user display field.
+		$html[] = "<div class=\'fltlft\'>";
+		$html[] = "  <input type=\'text\' id=\'".$original."_name\' value=\'".$title."\' disabled=\'disabled\' size=\'35\' />";
+		$html[] = "</div>";
+		
+		
+		// The user select button.
+		$html[] = "<div class=\'button2-left\' id=\'item-select-button\' >";
+		$html[] = "  <div class=\'blank\'>";
+		$html[] = '	<a class=\"modal\" title=\''.JText::_('COM_JOOMFISH_CHANGE_ITEM').'\'  href=\''.$link.'&amp;' .JSession::getFormToken().'=1\' rel=\"{handler: \'iframe\', size: {x: 800, y: 450}}\">'.JText::_('COM_JOOMFISH_CHANGE_ITEM_BUTTON')."</a>";
+		$html[] = "  </div>";
+		$html[] = "</div>";
+		
+
+		// class='required' for client side validation
+		$class = '';
+		//if ($this->required) {
+			$class = " class=\'required modal-value\'";
+		//}
+
+		$html[] = "<input type=\'hidden\' id=\'jfreference_id\'".$class." name=\'jfreference_id\' value=\'".$jfreference_id."\' />";
+		$html = implode("", $html);
+
+			
+			$orname 		= $original.'_name';
+			$is_translation_txt = JText::_('COM_JOOMFISH_SELECTOR_IS_TRANSLATION');
+			$translation_of_txt = JText::_('COM_JOOMFISH_SELECTOR_TRANSLATION_OF');
+			$original_id_txt	= JText::_('COM_JOOMFISH_SELECTOR_ORIGINAL_ID');
+			$yes			= JText::_('JYES');
+			$no				= JText::_('JNO');
+			
 			$doc = JFactory::getDocument();
 			$script = <<<SCRIPT
 window.addEvent('domready', function() {
 	var langselect = $('jform_language');
+	var languagechanged = 0;
+	
 	if (langselect){
 		var isTranslation = $original>0;
 		var langselectli = langselect.getParent()
-		var jflangselect = new Element("select",{ name:'jftranslation', id:'jftranslation'});
-		var opt = new Element("option",{value:1, 'text':'Yes'});
-		jflangselect.appendChild(opt);
+		var jftranslation = new Element("select",{ name:'jftranslation', id:'jftranslation'});
+		var opt = new Element("option",{value:1, 'text':'$yes'});
+		jftranslation.appendChild(opt);
 		if (!isTranslation){
-			opt = new Element("option",{value:0, 'text':'No'});
+			opt = new Element("option",{value:0, 'text':'$no'});
 			opt.selected=true;
-			jflangselect.appendChild(opt);
+			jftranslation.appendChild(opt);
 		}
-		jflangselect.value= isTranslation?1:0;
-		jflangselect.addEvent('change',function(){
-			if(this.value==1){
-				$('jform_id').value = 0;
-				$('jfid').value = 0;
+		jftranslation.value= isTranslation?1:0;
+		jftranslation.addEvent('change',function(){
+			if(this.value==1){				
 				$('jform_id').readonly = false;
 				$('jform_id').removeClass('readonly');
+				if(languagechanged == 1){
+					$('jform_id').value = 0;
+				}
+				
+				$('jfreference_id_lbl').style.display="block";
+				$('$orname').getParent().style.display="block";
+				// če je nov item ali pri obstoječem spremenimo translate v 1
+				if ($('item-select-button') && (languagechanged == 0 || $reference_id == 0 )) {
+					$('item-select-button').style.display="block";
+				}
+				if($('jfid') && languagechanged == 1) {
+					$('jfid').value = 0;
+					}
+				if ($('jform_alias')) {
+					$('jform_alias').value = "";
+				}	
+							
 			}
 			else {
-				$('jform_id').value = refid;
-				$('jfid').value = refid;
+				$('jform_id').value = refid;				
 				$('jform_id').readonly = true;
 				$('jform_id').addClass('readonly');
+				$('jfreference_id_lbl').style.display="none";
+				$('$orname').getParent().style.display="none";
+
+				if ($('item-select-button')) {
+					$('item-select-button').style.display="none";
+				}
+				if($('jfid')) {
+						$('jfid').value = refid;
+					}
 			}
 		});
+		
+		var jflanglabel   = new Element("label",{id:'jftranslation-lbl', for:'jftranslation'});
+		jflanglabel.appendText("$is_translation_txt");
 			
-		var jflanglabel   = new Element("label",{id:'jftranslation-lbl', for:'jftranslation'});		
-		jflanglabel.appendText("Is Translation?");
-					
 		var refid = $('jform_id').value;
-		var jflanginput = new Element("input",{ type:'text', name:'jfreference_id', id:'jfreference_id', value:$original, readonly:'readonly'});
+		//var jflanginput = new Element("input",{ type:'text', name:'jfreference_id', id:'jfreference_id', value:$original, readonly:'readonly'});
+		//var els = 
+		var jflanginput = Elements.from("$html");			
+		var jftranslabel  = new Element("label", {for:"jfreference_id", id:"jfreference_id_lbl"});
+		jftranslabel.appendText("$translation_of_txt");
+		
 		var jforigalinput = new Element("input",{ type:'text', name:'jforiginal_id', id:'jforiginal_id', value:refid, readonly:'readonly'});
+		var jforiglabel  = new Element("label", {for:"jforiginal_id", id:"jforiginal_id_lbl"});
+		jforiglabel.appendText("$original_id_txt");
 
-		var jftranslabel  = new Element("label", {for:"jfreference_id"});
-		jftranslabel.appendText("translation of : ");
 
-		var jforiglabel  = new Element("label", {for:"jforiginal_id"});
-		jforiglabel.appendText("original id : ");
-
+		
 		var newid = false;
 		if (!$('id')){
 			// must also have a new pseudo  id to make sure replaces anything in the URL!
-			// editing existing elements don't have this 
-			var newid = new Element("input",{ type:'text', name:'id', id:'jfid', value:refid, readonly:'readonly'});		
+			// editing existing elements don't have this
+			var newid = new Element("input",{ type:'text', name:'id', id:'jfid', value:refid, readonly:'readonly'});
+			newid.style.display="none";
 			var jfnewidlabel  = new Element("label", {for:"jfid"});
 			jfnewidlabel.appendText("new id : ");
+			jfnewidlabel.style.display="none";
 		}
-
-
+		
+		
 		// new li row
 		var li = new Element('li');
 		li.appendChild(jflanglabel);
-		li.appendChild(jflangselect);
+		li.appendChild(jftranslation);
 		// translation id
 		li.appendChild(jftranslabel);
-		li.appendChild(jflanginput);
+		//li.appendChild(jflanginput);
+		jflanginput.inject(li);
+
 		// original id
 		li.appendChild(jforiglabel);
 		li.appendChild(jforigalinput);
@@ -225,29 +382,49 @@ window.addEvent('domready', function() {
 		}
 		
 		// insert it after the lang selector
-		li.inject( langselectli,'after');			
+		li.inject( langselectli,'after');
 		
-		if(langselect.value=="*"){
-			jflangselect.getParent().style.display="none";
+		if(langselect.value=="*" || langselect.value=="$default_lang"){
+			jftranslation.getParent().style.display="none";
 		}
+		
 		langselect.addEventListener("change", function(){
-			if(langselect.value=="*"){
-				jflangselect.set('value', 0);
-				jflangselect.getParent().style.display="none";
+			if(langselect.value=="*" || langselect.value=="$default_lang"){
+				jftranslation.set('value', 0);
+				jftranslation.getParent().style.display="none";
+				languagechanged = 1;
+				jftranslation.fireEvent("change");
 			}
 			else {
-				jflangselect.set('value', 1);
-				jflangselect.getParent().style.display="block";
+				jftranslation.set('value', 1);
+				jftranslation.getParent().style.display="block";
+				languagechanged = 1;
+				jftranslation.fireEvent("change");
 			}
-			
+		
 		});
-
+		
+		if ($('item-select-button') && (languagechanged == 0 || $jfreference_id==0 )) {
+					$('item-select-button').style.display="none";
+		}
+		
+		if (!isTranslation){
+				$('jfreference_id_lbl').style.display="none";
+				$('$orname').getParent().style.display="none";
+				$('item-select-button').style.display="none";
+		}
+		
 	}
+	// as html is inserted by js we need to manually fire modal
+	SqueezeBox.initialize({});
+SqueezeBox.assign($$('a.modal'), {
+parse: 'rel'
+}); 
 });
+			
 SCRIPT;
 			$doc->addScriptDeclaration($script);
 		}
-
 	}
 
 	public function onContentBeforeSave($context, &$article, $isNew)
@@ -257,7 +434,7 @@ SCRIPT;
 	public function onContentAfterSave($context, &$article, $isNew)
 	{
 		// We need this plugin to respond to the native saving of content items in the backend of Joomla
-		$tablename = $article->getTableName();
+		$tableName = $article->getTableName();
 		$this->doAfterSave($context, $article, $isNew, $tableName);
 
 	}
@@ -286,6 +463,7 @@ SCRIPT;
 		}
 		
 		$this->doAfterSave($context, $table, $isNew, "menu");
+		
 
 	}
 
@@ -373,35 +551,53 @@ SCRIPT;
 		if (strpos($table,'#__')===0){
 			$table = str_replace('#__', '', $table);
 		}
-		// if its a new translation then jfreference_id is empy
+		// if its a new translation then jfreference_id is empy		
 		$referenceid = JRequest::getInt("jfreference_id",0);
+		
 		// originalid is the id of the item being edited  !
 		$originalid = JRequest::getInt("jforiginal_id", 0);
 		$jftranslation = JRequest::getInt("jftranslation",0);
 		$keyname = $article->getKeyName();
+		
 		// don't do anything if not a translation
 		if (!$jftranslation){
 			return;
 		}
-		if ($originalid > 0)
+		
+		$jform = JRequest::getVar("jform");
+		if ($jform && isset($jform['language']))
 		{
-			$jform = JRequest::getVar("jform");
-			if ($jform && isset($jform['language']))
-			{
-				$language = $jform['language'];
-			}
-			else if (JRequest::getInt("select_language_id"))
-			{
-				$language = JRequest::getInt("select_language_id");
-				$jfm = JoomFishManager::getInstance();
-				$languages = $jfm->getLanguagesIndexedById();
-				$language = $languages[$language]->code;
-			}
-			else
-			{
+			$language = $jform['language'];
+		}
+		else if (JRequest::getInt("select_language_id"))
+		{
+			$language = JRequest::getInt("select_language_id");
+			$jfm = JoomFishManager::getInstance();
+			$languages = $jfm->getLanguagesIndexedById();
+			$language = $languages[$language]->code;
+		}
+		else
+		{
+			return;
+		}
+		
+		if ($originalid > 0)
+		{	
+			if($referenceid <= 0 || $originalid == $referenceid) {
+				//translation from existing item in default language so we need to insert new items id as transaltion id
+				// new translation so the originalid field is the id of the item that has been translated i.e. the reference id
+				$db = JFactory::getDbo();
+				$translationid = $article->$keyname;
+				$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($originalid, $translationid ," . $db->quote($table) . "," . $db->quote($language) . ")";
+				$db->setQuery($sql);
+				$success = $db->query();
+				//check out original item we were editing
+				$ortable = JTable::getInstance($table);
+				$ortable->checkIn($originalid);
+			
 				return;
-			}
-			if ($referenceid > 0)
+				
+			} else if ($referenceid > 0)
 			{
 				// existing translation
 				$db = JFactory::getDbo();
@@ -410,7 +606,7 @@ SCRIPT;
 				$success = $db->query();
 				return;
 			}
-			else
+			/*else
 			{
 				// new translation so the originalid field is the id of the item that has been translated i.e. the reference id
 				$db = JFactory::getDbo();
@@ -419,12 +615,19 @@ SCRIPT;
 				$db->setQuery($sql);
 				$success = $db->query();
 				return;
-			}
+			}*/
 		}
-		else
+		else if ($originalid == 0 && $referenceid > 0 )
 		{
-			
+			// new menu item, so we are making a new translation of an existing item
+			$db = JFactory::getDbo();
+			$translationid = $article->$keyname;
+			$sql = "replace into #__jf_translationmap (reference_id, translation_id, reference_table, language ) values ($referenceid, $translationid ," . $db->quote($table) . "," . $db->quote($language) . ")";
+			$db->setQuery($sql);
+			$success = $db->query();
+			return;
 		}
+		
 
 	}
 

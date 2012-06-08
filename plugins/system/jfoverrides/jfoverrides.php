@@ -58,10 +58,14 @@ class plgSystemJFOverrides extends JPlugin
 	public function onAfterInitialise()
 	{	
 		if(!defined('JFOVERRIDES_PLUGIN_LOCATION')) define('JFOVERRIDES_PLUGIN_LOCATION', dirname(__FILE__));
-		if(JFactory::getApplication()->isAdmin()) {			
+		if(JFactory::getApplication()->isAdmin()) {	
+			// remove *		
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/language.php', 'JFormFieldLanguage');
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/contentlanguage.php', 'JFormFieldContentLanguage');
+			// remove translated menus from root
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/adminmenuhelper.php', 'ModMenuHelper');
+			// added pre-post save events
+			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/menusmodelitem.php', 'MenusModelItem');
 		} else {
 			//JFactory::getApplication()->setLanguageFilter(false);
 			jimport('joomla.application.menu');
