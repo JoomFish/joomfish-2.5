@@ -12,7 +12,7 @@ class com_JoomfishInstallerScript
          *
          * @return void
          */
-        function install($parent) 
+        public function install($parent) 
         {
             $manifest = $parent->get("manifest");
             $parent = $parent->getParent();
@@ -73,20 +73,56 @@ class com_JoomfishInstallerScript
 				$ltp = 1;
 			}
 			
+			$query2 = $db->getQuery(true);
+			$query2->update('#__modules');
+			$where2	= null;
+			$query2->set($db->nameQuote("published")."=1");
+			$query2->set($db->nameQuote("position")."=".$db->quote('position-6'));
+			
+			$query3 = $db->getQuery(true);
+			$query3->select('id');
+			$query3->from('#__modules');
+			
 			foreach($manifest->modules->module as $module) {
 				if ($ltp ==1 ) {
 					$where .= " OR ";
 					$ltp = 0;
 				}
-				if ($ltm ==1 ) $where .= " OR ";
+				if ($ltm ==1 ) {
+					$where .= " OR ";
+					$where2 .= " OR ";
+					$where3 .= " OR ";
+				}
 				$attributes = $module->attributes();
 				$where .= $columnElement ."='".$attributes['module']."'";
-			}
-			
+				$where2 .= $db->nameQuote('module') ."='".$attributes['module']."'";
+			}			
 			
 			$query->where($where);
             $query->where("$columnType='plugin' OR $columnType='module'");
             $db->setQuery((string)$query);
+            $db->query();
+            
+            $query2->where($where2);
+            $db->setQuery((string)$query2);
+            $db->query();
+            
+            $query3->where($where2);
+            $db->setQuery((string)$query3);
+            $moduleids = $db->loadAssocList('id', 'id');
+            
+            $query4 = $db->getQuery(true);
+            
+            $insert = '#__modules_menu ('.$db->nameQuote("moduleid").','.$db->nameQuote("menuid").')
+            VALUES ';
+            $values = array();
+            foreach($moduleids AS $moduleid) {
+            	$values[] = '('.$moduleid.',0)';
+            }
+            $values = implode(',', $values);
+            $insert .= $values .' ON DUPLICATE KEY UPDATE '.$db->nameQuote("menuid").'=0;';
+            $query4->insert($insert);
+            $db->setQuery($query4);
             $db->query();
             
             // Set plugin ordering: first increase all plugins ordering numbers
@@ -120,7 +156,7 @@ class com_JoomfishInstallerScript
          *
          * @return void
          */
-        function uninstall($parent)
+        public function uninstall($parent)
         {
         	$manifest = $parent->get("manifest");
         	$parent = $parent->getParent();
@@ -197,12 +233,11 @@ class com_JoomfishInstallerScript
          * method to update the component
          *
          * @return void
-         *
-        function update($parent) 
+         */
+        public function update($parent) 
         {
-                // $parent is the class calling this method
-                echo '<p>' . JText::_('COM_JOOMFISH_UPDATE_TEXT') . '</p>';
-        }*/
+                $this->install($parent);
+        }
  
         /**
          * method to run before an install/update/uninstall method
@@ -221,7 +256,7 @@ class com_JoomfishInstallerScript
          *
          * @return void
          **/
-        function postflight($type, $parent) 
+        public function postflight($type, $parent) 
         {		
                 // $parent is the class calling this method
                 // $type is the type of change (install, update or discover_install)
