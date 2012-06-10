@@ -355,7 +355,7 @@ class JFDatabase extends interceptDB {
 	* @param string The field name of a primary key
 	* @return array If <var>key</var> is empty as sequential list of returned records.
 	*/
-	function loadAssocList( $key='', $translate=true, $language=null )
+	function loadAssocList( $key='', $column = null, $translate=true, $language=null )
 	{
 		if ($this->skipjf) return parent::loadAssocList($key);
 		$this->translate = $translate;
@@ -370,13 +370,15 @@ class JFDatabase extends interceptDB {
 
 		$pfunc = $this->profile();
 		$results = array();
-		if( $rows != null ) {
+			if( $rows != null ) {
+			
 			foreach ($rows as $row) {
+				$value = ($column) ? (isset($row->$column) ? $row->$column : get_object_vars( $row )) : get_object_vars( $row );
 				if ($key!=""){
-					$results[$row->$key] = get_object_vars( $row );
+					$results[$row->$key] = $value;
 				}
 				else {
-					$results[] = get_object_vars( $row );
+					$results[] = $value;
 				}
 			}
 			$pfunc = $this->profile($pfunc);
