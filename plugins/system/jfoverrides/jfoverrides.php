@@ -33,6 +33,8 @@
 
 /** ensure this file is being included by a parent file */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+JFactory::getLanguage()->load('com_joomfish', JPATH_ADMINISTRATOR);
+JLoader::register('JoomfishExtensionHelper', JPATH_ADMINISTRATOR  . '/components/com_joomfish/helpers/extensionHelper.php' );
 
 /*
  * Load Joomla core classes overrides and
@@ -43,7 +45,7 @@ class plgSystemJFOverrides extends JPlugin
 {
 
 	public function __construct(& $subject, $config = array())
-	{
+	{	
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 	}
@@ -57,6 +59,10 @@ class plgSystemJFOverrides extends JPlugin
 	 */
 	public function onAfterInitialise()
 	{	
+		if (JFactory::getApplication()->isSite() && !JoomfishExtensionHelper::isJoomFishActive()){
+			JError::raiseNotice('no_jf_extension', JText::_('JF_DATABASE_PLUGIN_NOT_PUBLISHED'));
+		}
+		
 		if(!defined('JFOVERRIDES_PLUGIN_LOCATION')) define('JFOVERRIDES_PLUGIN_LOCATION', dirname(__FILE__));
 		if(JFactory::getApplication()->isAdmin()) {	
 			// remove *		

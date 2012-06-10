@@ -38,7 +38,6 @@ JLoader::register('JoomfishExtensionHelper', JPATH_ADMINISTRATOR  . '/components
 JLoader::register('JFModelRoute', JPATH_ADMINISTRATOR  . '/components/com_joomfish/models/JFRoute.php' );
 
 if (!JoomfishExtensionHelper::isJoomFishActive()){
-	echo JText::_("Joomfish System Plugin not enabled");
 	return;
 }
 $db = JFactory::getDBO();

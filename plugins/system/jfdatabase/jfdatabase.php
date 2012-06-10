@@ -42,6 +42,7 @@ if (!file_exists(dirname(__FILE__) . DS . 'jfdatabase_inherit.php'))
 }
 
 jimport('joomla.filesystem.file');
+JFactory::getLanguage()->load('com_joomfish', JPATH_ADMINISTRATOR);
 
 if (JFile::exists(JPATH_SITE . DS . 'components' . DS . 'com_joomfish' . DS . 'helpers' . DS . 'defines.php'))
 {
@@ -52,7 +53,7 @@ if (JFile::exists(JPATH_SITE . DS . 'components' . DS . 'com_joomfish' . DS . 'h
 }
 else
 {
-	JError::raiseNotice('no_jf_extension', JText::_('Joom!Fish extension not installed correctly. Plugin not executed'));
+	JError::raiseNotice('no_jf_extension', JText::_('JF_COMPONENT_NOT_INSTALLED'));
 	return;
 }
 
@@ -69,9 +70,9 @@ class plgSystemJFDatabase extends JPlugin
 	 */
 	var $_config = null;
 
-	function __construct(& $subject, $config)
+	public function __construct(& $subject, $config)
 	{
-
+		
 		jimport('joomla.html.parameter');
 		parent::__construct($subject, $config);
 
@@ -94,7 +95,7 @@ class plgSystemJFDatabase extends JPlugin
 		}
 		else
 		{
-			JError::raiseNotice('no_jf_component', JText::_('Joom!Fish component not installed correctly. Plugin not executed'));
+			JError::raiseNotice('no_jf_component', JText::_('JF_COMPONENT_NOT_INSTALLED'));
 		}
 		
 		// workaround for lame Joomla not triggering after save events WONT WORK, WE NEED TO DO IT AS OVERRIDE >>>> add AFTER SAVE

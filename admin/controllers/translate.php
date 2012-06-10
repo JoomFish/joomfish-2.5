@@ -123,7 +123,7 @@ class TranslateController extends JController
 
 		JoomfishControllerHelper::setupContentElementCache();
 		if (!JoomfishControllerHelper::testSystemBotState()) {
-			echo "<div style='font-size:16px;fontF-weight:bold;color:red'>" . JText::_('MAMBOT_ERROR') . "</div>";
+			echo "<div style='font-size:16px;fontF-weight:bold;color:red'>" . JText::_('JF_DATABASE_PLUGIN_NOT_PUBLISHED') . "</div>";
 		}
 
 
