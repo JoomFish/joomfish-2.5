@@ -428,12 +428,20 @@ SCRIPT;
 		}
 	}
 
-	public function onContentBeforeSave($context, &$article, $isNew)
+	/*public function onContentBeforeSave($context, &$article, $isNew)
 	{
-	}
+	}*/
+
+	/*public function onContentBeforeSave($context, &$article, $isNew)
+	{
+	}*/
 
 	public function onContentAfterSave($context, &$article, $isNew)
-	{
+	{	
+		if (!is_a($article, 'JTable')) {
+			return;
+		}
+		
 		// We need this plugin to respond to the native saving of content items in the backend of Joomla
 		$tableName = $article->getTableName();
 		$this->doAfterSave($context, $article, $isNew, $tableName);
@@ -441,6 +449,9 @@ SCRIPT;
 	}
 
 	public function onExtensionAfterSave($context, &$table, $isNew){
+		if (!is_a($table, 'JTable')) {
+			return;
+		}
 		// We need this plugin to respond to the native saving of modules etc. in the backend of Joomla
 		$tablename = $table->getTableName();
 		$this->doAfterSave($context, $table, $isNew, $tablename);
