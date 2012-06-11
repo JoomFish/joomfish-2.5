@@ -429,11 +429,7 @@ SCRIPT;
 	}
 
 	/*public function onContentBeforeSave($context, &$article, $isNew)
-	{
-	}*/
-
-	/*public function onContentBeforeSave($context, &$article, $isNew)
-	{
+	{ // see http://joomlacode.org/gf/project/joomla/tracker/?action=TrackerItemEdit&tracker_id=8103&tracker_item_id=28654 before activating
 	}*/
 
 	public function onContentAfterSave($context, &$article, $isNew)
