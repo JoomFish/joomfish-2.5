@@ -282,8 +282,9 @@ class JoomFishManager {
 	* @return mixed The value of the configuration variable or null if not found
 	*/
 	public function getCfg( $varname , $default=null) {
+		$result = $this->componentConfig->getValue($varname,$default);
 		// Must not get the config here since if I do so dynamically it could be within a translation and really mess things up.
- 		return $this->componentConfig->getValue($varname,$default);
+ 		return $result;
 	}
 
 	/**
