@@ -138,11 +138,16 @@ class plgSystemJFDatabase extends JPlugin
 	 * During this event we setup the database and link it to the Joomla! ressources for future use
 	 * @return void
 	 */
-	function onAfterInitialise()
+	public function onAfterInitialise()
 	{
 		if (JFactory::getApplication()->isAdmin())
 		{
 			// This plugin is only relevant for use within the frontend!
+			return;
+		}
+		$dbtype = JFactory::getConfig()->getValue('dbtype','mysqli');
+		if ($dbtype != 'mysqli') {
+			JError::raiseNotice('no_jf_extension', JText::_('JF_DATABASE_DRIVER_NOT_SUPPORTED'));
 			return;
 		}
 		$this->setupJFDatabase();

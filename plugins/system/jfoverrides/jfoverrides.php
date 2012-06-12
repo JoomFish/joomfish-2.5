@@ -63,6 +63,12 @@ class plgSystemJFOverrides extends JPlugin
 			JError::raiseNotice('no_jf_extension', JText::_('JF_DATABASE_PLUGIN_NOT_PUBLISHED'));
 		}
 		
+		$dbtype = JFactory::getConfig()->getValue('dbtype','mysqli');
+		if ($dbtype != 'mysqli') {
+			JError::raiseNotice('no_jf_extension', JText::_('JF_DATABASE_DRIVER_NOT_SUPPORTED'));
+			return;
+		}
+		
 		if(!defined('JFOVERRIDES_PLUGIN_LOCATION')) define('JFOVERRIDES_PLUGIN_LOCATION', dirname(__FILE__));
 		if(JFactory::getApplication()->isAdmin()) {	
 			// remove *		
