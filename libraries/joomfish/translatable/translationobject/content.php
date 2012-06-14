@@ -30,8 +30,8 @@
  * @subpackage Models
  *
  */
-JLoader::register('TranslationObject', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'TranslationObject.php');
-JLoader::register('iJFTranslatable', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'iJFTranslatable.php');
+jimport('joomfish.translatable.translationobject');
+jimport('joomfish.translatable.translatable');
 
 
 class  TranslationObjectContent  extends TranslationObject 

@@ -514,7 +514,7 @@ class JoomFishManager {
 			// Use new Joomfish DB Cache Storage Handler but only for php 5
 			$storage = 'jfdb';
 			// Make sure we have loaded the cache stroage handler
-			JLoader::import('JCacheStorageJFDB', dirname( __FILE__ ));
+			jimport('joomfish.cache.jfdb');
 		}
 		else {
 			$storage = 'file';

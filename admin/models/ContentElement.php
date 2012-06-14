@@ -164,14 +164,19 @@ class ContentElement
 			$targetElement = $xpath->query('//reference/treatment/translationObjectModel')->item(0);
 			if (!isset($targetElement))
 			{
-				JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
+				jimport('joomfish.translatable.translationobject');
 				return 'TranslationObject';
 			}
 			$translationObjectClass = trim($targetElement->textContent);
-			JLoader::import( "models.$translationObjectClass",JOOMFISH_ADMINPATH);
+			$addon = JLoader::import( "contentelements.$translationObjectClass",JOOMFISH_ADMINPATH);
+			if (!addon) {
+				$toname = strtolower(str_ireplace('TranslationObject','',$translationObjectClass));
+				jimport('joomfish.translatable.translationobject.'.$toname);
+			}
+			
 			return $translationObjectClass;
 		}
-		JLoader::import( 'models.TranslationObject',JOOMFISH_ADMINPATH);
+		jimport('joomfish.translatable.translationobject');
 		return 'TranslationObject';
 	}
 	

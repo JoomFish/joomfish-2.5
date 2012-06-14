@@ -17,5 +17,7 @@
     	<file>joomfish.php</file>
     	<file>manager.php</file>
         <folder>cache</folder>
+        <folder>translatable</folder>
+        <folder>translatable/translationobject</folder>
     </files>
 </extension>
