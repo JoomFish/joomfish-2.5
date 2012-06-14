@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version="2.5.0" method="install">
+<extension type="component" version="2.5.0" method="upgrade">
 	<name>COM_JOOMFISH</name>
 	<license>Open Source License, GPL v2 based</license>
 	<author>Joom!Fish Project</author>
@@ -60,7 +60,6 @@
 
 	    <files folder="admin">
 		    <folder>assets</folder>
-		    <folder>classes</folder>
 		    <folder>contentelements</folder>
 		    <folder>controllers</folder>
 		    <folder>documentation</folder>
@@ -88,6 +87,9 @@
  	</administration>
 
 	<params />
+	
+	<!-- NOTE: any extension must be in subfolder/subfolder as otherwise installer will first&only pick its manifest file!-->
+	
 	<modules>
 		<module folder="modules" module="mod_jflanguageselection" name="Language Selection Module" />
 	</modules>
@@ -97,7 +99,9 @@
 		<plugin folder="plugins/system" plugin="jfrouter" name="System - JFRouter" group="system" />
 		<plugin folder="plugins/system" plugin="jfoverrides" name="System - JFOverrides" group="system" />
 	</plugins>
-
+	
+	<library folder="libraries/joomfish" library="joomfish" name="Joomfish library" />
+	
 	<check>
 		<directory>/modules</directory>
 		<directory>/plugins/content</directory>

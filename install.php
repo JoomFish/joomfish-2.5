@@ -154,7 +154,7 @@ class com_JoomfishInstallerScript
 			
 			
 			// Install library
-			/*$library	= $manifest->library;
+			$library	= $manifest->library;
 			$attributes = $library->attributes();
 			$lib = $source . DS . $attributes['folder'];
 			if ($installer->install($lib) !== false) {
@@ -165,7 +165,6 @@ class com_JoomfishInstallerScript
 				$mtype = 'error';
 			}
 			$app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
-			*/
         }
  
         /**
@@ -210,6 +209,8 @@ class com_JoomfishInstallerScript
 				$attributes = $module->attributes();
 				$where .= $columnElement ."='".$attributes['module']."'";
 			}
+			$attributes = $manifest->library->attributes();
+			$where .= " OR ".$columnElement ."='".'lib_'.$attributes['library']."'";
 			
 			$query->where($where);
 			$db->setQuery((string)$query);
@@ -227,7 +228,7 @@ class com_JoomfishInstallerScript
                 	$result = JText::_('COM_JOOMFISH_FAIL') ;
                 	$mtype = 'error';
                 }
-	       		$app->enqueueMessage( JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result , $mtype);
+	       		$app->enqueueMessage( JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
         	}
 
         	// Uninstall modules
@@ -241,22 +242,22 @@ class com_JoomfishInstallerScript
                 	$result = JText::_('COM_JOOMFISH_FAIL') ;
                 	$mtype = 'error';
                 }
-        		$app->enqueueMessage( JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result , $mtype);
+        		$app->enqueueMessage( JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
         	}
         	
         	// Uninstall library
-        	/*$library	= $manifest->library;
+        	$library	= $manifest->library;
         	$attributes = $library->attributes();
-        	$lib = $source . DS . $attributes['folder'];
-        	if ($installer->uninstall($lib) !== false) {
+        	$libID = $ids[(string)'lib_'.$attributes['library']]->extension_id;
+        	if ($installer->uninstall('library', (int)$libID) !== false) {
         		$result = JText::_('COM_JOOMFISH_SUCCESS');
         		$mtype = 'information';
         	}  else {
         		$result = JText::_('COM_JOOMFISH_FAIL') ;
         		$mtype = 'error';
         	}
-        	$app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
-        	 */
+        	$app->enqueueMessage( JText::_('COM_JOOMFISH_UNINSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
+        	
         }
  
         /**
