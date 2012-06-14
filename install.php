@@ -33,7 +33,7 @@ class com_JoomfishInstallerScript
                 	$mtype = 'error';
                 }       
                 
-                $app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['plugin'] . ': ' . $result , $mtype);
+                $app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
             }
             
             // Install modules
@@ -47,8 +47,22 @@ class com_JoomfishInstallerScript
                 	$result = JText::_('COM_JOOMFISH_FAIL') ;
                 	$mtype = 'error';
                 }
-                $app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['module'] . ': ' . $result , $mtype);
+                $app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
             }
+            
+            // Install library
+            $library	= $manifest->library;
+            $attributes = $library->attributes();
+            $lib = $source . DS . $attributes['folder'];
+            if ($installer->install($lib) !== false) {
+            	$result = JText::_('COM_JOOMFISH_SUCCESS');
+            	$mtype = 'information';
+            }  else {
+            	$result = JText::_('COM_JOOMFISH_FAIL') ;
+            	$mtype = 'error';
+            }
+            $app->enqueueMessage( JText::_('COM_JOOMFISH_INSTALL_EXTENSION') . ' ' . $attributes['name'] . ': ' . $result , $mtype);
+             
             
             $db = JFactory::getDbo();
             $tableExtensions = $db->nameQuote("#__extensions");
@@ -261,7 +275,7 @@ class com_JoomfishInstallerScript
                 // $parent is the class calling this method
                 // $type is the type of change (install, update or discover_install)
                 if ($type == 'install' || $type == 'update') {
-                	JLoader::import( 'classes.JCacheStorageJFDB',JPATH_ADMINISTRATOR.'/components/com_joomfish');
+                	jimport('joomfish.cache.jfdb');
                 	$result = JCacheStorageJfdb::setupDB();
                 }
         }

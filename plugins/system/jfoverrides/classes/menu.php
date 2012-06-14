@@ -6,7 +6,7 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-JLoader::register('JoomFishManager', JPATH_ADMINISTRATOR  . '/components/com_joomfish/classes/JoomfishManager.class.php' );
+jimport('joomfish.manager');
 JLoader::register('JFModelRoute', JPATH_ADMINISTRATOR  . '/components/com_joomfish/models/JFRoute.php' );
 jimport('joomla.application.component.model');
 /**

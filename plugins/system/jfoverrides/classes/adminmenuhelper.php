@@ -6,7 +6,7 @@
 
 // no direct access
 defined('_JEXEC') or die;
-JLoader::register('JoomFishManager', JPATH_ADMINISTRATOR  . '/components/com_joomfish/classes/JoomfishManager.class.php' );
+jimport('joomfish.manager');
 
 /**
  * @package		Joomla.Administrator

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" method="upgrade" version="2.5.0">
+    <name>Joom!Fish Library</name>
+    <libraryname>joomfish</libraryname>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<author>Klas Berlič</author>
+	<authorEmail>support@joomfish.net</authorEmail>
+	<authorUrl>http://www.joomfish.net</authorUrl>
+	<creationDate>2012-05-20</creationDate>
+	<copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
+	<version>2.5.0 beta 1</version>
+    <description> 
+    Base Joomfish classes
+    </description>
+    
+    <files>
+    	<filename>joomfish.php</filename>
+    	<filename>manager.php</filename>
+        <folder>cache</folder>
+    </files>
+</extension>

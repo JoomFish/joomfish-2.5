@@ -52,7 +52,7 @@ class CpanelController extends JController  {
 
 		// ensure DB cache table is created and up to date
 		JLoader::import( 'helpers.controllerHelper',JOOMFISH_ADMINPATH);
-		JLoader::import( 'classes.JCacheStorageJFDB',JOOMFISH_ADMINPATH);
+		jimport('joomfish.cache.jfdb');
 		JoomfishControllerHelper::checkDBCacheStructure();
 	}
 

@@ -41,8 +41,7 @@ jimport('joomla.filesystem.path');
 @ini_set("zend.ze1_compatibility_mode","Off");
 
 /** required standard extentions **/
-require_once( JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers' .DS. 'defines.php' );
-JLoader::register('JoomfishManager', JOOMFISH_ADMINPATH .DS. 'classes' .DS. 'JoomfishManager.class.php' );
+jimport('joomfish.manager');
 JLoader::register('JoomfishExtensionHelper', JOOMFISH_ADMINPATH .DS. 'helpers' .DS. 'extensionHelper.php' );
 JLoader::register('JoomFishVersion', JOOMFISH_ADMINPATH .DS. 'version.php' );
 $joomFishManager = JoomFishManager::getInstance( dirname( __FILE__ ) );

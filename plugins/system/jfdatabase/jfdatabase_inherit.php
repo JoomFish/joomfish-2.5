@@ -34,10 +34,6 @@
 // Don't allow direct linking
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
-//require_once( JPATH_SITE.'/components/com_joomfish/helpers/joomfish.class.php' );
-//require_once( JPATH_SITE."/administrator/components/com_joomfish/JoomfishManager.class.php");
-
-
 /**
  * Multi lingual Database connector class
  *

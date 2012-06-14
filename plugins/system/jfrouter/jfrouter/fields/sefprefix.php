@@ -49,7 +49,7 @@ class JFormFieldSefprefix extends JFormField
 			
 			if(JPath::find(JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers','defines.php')) {
 				require_once(JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers'.DS.'defines.php');
-				require_once( JPATH_ADMINISTRATOR .DS. 'components' .DS. 'com_joomfish' .DS. 'classes' .DS.'JoomfishManager.class.php' );
+				jimport('joomfish.manager');
 			} else {
 				JError::raiseNotice('no_jf_component', JText::_('Joom!Fish component not installed correctly. Plugin not executed'));
 			}

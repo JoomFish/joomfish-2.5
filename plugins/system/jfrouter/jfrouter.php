@@ -51,9 +51,9 @@ if ( !JFile::exists( dirname(__FILE__) .DS. 'jfrouter' .DS. 'contact.php' )) {
 }
 if(JFile::exists(JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers' .DS. 'defines.php')) {
 	require_once( JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers' .DS. 'defines.php' );
-	JLoader::register('JoomfishManager', JOOMFISH_ADMINPATH .DS. 'classes' .DS. 'JoomfishManager.class.php' );
+	jimport('joomfish.manager');
 	JLoader::register('JoomFishVersion', JOOMFISH_ADMINPATH .DS. 'version.php' );
-	JLoader::register('JoomFish', JOOMFISH_PATH .DS. 'helpers' .DS. 'joomfish.class.php' );
+	jimport('joomfish.joomfish');
 } else {
 	JError::raiseNotice('no_jf_extension', JText::_('JF_COMPONENT_NOT_INSTALLED'));
 	return;
