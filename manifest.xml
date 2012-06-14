@@ -97,10 +97,7 @@
 		<plugin folder="plugins/system" plugin="jfrouter" name="System - JFRouter" group="system" />
 		<plugin folder="plugins/system" plugin="jfoverrides" name="System - JFOverrides" group="system" />
 	</plugins>
-	
-	<library folder="library" library="joomfish" name="Joomfish library" />
 
-	
 	<check>
 		<directory>/modules</directory>
 		<directory>/plugins/content</directory>

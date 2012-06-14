@@ -14,8 +14,8 @@
     </description>
     
     <files>
-    	<filename>joomfish.php</filename>
-    	<filename>manager.php</filename>
+    	<file>joomfish.php</file>
+    	<file>manager.php</file>
         <folder>cache</folder>
     </files>
 </extension>
