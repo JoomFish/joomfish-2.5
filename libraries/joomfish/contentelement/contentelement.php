@@ -33,7 +33,7 @@
 // Don't allow direct linking
 defined('_JEXEC') or die('Restricted access');
 
-include_once(dirname(__FILE__) . DS . "ContentElementTable.php");
+jimport('joomfish.contentelement.table');
 
 /**
  * Content element class based on the xml file
@@ -169,7 +169,7 @@ class ContentElement
 			}
 			$translationObjectClass = trim($targetElement->textContent);
 			$addon = JLoader::import( "contentelements.$translationObjectClass",JOOMFISH_ADMINPATH);
-			if (!addon) {
+			if (!$addon) {
 				$toname = strtolower(str_ireplace('TranslationObject','',$translationObjectClass));
 				jimport('joomfish.translatable.translationobject.'.$toname);
 			}

@@ -35,7 +35,7 @@
 // Don't allow direct linking
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-include_once(dirname(__FILE__).DS."ContentElementTableField.php");
+jimport('joomfish.contentelement.tablefield');
 
 /**
  * Description of a content element table.

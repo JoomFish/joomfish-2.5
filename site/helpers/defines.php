@@ -40,7 +40,7 @@ if( !defined('DS') ) {
 if( !defined('JOOMFISH_PATH') ) {
 	define( 'JOOMFISH_PATH', JPATH_SITE .DS.'components'.DS.'com_joomfish' );
 	define( 'JOOMFISH_ADMINPATH', JPATH_SITE .DS.'administrator'.DS.'components'.DS.'com_joomfish' );
-	define( 'JOOMFISH_LIBPATH', JOOMFISH_ADMINPATH .DS. 'libraries' );
+	define( 'JOOMFISH_LIBPATH', JPATH_LIBRARIES .DS. 'joomfish' );
 	define( 'JOOMFISH_LANGPATH', JOOMFISH_PATH .DS. 'language' );
 	define( 'JOOMFISH_URL', '/components/com_joomfish');
 }

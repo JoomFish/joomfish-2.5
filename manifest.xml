@@ -60,7 +60,6 @@
 
 	    <files folder="admin">
 		    <folder>assets</folder>
-		    <folder>contentelements</folder>
 		    <folder>controllers</folder>
 		    <folder>documentation</folder>
 		    <folder>editors</folder>

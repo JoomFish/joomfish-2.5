@@ -18,6 +18,6 @@
     	<file>manager.php</file>
         <folder>cache</folder>
         <folder>translatable</folder>
-        <folder>translatable/translationobject</folder>
+        <folder>contentelement</folder>
     </files>
 </extension>

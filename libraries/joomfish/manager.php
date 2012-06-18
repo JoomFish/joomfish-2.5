@@ -82,7 +82,7 @@ class JoomFishManager {
 	
 	/** Standard constructor */
 	public function __construct() {
-		include_once(JOOMFISH_ADMINPATH .DS. "models".DS."ContentElement.php");
+		jimport('joomfish.contentelement.contentelement');
 
 		// now redundant
 		$this->_loadPrimaryKeyData();
@@ -179,7 +179,7 @@ class JoomFishManager {
 		// XML library
 
 		// Try to find the XML file
-		$filesindir = JFolder::files(JOOMFISH_ADMINPATH ."/contentelements" ,".xml");
+		$filesindir = JFolder::files( JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements' ,".xml");
 		if(count($filesindir) > 0)
 		{
 			$this->_contentElements = array();
@@ -187,7 +187,7 @@ class JoomFishManager {
 			{
 				unset($xmlDoc);
 				$xmlDoc = new DOMDocument();
-				if ($xmlDoc->load(JOOMFISH_ADMINPATH . "/contentelements/" . $file)) {
+				if ($xmlDoc->load( JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements' .DS. $file)) {
 					$element = $xmlDoc->documentElement;
 					if ($element->nodeName == 'joomfish') {
 						if ( $element->getAttribute('type')=='contentelement' ) {
@@ -214,7 +214,7 @@ class JoomFishManager {
 			return;
 		}
 
-		$file = JOOMFISH_ADMINPATH .'/contentelements/'.$tablename.".xml";
+		$file =  JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements'.DS. $tablename.".xml";
 		if (file_exists($file)){
 			unset($xmlDoc);
 			$xmlDoc = new DOMDocument();

@@ -45,7 +45,7 @@ function getTranslationFilters($catid, $contentElement)
 	foreach ($filterNames as $key => $value)
 	{
 		$filterType = "translation" . ucfirst(strtolower($key)) . "Filter";
-		$classFile = JPATH_SITE . "/administrator/components/com_joomfish/contentelements/$filterType.php";
+		$classFile =  JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements'.DS. "$filterType.php";
 		if (!class_exists($filterType))
 		{
 			if (file_exists($classFile))

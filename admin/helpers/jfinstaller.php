@@ -58,7 +58,7 @@ class jfInstaller {
 	*/
 	public function __construct() {
 		$this->_iswin = (substr(PHP_OS, 0, 3) == 'WIN');
-		$this->_elementdir =JPath::clean( JPATH_COMPONENT_ADMINISTRATOR. DS.'contentelements' );
+		$this->_elementdir =JPath::clean(  JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements' );
 
 	}
 

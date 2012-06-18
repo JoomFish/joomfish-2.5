@@ -245,7 +245,7 @@ class LanguagesController extends JController  {
 		$this->view->trans_defaulttext = $this->view->translations->get("defaulttext","");
 		
 		// Set the config detials for translation in the view
-		$elementfolder =JPath::clean( JPATH_ADMINISTRATOR . '/components/com_joomfish/contentelements' );
+		$elementfolder =JPath::clean(  JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements' );
 		include($elementfolder.DS."language.config.php");
 		$this->view->jf_siteconfig=$jf_siteconfig;
 
