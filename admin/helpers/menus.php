@@ -4,4 +4,6 @@
 defined('_JEXEC') or die;
 
 // Dummy file  used to load menus helper from com_menu
-include_once(JPATH_ADMINISTRATOR."/components/com_menus/helpers/menus.php");
+if (!class_exists('MenusHelper')) {
+		JLoader::register('MenusHelper', JPATH_ADMINISTRATOR.'/components/com_menus/helpers/menus.php', true);	
+}

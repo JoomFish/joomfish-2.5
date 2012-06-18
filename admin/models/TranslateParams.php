@@ -428,8 +428,14 @@ class JFModuleParams extends JObject
 		
 		// menu assignments
 		// Initiasile related data.
-		require_once JPATH_ADMINISTRATOR.'/components/com_menus/helpers/menus.php';
-		require_once JPATH_ADMINISTRATOR.'/components/com_modules/helpers/modules.php';
+		if (!class_exists('MenusHelper')) {
+				JLoader::register('MenusHelper', JPATH_ADMINISTRATOR.'/components/com_menus/helpers/menus.php', true);	
+		}
+		
+		if (!class_exists('ModulesHelper')) {
+			JLoader::register('ModulesHelper', JPATH_ADMINISTRATOR.'/components/com_modules/helpers/modules.php', true);
+		}
+		
 		$menuTypes = MenusHelper::getMenuLinks();
 		?>
 		<script type="text/javascript">
