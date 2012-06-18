@@ -154,8 +154,8 @@ class TranslateController extends JController
 				$catid = "content";
 				$contentElement = $this->_joomfishManager->getContentElement($catid);
 			}
-			JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
-			$tranFilters = getTranslationFilters($catid, $contentElement);
+			jimport('joomfish.translationfilter.translationfilter');
+			$tranFilters = translationFilter::getTranslationFilters($catid, $contentElement);
 
 			$total = $contentElement->countReferences($language_id, $tranFilters);
 
@@ -265,8 +265,8 @@ class TranslateController extends JController
 		}
 
 		// get existing filters so I can remember them!
-		JLoader::import('models.TranslationFilter', JOOMFISH_ADMINPATH);
-		$tranFilters = getTranslationFilters($catid, $contentElement);
+		jimport('joomfish.translationfilter.translationfilter');
+		$tranFilters = translationFilter::getTranslationFilters($catid, $contentElement);
 
 		// get the view
 		$this->view = $this->getView("translate");

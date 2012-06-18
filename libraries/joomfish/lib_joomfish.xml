@@ -19,5 +19,6 @@
         <folder>cache</folder>
         <folder>translatable</folder>
         <folder>contentelement</folder>
+        <folder>translationfilter</folder>
     </files>
 </extension>
