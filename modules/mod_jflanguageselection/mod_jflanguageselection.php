@@ -35,7 +35,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 JLoader::register('JoomfishExtensionHelper', JPATH_ADMINISTRATOR  . '/components/com_joomfish/helpers/extensionHelper.php' );
-JLoader::register('JFModelRoute', JPATH_ADMINISTRATOR  . '/components/com_joomfish/models/JFRoute.php' );
+jimport('joomfish.route.jfroute');
 
 if (!JoomfishExtensionHelper::isJoomFishActive()){
 	return;

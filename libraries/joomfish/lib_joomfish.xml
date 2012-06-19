@@ -20,5 +20,6 @@
         <folder>translatable</folder>
         <folder>contentelement</folder>
         <folder>translationfilter</folder>
+        <folder>route</folder>
     </files>
 </extension>

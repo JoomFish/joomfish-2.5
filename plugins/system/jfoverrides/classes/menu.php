@@ -7,7 +7,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 jimport('joomfish.manager');
-JLoader::register('JFModelRoute', JPATH_ADMINISTRATOR  . '/components/com_joomfish/models/JFRoute.php' );
+jimport('joomfish.route.jfroute');
 jimport('joomla.application.component.model');
 /**
  * JMenu class
@@ -78,7 +78,7 @@ class JMenuSite extends JMenu
 		
 		
 		// @Todo move this to plugin
-		JModel::getInstance('JFModelRoute')->fixMenuItemRoutes($this->_items, null);
+		JFRoute::getInstance()->fixMenuItemRoutes($this->_items, null);
 		
 		// throw away everything that is not * or default as the rest is there only for translations
 		$deflang = JoomFishManager::getInstance()->getDefaultLanguage();

@@ -33,7 +33,6 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
-JLoader::register('JFModel', JOOMFISH_ADMINPATH . DS . 'models' . DS . 'JFModel.php');
 JLoader::register('TableJFLanguage', JOOMFISH_ADMINPATH .DS. 'tables' .DS. 'JFLanguage.php' );
 
 /**
@@ -43,13 +42,33 @@ JLoader::register('TableJFLanguage', JOOMFISH_ADMINPATH .DS. 'tables' .DS. 'JFLa
  * @subpackage	JFModel
  */
 
-class JFModelRoute extends JFModel {
+class JFRoute {
 
 	private $_conf;
-
-	public function __construct() {
+	private static $_instance = null;
+	
+	public function __construct() 
+	{	
 		$this->_conf = JFactory::getConfig();
 	}
+	
+	
+	/**
+	 * Returns the global JFRoute object, only creating it if it
+	 * doesn't already exist.
+	 *
+	 * @return  JFRoute A JFRoute object.
+	 */
+	public static function getInstance()
+	{
+		if (empty(self::$_instance))
+		{
+			self::$_instance = new JFRoute();
+		}
+	
+		return self::$_instance;
+	}
+	
 
 	/*
 	 * Function to route given url

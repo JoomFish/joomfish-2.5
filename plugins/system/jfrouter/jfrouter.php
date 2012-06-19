@@ -58,7 +58,7 @@ if(JFile::exists(JPATH_SITE .DS. 'components' .DS. 'com_joomfish' .DS. 'helpers'
 	JError::raiseNotice('no_jf_extension', JText::_('JF_COMPONENT_NOT_INSTALLED'));
 	return;
 }
-JLoader::register('JFModelRoute', JPATH_ADMINISTRATOR  . '/components/com_joomfish/models/JFRoute.php' );
+jimport('joomfish.route.jfroute');
 jimport('joomla.application.component.model');
 
 /**
@@ -152,7 +152,7 @@ class plgSystemJFRouter extends JPlugin{
 				$uri->setVar("lang",$lang);
 				JRequest::setVar('lang', $lang );
 				// I need to discover language here since menu is loaded in router
-				JModel::getInstance('JFModelRoute')->discoverJFLanguage();
+				JFRoute::getInstance()->discoverJFLanguage();
 				// TODO fix this for HTTPS
 				$conf->setValue('config.live_site',"http://".$host);
 				$conf->setValue("joomfish.current_host",$host);
@@ -255,7 +255,7 @@ class plgSystemJFRouter extends JPlugin{
 
 						JRequest::setVar('lang', $lang);
 						// I need to discover language here since menu is loaded in router
-						JModel::getInstance('JFModelRoute')->discoverJFLanguage();
+						JFRoute::getInstance()->discoverJFLanguage();
 						return array("lang"=>$lang);
 					}
 				}
@@ -268,7 +268,7 @@ class plgSystemJFRouter extends JPlugin{
 			
 			
 		}
-		JModel::getInstance('JFModelRoute')->discoverJFLanguage();
+		JFRoute::getInstance()->discoverJFLanguage();
 		return array();
 	}
 
