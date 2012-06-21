@@ -76,11 +76,6 @@ class interceptDB extends JDatabaseMySQLi
 
 	}
 
-	function setRefTables()
-	{
-		
-	}
-
 	public function loadObjectList($key='', $class="stdClass", $translate=true, $language=null, $asObject = true, $onlytransFields = true)
 	{	
 		$this->translate = $translate;

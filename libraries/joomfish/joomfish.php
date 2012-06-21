@@ -237,7 +237,7 @@ class JoomFish
 			return;  // I can't translate myself ;-)
 		}
 
-		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $language, $keycol, & $fielddata, $querySQL, $allowfallback));
+		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, & $fielddata, $querySQL, $allowfallback, $onlytransFields));
 
 		// if onBeforeTranslation has cleaned out the list then just return at this point
 		if (strlen($ids) == 0)
@@ -352,8 +352,9 @@ class JoomFish
 				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $tablealias, $fallbacklanguage, $keycol, $fielddata, $querySQL, false, $onlytransFields);
 			}
 
-			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table, $language, $keycol, $fielddata, $querySQL, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $querySQL, $allowfallback, $onlytransFields));
 		}
+		
 
 	}
 

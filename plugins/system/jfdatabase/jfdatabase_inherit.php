@@ -53,8 +53,6 @@ class JFDatabase extends interceptDB {
 
 	/** @var array list of multi lingual tables */
 	public $mlTableList=null;
-	/** @var Internal variable to hold array of unique tablenames and mapping data*/
-	public $refTables=null;
 
 	/** @var Internal variable to hold flag about whether setRefTables is needed - JF queries don't need it */
 	public $skipSetRefTables = false;
@@ -70,7 +68,7 @@ class JFDatabase extends interceptDB {
 
 	/** Constructor
 	*/
-	function JFDatabase( $options) {
+	public function JFDatabase( $options) {
 		//if (JDEBUG) { $_PROFILER = JProfiler::getInstance('Application');$_PROFILER->mark('start jfdatabase');	}
 
 		parent::__construct($options );
@@ -93,7 +91,7 @@ class JFDatabase extends interceptDB {
 
 	public $profileData = array();
 
-	function profile($func = "", $forcestart=false){
+	public function profile($func = "", $forcestart=false){
 		if ($this->skipjf) return "";
 		//if (!$this->debug) return "";
 		// start of function
@@ -135,7 +133,7 @@ class JFDatabase extends interceptDB {
 	 *
 	 * @param string $table : tablename to test
 	 */
-	function translatedContentAvailable($table){
+	public function translatedContentAvailable($table){
 		// mltable is a union of joomfish and native translations!
 		return in_array( $table, $this->mlTableList) ;
 	}
@@ -197,7 +195,7 @@ class JFDatabase extends interceptDB {
 	 * @access public
 	 * @return int The number of rows returned from the most recent query.
 	 */
-	function getNumRows( $cur=null, $translate=true, $language=null )
+	public function getNumRows( $cur=null, $translate=true, $language=null )
 	{
 		if ($this->skipjf) return parent::getNumRows($cur);
 		$count = parent::getNumRows($cur);
@@ -205,33 +203,35 @@ class JFDatabase extends interceptDB {
 		if (!$translate) {
 			//$this->translate = false;
 			return $count;
-		}
+		}				
 
 		// setup Joomfish plugins
 		$dispatcher	   = JDispatcher::getInstance();
 		JPluginHelper::importPlugin('joomfish');
 
 		// must allow fall back for contnent table localisation to work
-		$allowfallback = true;
-		$refTablePrimaryKey = "";
-		$reference_table = "";
-		$ids="";
+		$allowfallback 		= true;
+		$onlytransFields 	= true;
+		$keycol 			= "";
+		$reference_table 	= "";
+		$tablealias 		= "";
+		$ids				= "";
+		$fielddata			= "";
 		$jfm = JoomFishManager::getInstance();
 		$this->setLanguage($language);
 		$registry = JFactory::getConfig();
 		$defaultLang = $registry->getValue("config.defaultlang");
-		if ($defaultLang == $language){
-			$rows = array($count);
-			$dispatcher->trigger('onBeforeTranslation', array (&$rows, &$ids, $reference_table, $language, $refTablePrimaryKey, $this->getRefTables(), $this->sql, $allowfallback));
-			$count = $rows[0];
-			return $count;
-		}
-
+		
 		$rows = array($count);
-
-		$dispatcher->trigger('onBeforeTranslation', array (&$rows, &$ids, $reference_table, $language, $refTablePrimaryKey, $this->getRefTables(), $this->sql, $allowfallback));
-
-		$dispatcher->trigger('onAfterTranslation', array (&$rows, &$ids, $reference_table, $language, $refTablePrimaryKey, $this->getRefTables(), $this->sql, $allowfallback));
+		
+		// @todo check whether this triggers are still necessary
+		if ($defaultLang == $language){
+			$dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
+		} else {
+			$dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
+		}
+		
 		$count = $rows[0];
 		return $count;
 	}
@@ -241,7 +241,7 @@ class JFDatabase extends interceptDB {
 	*
 	* @return The value returned in the query or null if the query failed.
 	*/
-	function loadResult( $translate=true, $language=null ) {
+	public function loadResult( $translate=true, $language=null ) {
 		if ($this->skipjf) return parent::loadResult();
 		$this->translate = $translate;
 		
@@ -275,7 +275,7 @@ class JFDatabase extends interceptDB {
 	 *
 	 * @access	public
 	 */
-	function loadResultArray($numinarray = 0,  $translate=true, $language=null){
+	public function loadResultArray($numinarray = 0,  $translate=true, $language=null){
 		
 		if ($this->skipjf)  return parent::loadResultArray($numinarray);
 		$this->translate = $translate;
@@ -322,7 +322,7 @@ class JFDatabase extends interceptDB {
 	* @access	public
 	* @return array
 	*/
-	function loadAssoc( $translate=true, $language=null) {
+	public function loadAssoc( $translate=true, $language=null) {
 		if ($this->skipjf) return parent::loadAssoc();
 		$this->translate = $translate;
 		
@@ -351,7 +351,7 @@ class JFDatabase extends interceptDB {
 	* @param string The field name of a primary key
 	* @return array If <var>key</var> is empty as sequential list of returned records.
 	*/
-	function loadAssocList( $key='', $column = null, $translate=true, $language=null )
+	public function loadAssocList( $key='', $column = null, $translate=true, $language=null )
 	{
 		if ($this->skipjf) return parent::loadAssocList($key);
 		$this->translate = $translate;
@@ -386,7 +386,7 @@ class JFDatabase extends interceptDB {
 	/**
 	* This global function loads the first row of a query into an object
 	*/
-	function loadObject($class="stdClass", $translate=true, $language=null ) {
+	public function loadObject($class="stdClass", $translate=true, $language=null ) {
 		if ($this->skipjf) return parent::loadObject($class);
 		
 		$objects = $this->loadObjectList("",$class,$translate,$language);
@@ -402,7 +402,7 @@ class JFDatabase extends interceptDB {
 	 * @param boolran $translate
 	 * @param string $language
 	 */
-	function _loadObject( $translate=true, $language=null ) {
+	private function _loadObject( $translate=true, $language=null ) {
 		return $this->loadObject('stdClass', $translate, $language);
 	}
 
@@ -412,7 +412,7 @@ class JFDatabase extends interceptDB {
 	 * @access	public
 	 * @return The first row of the query.
 	 */
-	function loadRow( $translate=true, $language=null)
+	public function loadRow( $translate=true, $language=null)
 	{
 		if ($this->skipjf) return parent::loadRow();
 		$this->translate = $translate;
@@ -447,7 +447,7 @@ class JFDatabase extends interceptDB {
 	* If <var>key</var> is not empty then the returned array is indexed by the value
 	* the database key.  Returns <var>null</var> if the query fails.
 	*/
-	function loadRowList( $key=null , $translate=true, $language=null)
+	public function loadRowList( $key=null , $translate=true, $language=null)
 	{
 		if ($this->skipjf) return parent::loadRowList($key);	
 		$this->translate = $translate;
@@ -684,19 +684,9 @@ class JFDatabase extends interceptDB {
 	function query() {
 		if ($this->skipjf) return parent::query();
 		$res = parent::query();
-		if ($res && !$this->skipSetRefTables){
-			$this->setRefTables();
-		}
 		return $this->cursor;
 	}
 
-	/** Internal function to return reference table names from an sql query
-	 *
-	 * @return	string	table name
-	 */
-	function getRefTables(){
-		return $this->refTables;
-	}
 
 	/**
 	 * Private function to get the language for a specific translation
