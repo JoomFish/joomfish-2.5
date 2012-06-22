@@ -650,8 +650,14 @@ class JFContentParams extends JObject
 		if ($paramsfieldSets)
 		{
 			foreach ($paramsfieldSets as $name => $fieldSet)
-			{
+			{	
+				if ($name == 'basic-limited') {
+					continue;
+				}
 				$label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_CONTENT_' . $name . '_FIELDSET_LABEL';
+				if ($name == 'editorConfig') {
+					$label = 'COM_CONTENT_SLIDER_EDITOR_CONFIG';
+				}
 				echo $sliders->startPanel(JText::_($label), $name . '-options');
 
 				if (isset($fieldSet->description) && trim($fieldSet->description)) :
