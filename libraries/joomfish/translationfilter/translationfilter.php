@@ -32,6 +32,8 @@
  */
 defined('_JEXEC') or die('Restricted access');
 
+jimport('joomfish.manager');
+
 class translationFilter
 {
 
@@ -73,8 +75,8 @@ class translationFilter
 	
 	public static function getTranslationFilters($catid, $contentElement)
 	{	
-		self::addIncludePath(JOOMFISH_LIBPATH .DS. 'translationfilter');
-		self::addIncludePath(JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements');
+		JoomFishManager::addIncludePath(JOOMFISH_LIBPATH .DS. 'translationfilter','translationfilter' );
+		JoomFishManager::addIncludePath(JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements', 'translationfilter');
 		
 		if (!$contentElement) {
 			return array();
@@ -98,11 +100,11 @@ class translationFilter
 				// Search for the class file in the include paths.
 				jimport('joomla.filesystem.path');
 
-				if ($path = JPath::find(self::addIncludePath(), strtolower($key) . '.php'))
+				if ($path = JPath::find(JoomFishManager::addIncludePath('','translationfilter'), strtolower($key) . '.php'))
 				{
 					include_once $path;
 				}
-				else if ($path = JPath::find(self::addIncludePath(), $filterType . '.php'))
+				else if ($path = JPath::find(JoomFishManager::addIncludePath('','translationfilter'), $filterType . '.php'))
 				{
 					include_once $path;
 				}
@@ -139,29 +141,5 @@ class translationFilter
 
 	}
 	
-	/**
-	 * Add a directory where translationFilter should search for handlers. You may
-	 * either pass a string or an array of directories.
-	 *
-	 * @param   string  $path  A path to search.
-	 *
-	 * @return  array   An array with directory elements
-	 */
-	
-	public static function addIncludePath($path = '')
-	{
-		static $paths;
-	
-		if (!isset($paths))
-		{
-			$paths = array();
-		}
-		if (!empty($path) && !in_array($path, $paths))
-		{
-			jimport('joomla.filesystem.path');
-			array_unshift($paths, JPath::clean($path));
-		}
-		return $paths;
-	}
 
 }

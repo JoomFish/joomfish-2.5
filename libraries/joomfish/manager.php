@@ -531,4 +531,29 @@ class JoomFishManager {
 		$this->_cache[$lang] = JCache::getInstance( "callback", $options );
 		return $this->_cache[$lang];
 	}
+	
+	/**
+	 * Add a directory where we should search for handlers. You may
+	 * either pass a string or an array of directories.
+	 *
+	 * @param   string  $path  A path to search.
+	 *
+	 * @return  array   An array with directory elements
+	 */
+	
+	public static function addIncludePath($path = '', $type='manager')
+	{
+		static $paths;
+	
+		if (!isset($paths[$type]))
+		{
+			$paths[$type] = array();
+		}
+		if (!empty($path) && !in_array($path, $paths[$type]))
+		{
+			jimport('joomla.filesystem.path');
+			array_unshift($paths[$type], JPath::clean($path));
+		}
+		return $paths[$type];
+	}
 }
