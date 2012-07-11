@@ -21,5 +21,6 @@
         <folder>contentelement</folder>
         <folder>translationfilter</folder>
         <folder>route</folder>
+        <folder>form</folder>
     </files>
 </extension>
