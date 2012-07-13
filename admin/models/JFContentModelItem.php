@@ -35,8 +35,16 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 include_once(JPATH_ADMINISTRATOR."/components/com_content/models/article.php");
 
 
-class JFTempContentModelItem extends ContentModelArticle {
+class JFContentModelItem  extends ContentModelArticle {
 	
+	
+	
+	public function __construct($config = array())
+	{
+		// Must set option value to override constructors attempts to find it!
+		$this->option  = "com_content";
+		return parent::__construct($config);
+	}
 	
 	/**
 	 * Overload Method to get a form object - we MUST NOT use JPATH_COMPONENT
@@ -109,20 +117,9 @@ class JFTempContentModelItem extends ContentModelArticle {
 
 		return $form;
 	}
-}
 	
 
-	
-class JFContentModelItem extends JFTempContentModelItem {
-	
-	public function __construct($config = array())
-	{
-		// Must set option value to override constructors attempts to find it!
-		$this->option  = "com_content";
-		return parent::__construct($config);
-	}
-
-	function &getItem($translation=null)
+	public function getItem($translation=null)
 	{
 		$item = parent::getItem();
 		return $item;
@@ -169,7 +166,7 @@ class JFContentModelItem extends JFTempContentModelItem {
 
 	
 }
-class JFDefaultContentModelItem extends JFTempContentModelItem {
+/*class JFDefaultContentModelItem extends JFTempContentModelItem {
 
 	function &getItem()
 	{
@@ -193,5 +190,5 @@ class JFDefaultContentModelItem extends JFTempContentModelItem {
 		return $item;
 	}
 
-}
+}*/
 ?>

@@ -35,8 +35,14 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 include_once(JPATH_ADMINISTRATOR."/components/com_menus/models/item.php");
 
 
-class JFTempMenusModelItem extends MenusModelItem {
+class JFMenusModelItem extends MenusModelItem {
 	
+	public function __construct($config = array())
+	{
+		// Must set option value to override constructors attempts to find it!
+		$this->option  = "com_menus";
+		return parent::__construct($config);
+	}
 	
 	/**
 	 * Overload Method to get a form object - we MUST NOT use JPATH_COMPONENT
@@ -53,7 +59,7 @@ class JFTempMenusModelItem extends MenusModelItem {
 	 * @since   11.1
 	 */
 	protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
-	{
+	{  
 		// Handle the optional arguments.
 		$options['control']	= JArrayHelper::getValue($options, 'control', false);
 
@@ -109,20 +115,9 @@ class JFTempMenusModelItem extends MenusModelItem {
 
 		return $form;
 	}
-}
-	
 
 	
-class JFMenusModelItem extends JFTempMenusModelItem {
-	
-	public function __construct($config = array())
-	{
-		// Must set option value to override constructors attempts to find it!
-		$this->option  = "com_menus";
-		return parent::__construct($config);
-	}
-	
-	function &getItem($translation=null)
+	public function getItem($translation=null)
 	{
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_menus/tables');
 		$table = clone(parent::getItem());
@@ -167,7 +162,7 @@ class JFMenusModelItem extends JFTempMenusModelItem {
 
 	
 }
-class JFDefaultMenusModelItem extends JFTempMenusModelItem {
+/*class JFDefaultMenusModelItem extends JFTempMenusModelItem {
 
 	function &getItem($pk = null)
 	{
@@ -192,5 +187,5 @@ class JFDefaultMenusModelItem extends JFTempMenusModelItem {
 		return $item;
 	}
 
-}
+}*/
 ?>

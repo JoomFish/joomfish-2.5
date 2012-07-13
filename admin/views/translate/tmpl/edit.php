@@ -49,8 +49,8 @@ $select_language_id = $this->select_language_id;
 $elementTable = $this->translationObject->getTable();
 $option = JRequest::getCmd("option");
 
-ini_set('xdebug.var_display_max_children', 3000 );
-ini_set('xdebug.var_display_max_depth', 3000 );
+/*ini_set('xdebug.var_display_max_children', 3000 );
+ini_set('xdebug.var_display_max_depth', 3000 );*/
 
 // Should use CSS for image waps - in the meantime to this.
 //$jsfile = '<script language="javascript" type="text/javascript" src="'.JURI::root().'/includes/js/mambojavascript.js" ></script>';
@@ -323,27 +323,16 @@ else {
 				<input type="hidden" name="origValue_<?php echo $field->Name;?>" value='<?php echo md5( $field->originalValue );?>' />
 					    <textarea  name="origText_<?php echo $field->Name;?>" style="display:none"><?php echo $field->originalValue;?></textarea>
 				<input type="hidden" name="id_<?php echo $field->Name;?>" value="<?php echo $translationContent->id;?>" />
-			      <!--
-				  // We will have to use this method for JForm originals and defaults!
-			      <iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=orig&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>
-			      <iframe src="<?php echo JRoute::_("index.php?option=$option&task=translate.paramsiframe&id=".$translationContent->reference_id."&type=default&tmpl=component&catid=".$translationContent->reference_table."&lang=".$select_language_id,false);?>" ></iframe>
-			      //-->
+
 			      <?php
-			      JLoader::import( 'models.TranslateParams',JOOMFISH_ADMINPATH);
-			      $tpclass = "TranslateParams_".$elementTable->Name;
-			      if (!class_exists($tpclass)){
-			      	$tpclass = "TranslateParams";
-			      }
-			      $transparams = new $tpclass($field->originalValue,$translationContent->value, $field->Name,$elementTable->Fields);
-			      // comment lut if using iframes above
-			      //$transparams->showOriginal();
-			      //$transparams->showDefault();
+			     	jimport('joomfish.translateparams.translateparams');
+				 	$transparams = TranslateParams::getTranslateParams($elementTable->Name, $field->originalValue, $translationContent->value, $field->Name,$elementTable->Fields);
 				  
-				// TODO sort out default value for author in params when editing new translation
-				$retval = $transparams->editTranslation();
-				if ($retval){
-					$editorFields[] = $retval;
-				}
+					// TODO sort out default value for author in params when editing new translation
+					$retval = $transparams->editTranslation();
+					if ($retval){
+						$editorFields[] = $retval;
+					}
 				?>
 		      </td>
 		    </tr>

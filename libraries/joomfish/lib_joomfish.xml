@@ -22,5 +22,6 @@
         <folder>translationfilter</folder>
         <folder>route</folder>
         <folder>form</folder>
+        <folder>translateparams</folder>
     </files>
 </extension>
