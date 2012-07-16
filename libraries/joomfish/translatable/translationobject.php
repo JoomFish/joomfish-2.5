@@ -243,7 +243,15 @@ class TranslationObject implements iJFTranslatable
 				$field->translationContent = $fieldContent;
 			}
 			else if ($field->Type == "params" && isset($formArray["jform"][$field->Name]))
-			{
+			{	
+				// unset all original parameters before they are saved
+				// @todo implement full JForm parameters filtering
+				foreach ($formArray["jform"][$field->Name] AS $checkname=>$checkfield) {
+					if (strstr($checkname, '_orig')) {
+						unset ($formArray["jform"][$field->Name][$checkname]);
+					}
+				}
+				
 				$translationValue = $formArray["jform"][$field->Name];
 
 				if ($field->posthandler != "")
