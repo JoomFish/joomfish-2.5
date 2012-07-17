@@ -12,12 +12,8 @@
 	<files>
 		<filename plugin="jfoverrides">jfoverrides.php</filename>
 		<filename>index.html</filename>
-		<filename>classes/index.html</filename>
-		<filename>classes/adminmenuhelper.php</filename>
-		<filename>classes/contentlanguage.php</filename>
-		<filename>classes/language.php</filename>
-		<filename>classes/menu.php</filename>
-		<filename>classes/menusmodelitem.php</filename>
+		<folder>classes</folder>
+		<folder>classes/originals</folder>
 	</files>
 	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_system_jfoverrides.ini</language>

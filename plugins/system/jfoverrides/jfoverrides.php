@@ -78,6 +78,9 @@ class plgSystemJFOverrides extends JPlugin
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/adminmenuhelper.php', 'ModMenuHelper');
 			// added pre-post save events
 			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/menusmodelitem.php', 'MenusModelItem');
+			// home menu allow also default lang not just *
+			$this->_requireClassFile (JFOVERRIDES_PLUGIN_LOCATION.'/classes/tablemenu.php', 'JTableMenu', true);
+
 		} else {
 			//JFactory::getApplication()->setLanguageFilter(false);
 			jimport('joomla.application.menu');
