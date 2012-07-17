@@ -159,6 +159,9 @@ class JMenuSite extends JMenu
 		elseif (array_key_exists('*', $this->_default)) {
 			return $this->_items[$this->_default['*']];
 		}
+		elseif (array_key_exists(JoomFishManager::getDefaultLanguage(), $this->_default)) {
+			return $this->_items[$this->_default[JoomFishManager::getDefaultLanguage()]];
+		}
 		else {
 			return 0;
 		}
