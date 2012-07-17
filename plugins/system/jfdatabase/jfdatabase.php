@@ -460,10 +460,10 @@ SCRIPT;
 	
 	public function onMenuAfterSave($context, &$table, $isNew, $elementTable)
 	{	
-		$data = JRequest::getVar("jform", array());
+		//$data = JRequest::getVar("jform", array());
 		
 		foreach ($elementTable->Fields AS $Field) {
-			if ($Field->Name == "home" && $Field->translationContent->original_text == "1") {
+			if ($Field->Name == "home" && JRequest::getVar('origText_home') == "1") {
 				$db = JFactory::getDbo();
 
 			$query = $db->getQuery(true);
