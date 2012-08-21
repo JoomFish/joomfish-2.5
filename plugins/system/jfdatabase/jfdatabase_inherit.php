@@ -213,6 +213,7 @@ class JFDatabase extends interceptDB {
 		$allowfallback 		= true;
 		$onlytransFields 	= true;
 		$keycol 			= "";
+		$idkey				= "";
 		$reference_table 	= "";
 		$tablealias 		= "";
 		$ids				= "";
@@ -226,10 +227,10 @@ class JFDatabase extends interceptDB {
 		
 		// @todo check whether this triggers are still necessary
 		if ($defaultLang == $language){
-			$dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
 		} else {
-			$dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
-			$dispatcher->trigger('onAfterTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $this->sql, $allowfallback, $onlytransFields));
 		}
 		
 		$count = $rows[0];

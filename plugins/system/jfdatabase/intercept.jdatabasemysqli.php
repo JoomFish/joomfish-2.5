@@ -115,7 +115,7 @@ class interceptDB extends JDatabaseMySQLi
 		}
 		else
 		{	
-			while ($row = mysqli_fetch_row($cur))
+			while ($row = mysqli_fetch_array($cur, MYSQLI_BOTH))
 			{
 				$jfdata[] = $row;
 			}

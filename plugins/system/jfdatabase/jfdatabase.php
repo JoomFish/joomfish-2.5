@@ -644,7 +644,7 @@ SCRIPT;
 
 	}
 
-	function onAfterRender()
+	public function onAfterRender()
 	{
 		if (JFactory::getApplication()->isAdmin())
 		{
@@ -670,7 +670,7 @@ SCRIPT;
 
 	}
 
-	function sortprofile($a, $b)
+	protected function sortprofile($a, $b)
 	{
 		return $a["total"] >= $b["total"] ? -1 : 1;
 
@@ -681,7 +681,7 @@ SCRIPT;
 	 * Which connector is used and which technique is based on the extension configuration
 	 * @return void
 	 */
-	function setupJFDatabase()
+	protected function setupJFDatabase()
 	{
 		if (file_exists(dirname(__FILE__) . DS . 'jfdatabase_inherit.php'))
 		{
@@ -717,8 +717,6 @@ SCRIPT;
 			JFactory::$database = null;
 			JFactory::$database = $db;
 
-			$test = JFactory::getDBO();
-
 			$conf->setValue('config.mbf_content', 1);
 			$conf->setValue('config.multilingual_support', 1);
 		}
@@ -729,9 +727,26 @@ SCRIPT;
 	 * easy access and prepare certain information.
 	 * @access private
 	 */
-	function jfInitialize()
+	public function jfInitialize()
 	{
 		
 	}
+	
+	// @Todo move this to specific joomfish plugins
+	public function onBeforeTranslationProcess (&$rows, $language, &$fielddata, $querySQL, $onlytransFields) {
+		if (stristr($querySQL, 'LEFT JOIN #__categories AS c on c.id = a.catid')) {
+
+				$previouskey = null; 
+				foreach ($rows[0] as $key => $value) {
+					if (is_string($key) && $key == 'catid') {
+						$idindex = (int)$previouskey;
+						break;
+					}
+					$previouskey = $key;
+				}
+			$fielddata['alias_c']['idindex'] = $idindex;
+		}
+	}
+	
 
 }

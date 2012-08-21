@@ -95,7 +95,11 @@ class JoomFish
 		}
 
 		$fielddata = JoomFish::getTablesIdsAndFields($fields);
-
+		
+		$dispatcher = JDispatcher::getInstance();
+		JPluginHelper::importPlugin('joomfish');
+		$dispatcher->trigger('onBeforeTranslationProcess', array(&$rows, $language, &$fielddata, $querySQL, $onlytransFields));
+		
 		// If I write content in non-default language then this skips the translation!
 		//if($language == $defaultLang) return $rows;
 		$rowsLanguage = $language;
@@ -147,7 +151,7 @@ class JoomFish
 
 				if (!$jfManager->getContentElement($table) || $jfManager->getContentElement($table)->getTarget() == "joomfish")
 				{
-					JoomFish::translateListArrayWithIDs($rows, $idstring, $table, $reftable, $language, $keycol, $fielddata, $querySQL);
+					JoomFish::translateListArrayWithIDs($rows, $idstring, $table, $reftable, $language, $keycol, $idkey, $fielddata, $querySQL);
 				}
 				else
 				{
@@ -219,7 +223,7 @@ class JoomFish
 	 * @param boolean $allowfallback
 	 * @param boolean only translate translatable fields
 	 */
-	public static function translateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, & $fielddata, $querySQL, $allowfallback=true, $onlytransFields = true)
+	public static function translateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $querySQL, $allowfallback=true, $onlytransFields = true)
 	{
 
 		$registry = JFactory::getConfig();
@@ -237,7 +241,7 @@ class JoomFish
 			return;  // I can't translate myself ;-)
 		}
 
-		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, & $fielddata, $querySQL, $allowfallback, $onlytransFields));
+		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $querySQL, $allowfallback, $onlytransFields));
 
 		// if onBeforeTranslation has cleaned out the list then just return at this point
 		if (strlen($ids) == 0)
@@ -349,10 +353,10 @@ class JoomFish
 			if ($allowfallback && count($fallbackrows) > 0)
 			{
 				$fallbackids = implode($fallbackids, ",");
-				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $tablealias, $fallbacklanguage, $keycol, $fielddata, $querySQL, false, $onlytransFields);
+				JoomFish::translateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $tablealias, $fallbacklanguage, $keycol, $idkey, $fielddata, $querySQL, false, $onlytransFields);
 			}
 
-			$dispatcher->trigger('onAfterTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, &$fielddata, $querySQL, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, &$ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $querySQL, $allowfallback, $onlytransFields));
 		}
 		
 
@@ -369,7 +373,7 @@ class JoomFish
 	 * @param string $querySQL
 	 * @param boolean $allowfallback
 	 */
-	public static function nativeTranslateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $pk, & $fielddata, $querySQL, $allowfallback=true, $onlytransFields = true)
+	public static function nativeTranslateListArrayWithIDs(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $querySQL, $allowfallback=true, $onlytransFields = true)
 	{
 		$registry = JFactory::getConfig();
 		$defaultLang = $registry->getValue("config.defaultlang");
@@ -381,7 +385,7 @@ class JoomFish
 		$dispatcher = JDispatcher::getInstance();
 		JPluginHelper::importPlugin('joomfish');
 
-		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, &$ids, $reference_table, $language, $keycol, $pk, $fielddata, $querySQL, $allowfallback, $onlytransFields));
+		$results = $dispatcher->trigger('onBeforeTranslation', array(&$rows, $ids, $reference_table, $tablealias, $language, $keycol, $idkey, &$fielddata, $querySQL, $allowfallback, $onlytransFields));
 
 		// if onBeforeTranslation has cleaned out the list then just return at this point
 		if (strlen($ids) == 0)
@@ -422,7 +426,7 @@ class JoomFish
 			$published = $user->authorise('core.publish', 'com_joomfish') ? "\n	AND $published=1" : "";
 			
 			$sql = "SELECT tab.*, tmap.reference_id, tmap.translation_id FROM #__$reference_table as tab"
-					. "\n LEFT JOIN #__jf_translationmap AS tmap ON tmap.reference_table = " . $db->quote($reference_table) . "   AND tmap.translation_id = tab.$pk AND tmap.language= " . $db->quote($languages[$language]->code)
+					. "\n LEFT JOIN #__jf_translationmap AS tmap ON tmap.reference_table = " . $db->quote($reference_table) . "   AND tmap.translation_id = tab.$idkey AND tmap.language= " . $db->quote($languages[$language]->code)
 					. "\n  WHERE tmap.reference_id IN($ids)"
 					//. "\nWHERE tab.language=" . $db->quote($languages[$language]->code)
 					. $published
@@ -516,10 +520,10 @@ class JoomFish
 			if ($allowfallback && count($fallbackrows) > 0)
 			{
 				$fallbackids = implode($fallbackids, ",");
-				JoomFish::nativeTranslateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $tablealias, $fallbacklanguage, $keycol, $pk, $fielddata, $querySQL, false, $onlytransFields);
+				JoomFish::nativeTranslateListArrayWithIDs($fallbackrows, $fallbackids, $reference_table, $tablealias, $fallbacklanguage, $keycol, $idkey, $fielddata, $querySQL, false, $onlytransFields);
 			}
 
-			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table,  $language, $keycol, $pk, $fielddata, $querySQL, $allowfallback, $onlytransFields));
+			$dispatcher->trigger('onAfterTranslation', array(&$rows, $ids, $reference_table,  $language, $keycol, $idkey, &$fielddata, $querySQL, $allowfallback, $onlytransFields));
 		}
 
 	}
