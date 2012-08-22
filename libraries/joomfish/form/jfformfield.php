@@ -60,6 +60,7 @@ class JFFormField extends JFormField {
 
 	public function set($name, $value) {
 		$this->obj->$name = $value;
+		$this->$name = $value;
 	}
 
 	public function __get($name) {
@@ -68,6 +69,7 @@ class JFFormField extends JFormField {
 
 	public function __set($name, $value) {
 		$this->obj->$name = $value;
+		$this->$name = $value;
 	}
 
 	protected function getInput() {

@@ -61,6 +61,7 @@ class JFForm extends JForm {
 	
 	public function set($name, $value) {
 		$this->obj->$name = $value;
+		$this->$name = $value;
 	}
 	
 	public function __get($name) {
@@ -69,6 +70,7 @@ class JFForm extends JForm {
 	
 	public function __set($name, $value) {
 		$this->obj->$name = $value;
+		$this->$name = $value;
 	}
 		
 }
