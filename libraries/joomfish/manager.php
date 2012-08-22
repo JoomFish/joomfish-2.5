@@ -48,7 +48,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 */
 class JoomFishManager {
 	/** @var array of all known content elements and the reference to the XML file */
-	private $_contentElements;
+	private $_contentElements = array();
 
 	/** @static string Content type which can use default values */
 	public static $DEFAULT_CONTENTTYPE='content';
@@ -176,26 +176,32 @@ class JoomFishManager {
 	 * we get lots of incomplete classes from the unserialisation
 	*/
 	private function _loadContentElements() {
-		// XML library
 
-		// Try to find the XML file
-		$filesindir = JFolder::files( JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements' ,".xml");
-		if(count($filesindir) > 0)
-		{
-			$this->_contentElements = array();
-			foreach($filesindir as $file)
+		self::addIncludePath(JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements', 'contentelements');
+		self::addIncludePath(JOOMFISH_ADMINPATH .DS.  'contentelements', 'contentelements');
+		
+		$contentelementlocations = self::addIncludePath('', 'contentelements');
+		
+		foreach ($contentelementlocations as $location) {
+			// Try to find the XML file
+			$filesindir = JFolder::files( $location ,".xml");
+			if(count($filesindir) > 0)
 			{
-				unset($xmlDoc);
-				$xmlDoc = new DOMDocument();
-				if ($xmlDoc->load( JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements' .DS. $file)) {
-					$element = $xmlDoc->documentElement;
-					if ($element->nodeName == 'joomfish') {
-						if ( $element->getAttribute('type')=='contentelement' ) {
-							$nameElements = $element->getElementsByTagName('name');
-							$nameElement = $nameElements->item(0);
-							$name = strtolower( trim($nameElement->textContent) );
-							$contentElement = new ContentElement( $xmlDoc );
-							$this->_contentElements[$contentElement->getTableName()] = $contentElement;
+
+				foreach($filesindir as $file)
+				{
+					unset($xmlDoc);
+					$xmlDoc = new DOMDocument();
+					if ($xmlDoc->load( $location .DS. $file)) {
+						$element = $xmlDoc->documentElement;
+						if ($element->nodeName == 'joomfish') {
+							if ( $element->getAttribute('type')=='contentelement' ) {
+								$nameElements = $element->getElementsByTagName('name');
+								$nameElement = $nameElements->item(0);
+								$name = strtolower( trim($nameElement->textContent) );
+								$contentElement = new ContentElement( $xmlDoc );
+								$this->_contentElements[$contentElement->getTableName()] = $contentElement;
+							}
 						}
 					}
 				}
@@ -213,8 +219,11 @@ class JoomFishManager {
 		if (array_key_exists($tablename,$this->_contentElements)){
 			return;
 		}
-
-		$file =  JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements'.DS. $tablename.".xml";
+		
+		$contentelementlocations = self::addIncludePath('', 'contentelements');
+		
+		foreach ($contentelementlocations as $location) {
+		$file =  $location .DS. $tablename.".xml";
 		if (file_exists($file)){
 			unset($xmlDoc);
 			$xmlDoc = new DOMDocument();
@@ -231,6 +240,8 @@ class JoomFishManager {
 					}
 				}
 			}
+			break;
+		}
 		}
 		return null;
 	}
