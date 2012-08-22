@@ -220,6 +220,9 @@ class JoomFishManager {
 			return;
 		}
 		
+		self::addIncludePath(JOOMFISH_LIBPATH .DS. 'contentelement' .DS. 'contentelements', 'contentelements');
+		self::addIncludePath(JOOMFISH_ADMINPATH .DS.  'contentelements', 'contentelements');
+		
 		$contentelementlocations = self::addIncludePath('', 'contentelements');
 		
 		foreach ($contentelementlocations as $location) {
