@@ -13,7 +13,6 @@
 		<filename plugin="jfoverrides">jfoverrides.php</filename>
 		<filename>index.html</filename>
 		<folder>classes</folder>
-		<folder>classes/originals</folder>
 	</files>
 	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_system_jfoverrides.ini</language>
