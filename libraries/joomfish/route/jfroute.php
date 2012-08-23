@@ -123,9 +123,17 @@ class JFRoute {
 
 		JFactory::$language = null; // reset language instance as JFDatabase->setLanguage uses  JFactory::getLanguage()
 		
-		// get translated menu
+		// get translated menu and categories
 		$menu		= JFactory::getApplication()->getMenu();
 		$menu->__construct(); // force re-loading of the menu
+		if (isset($vars['id'])) {
+			$extension		= 'Content';
+			if (isset($vars['option'])) {
+				$extension	= ucfirst(str_ireplace('com_', '', $vars['option']));
+			} 
+			$categories = JCategories::getInstance($extension);
+			$categories->get((int)$vars['id'], true); // force re-loading of the category
+		}
 		
 		// fix item routes for this item as routing is based on active menu $item->route
 		// and translated query doesn't change menu routes
@@ -148,7 +156,9 @@ class JFRoute {
 		$this->switchJoomlaLanguageLongcode($currentJoomlaLang);
 		JFactory::$language = null;
 		$menu->__construct();
-		
+		if (isset($vars['id'])) {
+			$categories->get((int)$vars['id'], true);
+		}
 		// fix url if we are using sef domains
 		$this->prefixToHost($routedurl);
 		
