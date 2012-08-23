@@ -213,9 +213,7 @@ class JoomFishManager {
 	 * Loading of specific XML files
 	*/
 	private function _loadContentElement($tablename) {
-		if (!is_array($this->_contentElements)){
-			$this->_contentElements = array();
-		}
+
 		if (array_key_exists($tablename,$this->_contentElements)){
 			return;
 		}
@@ -256,7 +254,7 @@ class JoomFishManager {
 	 * @return unknown
 	 */
 	public function getContentElements( $reload=false ) {
-		if( !isset( $this->_contentElements ) || $reload ) {
+		if( empty( $this->_contentElements ) || $reload ) {
 			$this->_loadContentElements();
 		}
 		return $this->_contentElements;
@@ -267,7 +265,7 @@ class JoomFishManager {
 	*/
 	public function getContentElement( $key ) {
 		$element = null;
-		if( isset($this->_contentElements) &&  array_key_exists( strtolower($key), $this->_contentElements ) ) {
+		if( !empty($this->_contentElements) &&  array_key_exists( strtolower($key), $this->_contentElements ) ) {
 			$element = $this->_contentElements[ strtolower($key) ];
 		}
 		else {
