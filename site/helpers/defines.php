@@ -43,5 +43,6 @@ if( !defined('JOOMFISH_PATH') ) {
 	define( 'JOOMFISH_LIBPATH', JPATH_LIBRARIES .DS. 'joomfish' );
 	define( 'JOOMFISH_LANGPATH', JOOMFISH_PATH .DS. 'language' );
 	define( 'JOOMFISH_URL', '/components/com_joomfish');
+	define( 'JOOMFISH_DEVMODE', false);
 }
 ?>

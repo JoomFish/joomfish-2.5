@@ -39,29 +39,37 @@ defined('_JEXEC') or die('Restricted access'); ?>
 			<?php
 			$link = 'index.php?option=com_joomfish&amp;task=translate.overview';
 			$this->_quickiconButton( $link, 'icon-48-translation.png', JText::_( 'TRANSLATION' ) );
-
-			$link = 'index.php?option=com_joomfish&amp;task=translate.orphans';
-			$this->_quickiconButton( $link, 'icon-48-orphan.png', JText::_( 'ORPHANS' ) );
-
-			$link = 'index.php?option=com_joomfish&amp;task=manage.overview';
-			$this->_quickiconButton( $link, 'icon-48-manage.png', JText::_( 'MANAGE_TRANSLATIONS' ) );
-
-			$link = 'index.php?option=com_joomfish&amp;task=statistics.overview';
-			$this->_quickiconButton( $link, 'icon-48-statistics.png', JText::_( 'STATISTICS' ) );
-
-			echo '<div style="clear: both;" />';
-
+			
 			$link = 'index.php?option=com_joomfish&amp;task=languages.show';
 			$this->_quickiconButton( $link, 'icon-48-language.png', JText::_( 'LANGUAGE_CONFIGURATION' ) );
 
 			$link = 'index.php?option=com_joomfish&amp;task=elements.show';
 			$this->_quickiconButton( $link, 'icon-48-extension.png', JText::_( 'CONTENT_ELEMENTS' ) );
+			
+			
+			$link = 'index.php?option=com_joomfish&amp;task=help.show';
+			$this->_quickiconButton( $link, 'icon-48-help.png', JText::_( 'HELP_AND_HOWTO' ) );
+			
+			echo '<div style="clear: both;" />';
+			
+			if (JOOMFISH_DEVMODE == true) {
+				$link = 'index.php?option=com_joomfish&amp;task=translate.orphans';
+				$this->_quickiconButton( $link, 'icon-48-orphan.png', JText::_( 'ORPHANS' ) );
+			}
+			
+			if (JOOMFISH_DEVMODE == true) {
+				$link = 'index.php?option=com_joomfish&amp;task=statistics.overview';
+				$this->_quickiconButton( $link, 'icon-48-statistics.png', JText::_( 'STATISTICS' ) );
+			}
+			
+			if (JOOMFISH_DEVMODE == true) {
+				$link = 'index.php?option=com_joomfish&amp;task=manage.overview';
+				$this->_quickiconButton( $link, 'icon-48-manage.png', JText::_( 'MANAGE_TRANSLATIONS' ) );
+			}
 
 			$link = 'index.php?option=com_joomfish&amp;task=plugin.show';
 			$this->_quickiconButton( $link, 'icon-48-plugin.png', JText::_( 'MANAGE_PLUGINS' ) );
-
-			$link = 'index.php?option=com_joomfish&amp;task=help.show';
-			$this->_quickiconButton( $link, 'icon-48-help.png', JText::_( 'HELP_AND_HOWTO' ) );
+		
 			?>
 		</div>
 		</td>

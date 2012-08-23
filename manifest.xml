@@ -49,9 +49,9 @@
 	    <submenu>
 	      <menu link="option=com_joomfish" img="components/com_joomfish/assets/images/icon-16-cpanel.png">com_joomfish_control_panel</menu>
 	      <menu link="option=com_joomfish&amp;task=translate.overview" img="components/com_joomfish/assets/images/icon-16-translation.png">com_joomfish_translation</menu>
-	      <menu link="option=com_joomfish&amp;task=translate.orphans" img="components/com_joomfish/assets/images/icon-16-orphan.png">com_joomfish_orphan_translations</menu>
-	      <menu link="option=com_joomfish&amp;task=manage.overview" img="components/com_joomfish/assets/images/icon-16-manage.png">com_joomfish_manage_translations</menu>
-	      <menu link="option=com_joomfish&amp;task=statistics.overview" img="components/com_joomfish/assets/images/icon-16-statistics.png">com_joomfish_statistics</menu>
+	      <!-- <menu link="option=com_joomfish&amp;task=translate.orphans" img="components/com_joomfish/assets/images/icon-16-orphan.png">com_joomfish_orphan_translations</menu>-->
+	      <!-- <menu link="option=com_joomfish&amp;task=manage.overview" img="components/com_joomfish/assets/images/icon-16-manage.png">com_joomfish_manage_translations</menu>-->
+	      <!-- <menu link="option=com_joomfish&amp;task=statistics.overview" img="components/com_joomfish/assets/images/icon-16-statistics.png">com_joomfish_statistics</menu>-->
 	      <menu link="option=com_joomfish&amp;task=languages.show" img="components/com_joomfish/assets/images/icon-16-language.png">com_joomfish_languages</menu>
 	      <menu link="option=com_joomfish&amp;task=elements.show" img="components/com_joomfish/assets/images/icon-16-extension.png">com_joomfish_content_elements</menu>
 	      <menu link="option=com_joomfish&amp;task=plugin.show" img="components/com_joomfish/assets/images/icon-16-plugin.png">com_joomfish_plugins</menu>
