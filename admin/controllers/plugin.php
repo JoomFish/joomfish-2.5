@@ -55,13 +55,13 @@ class PluginController extends JController  {
 		// test if any plugins are installed - if not divert to installation screen
 		$db = JFactory::getDBO();
 		$query = 'SELECT COUNT(*)'
-			. ' FROM #__plugins AS p'
-			. ' WHERE p.folder = '.$db->Quote("joomfish");
+			. ' FROM #__extensions AS e'
+			. ' WHERE e.type = '.$db->Quote("plugin").' AND e.folder = '.$db->Quote("joomfish");
 			;
 		$db->setQuery( $query );
 		$total = $db->loadResult();
 		if ($total>0){
-			$link = 'index.php?option=com_plugins&filter_type=joomfish';
+			$link = 'index.php?option=com_plugins&view=plugins&filter_folder=joomfish';
 			$msg = "";
 		}
 		else {
