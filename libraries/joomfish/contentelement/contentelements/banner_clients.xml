@@ -14,4 +14,7 @@
   		<field type="textarea" name="extrainfo" translate="1">Extra Info</field>
   	</table>
   </reference>
+  <translationfilters>
+  	  <published>published</published>
+  </translationfilters> 
 </joomfish>

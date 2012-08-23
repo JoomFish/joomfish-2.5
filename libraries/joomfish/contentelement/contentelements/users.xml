@@ -11,4 +11,7 @@
   		<field type="titletext" name="name" translate="1">Name</field>
   	</table>
   </reference>
+  <translationfilters>
+  	  <published>published</published>
+  </translationfilters> 
 </joomfish>

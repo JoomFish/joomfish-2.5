@@ -13,4 +13,8 @@
   		<field type="text" name="url" maxlength="1000" translate="1">URL</field>
   	</table>
   </reference>
+  <translationfilters>
+  	  <category>catid</category>
+  	  <published>published</published>
+  </translationfilters>  
 </joomfish>

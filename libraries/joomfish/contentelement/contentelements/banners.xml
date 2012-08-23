@@ -16,4 +16,7 @@
   		<form>com_banners#banners#id#task#!edit</form>
   	</component>
    </reference>
+     <translationfilters>
+  	  <published>published</published>
+  </translationfilters> 
 </joomfish>

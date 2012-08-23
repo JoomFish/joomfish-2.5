@@ -19,5 +19,6 @@
   </reference>
   <translationfilters>
   	  <category>catid</category>
+  	  <published>published</published>
   </translationfilters>  
 </joomfish>

@@ -25,4 +25,7 @@
   		<form>com_contact#contact_details#cid#!edit</form>
   	</component>
   </reference>
+    <translationfilters>
+  	  <published>published</published>
+  </translationfilters> 
 </joomfish>
