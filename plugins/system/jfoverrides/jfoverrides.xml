@@ -16,6 +16,7 @@
 	</files>
 	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_system_jfoverrides.ini</language>
+		<language tag="en-GB">en-GB.plg_system_jfoverrides.sys.ini</language>
 	</languages>
 	<config>
 	</config>
