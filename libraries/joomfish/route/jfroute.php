@@ -34,6 +34,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 JLoader::register('TableJFLanguage', JOOMFISH_ADMINPATH .DS. 'tables' .DS. 'JFLanguage.php' );
+jimport('joomla.application.categories');
 
 /**
  * This class provides routing mappings for languages
