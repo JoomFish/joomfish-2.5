@@ -127,13 +127,25 @@ class JFRoute {
 		// get translated menu and categories
 		$menu		= JFactory::getApplication()->getMenu();
 		$menu->__construct(); // force re-loading of the menu
-		if (isset($vars['id'])) {
-			$extension		= 'Content';
+		
+		// @todo implement better check here, id migh be something unrelated
+		$catid 		= null;
+		if (isset($vars['catid']))
+		{
+			$catid 		= $vars['catid'];
+		} elseif (isset($vars['id'])) {
+			$catid 		= $vars['id'];
+		}
+		
+		if (isset($catid)) {
+			$extension	= 'Content';
 			if (isset($vars['option'])) {
 				$extension	= ucfirst(str_ireplace('com_', '', $vars['option']));
 			} 
 			$categories = JCategories::getInstance($extension);
-			$categories->get((int)$vars['id'], true); // force re-loading of the category
+			if ($categories) {
+				$categories->get((int)$catid, true); // force re-loading of the category
+			}
 		}
 		
 		// fix item routes for this item as routing is based on active menu $item->route
@@ -144,21 +156,21 @@ class JFRoute {
 		$this->fixMenuItemRoutes($menuitems, $itemid);*/
 		
 		/////// 4. route vars //////////////////////////////////////////////////////////////////
-		$varstring = 'index.php?'.$uri->buildQuery($vars);
-		//$currenturl= $uri->toString(array('path', 'query'));
-		$absolute = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
-		$routedurl = $absolute . JRoute::_($varstring, true, $uri->isSSL());
+		$varstring 		= 'index.php?'.$uri->buildQuery($vars);
+		//$currenturl	= $uri->toString(array('path', 'query'));
+		$absolute 		= $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
+		$routedurl 		= $absolute . JRoute::_($varstring, true, $uri->isSSL());
 		
 		/////// 5. reset everything to the previous state so we don't affect anything //////////
-		$vars['lang'] = $currentlang;
+		$vars['lang'] 	= $currentlang;
 		$uri->setVar('lang', $currentlang);
 		$router->setVars($vars, false);
 		$this->switchJFLanguageShortcode($currentlang, false);
 		$this->switchJoomlaLanguageLongcode($currentJoomlaLang);
 		JFactory::$language = null;
 		$menu->__construct();
-		if (isset($vars['id'])) {
-			$categories->get((int)$vars['id'], true);
+		if (isset($catid) && $categories) {
+			$categories->get((int)$catid, true);
 		}
 		// fix url if we are using sef domains
 		$this->prefixToHost($routedurl);
