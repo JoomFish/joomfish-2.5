@@ -119,6 +119,7 @@ class LanguagesModelLanguages extends JFModel
 				
 				// The checkbox is only filled when it was active - so we have to check if
 				// one box is fitting to your language
+				$jfLang->set('published', false);
 				if( isset($data['published']) ) {
 					foreach( $data['published'] as $activeLanguageID ) {
 						if( $activeLanguageID == $jfLang->lang_id ) {
