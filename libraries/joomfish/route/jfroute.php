@@ -157,9 +157,14 @@ class JFRoute {
 		
 		/////// 4. route vars //////////////////////////////////////////////////////////////////
 		$varstring 		= 'index.php?'.$uri->buildQuery($vars);
-		//$currenturl	= $uri->toString(array('path', 'query'));
 		$absolute 		= $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
-		$routedurl 		= $absolute . JRoute::_($varstring, true, $uri->isSSL());
+		$rvarstring 	= JRoute::_($varstring, true, null);
+		// Make sure our URL path begins with a slash.
+		if (!preg_match('#^/#', $rvarstring))
+		{
+			$rvarstring = '/' . $rvarstring;
+		}		
+		$routedurl 		= $absolute . $rvarstring;
 		
 		/////// 5. reset everything to the previous state so we don't affect anything //////////
 		$vars['lang'] 	= $currentlang;
