@@ -4,7 +4,7 @@
   <author>I. Apostolov</author>
   <version>2.5.0</version>
   <description>Definition for the core user management component</description>
-  <copyright>2003 - 2013, Think Network GmbH, Munich</copyright>
+  <copyright>2003 - 2013, Think Network GmbH, Konstanz</copyright>
   <reference>
   	<table name="users">
   		<field type="referenceid" name="id" translate="0">ID</field>

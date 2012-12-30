@@ -11,10 +11,10 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
    Think Network grants you the license based on the GNU
    GENERAL PUBLIC License as documented below.
    All terms and references to trademarks, services or other products are related
-   to Think Network GmbH, Munich.
+   to Think Network GmbH, Konstanz.
 
-   Think Network is a registered Trademark of Think Network GmbH, Munich. MambelFish
-   and Joom!Fish are registered trademarks of Think Network GmbH, Munich. All rights
+   Think Network is a registered Trademark of Think Network GmbH, Konstanz. MambelFish
+   and Joom!Fish are registered trademarks of Think Network GmbH, Konstanz. All rights
    to the names, logos and other material are reserved.   
    The Joomla! trademark is a registered trademark of Open Source Matters, Inc.
 
@@ -351,4 +351,4 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 	  `Gnomovision' (which makes passes at compilers) written by James Hacker.
 
 	  Alex Kempkens, 21 June 2008
-	  Managing Director, Think Network GmbH Munich
+	  Managing Director, Think Network GmbH Konstanz

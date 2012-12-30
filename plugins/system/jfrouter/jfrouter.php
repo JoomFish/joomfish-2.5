@@ -1,7 +1,7 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2013, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2013, Think Network GmbH, Konstanz
  *
  * All rights reserved.  The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -45,7 +45,7 @@ jimport('joomla.filesystem.file');
 // Joom!Fish router only gets activated if essential files are missing
 //if ( !file_exists( JPATH_PLUGINS .DS. 'system' .DS. 'jfdatabase' .DS. 'jfdatabase.class.php' )) {
 JFactory::getLanguage()->load('com_joomfish', JPATH_ADMINISTRATOR);
-if ( !JFile::exists( dirname(__FILE__) .DS. 'jfrouter' .DS. 'contact.php' )) {
+if ( !JFile::exists( dirname(__FILE__) .DS. 'contact.php' )) {
 	JError::raiseNotice('no_jf_plugin', JText::_('JF_ROUTER_PLUGIN_NOT_INSTALLED'));
 	return;
 }
@@ -110,7 +110,7 @@ class plgSystemJFRouter extends JPlugin{
 		$option = $uri->getVar("option","");
 		if (strpos($option,"com_")!==0) return;
 		$option = substr($option,4);
-		$customFile = dirname(__FILE__).DS."jfrouter".DS.$option.".php";
+		$customFile = dirname(__FILE__).DS.$option.".php";
 		if (file_exists($customFile)){
 			include_once($customFile);
 			if (function_exists("JFRouterHelper".ucfirst($option))){

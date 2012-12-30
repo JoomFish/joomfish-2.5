@@ -1,7 +1,7 @@
 <?php 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2013, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2013, Think Network GmbH, Konstanz
  *
  * All rights reserved.  The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -37,15 +37,15 @@ defined('_JEXEC') or die('Restricted access'); ?>
 Present core team:</p>
 <ul>
 	<li>Alex Kempkens</li>
-	<li>Geraint Edwards</li>
 	<li>Klas Berlič</li>
 </ul>
 <p>
 Special community contributions:</p>
 <ul>
+	<li>Geraint Edwards</li>
 	<li>Tommy White (original logo)</li>
 	<li>Robert Ola Akerman (logo freshup)</li>
-	<li>Mirjam (forum moderation)</li>
+	<li>Mirjam Kaizer (forum moderation)</li>
 </ul>
 <h3>Version:</h3>
 <p>
@@ -56,6 +56,6 @@ echo $version->getVersion();
 </p>
 <h3>Copyright:</h3>
 <p>
-<?php echo $version->getCopyright() ?> <a href="http://www.thinknetwork.com?utm_source=jf&utm_medium=ext&utm_campaign=help" target="_blank" class="smallgrey">Think Network, Munich</a><br />
+<?php echo $version->getCopyright() ?> <a href="http://www.thinknetwork.com?utm_source=jf&utm_medium=ext&utm_campaign=help" target="_blank" class="smallgrey">Think Network, Konstanz</a><br />
 Revision: <?php echo $version->getRevision() ?>
 </p>

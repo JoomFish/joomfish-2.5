@@ -1,7 +1,7 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2013, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2013, Think Network GmbH, Konstanz
  *
  * All rights reserved.  The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -48,8 +48,6 @@ class HelpController extends JController  {
 	{
 		parent::__construct($config);
 		$this->registerTask( 'show',  'display' );
-		$this->registerTask('postInstall', 'postInstall');
-		$this->registerTask('information', 'information');
 	}
 
 	/**
@@ -65,24 +63,6 @@ class HelpController extends JController  {
 	public function cancel()
 	{
 		$this->setRedirect( 'index.php?option=com_joomfish' );
-	}
-	
-	public function postinstall() {
-		// get the view
-		$this->view =  $this->getView("help");
-
-		// Set the layout
-		$this->view->setLayout('postinstall');
-		$this->view->display();
-	}
-	
-	public function information() {
-		// get the view
-		$this->view =  $this->getView("help");
-
-		// Set the layout
-		$this->view->setLayout('information');
-		$this->view->display();
 	}
 }
 ?>

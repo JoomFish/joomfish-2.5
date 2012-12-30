@@ -1,14 +1,14 @@
-<h2>Joom!Fish: be in control of your localization</h2>
+<h2>Joom!Fish - be in control of your localization</h2>
 <div id="introduction">
 <p>
-	The Joom!Fish extensions provides you the capabilities to manage, control and maintain your different language versions of your website.<br />
-	The purpose of this extension is automatically choose the langauge version of any information of you Joomla CMS that the user choosed to use.
+	The Joom!Fish extensions provides you the capabilities to manage, control and maintain your different language versions of your website that go beyond the core Joomla features.<br />
+	The purpose of this extension is a translation management for all content stored in any extension you use with Joomla.
 	To achieve this you need to follow 4 basic steps:
 </p>
 <ol>
 	<li>Define the languages in which you like to allow your users to view your website using the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_joomfish&task=languages.show">content language manager</a>.</li>
-	<li>Configure the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_modules&client=0">language selection module</a> and the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_plugins">JoomFish specific router plugin</a> in the way you like your website to behave.</li>
-	<li>Translate your CMS information e.g. for menus or articles using either the direct translation module or the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_joomfish&task=translate.overview">translation overview</a>.<br />Don't forget to publish your translations ;-).</li>
+	<li>Configure the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_modules&filter_search=JoomFish">JoomFish language selector</a> and the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_plugins&view=plugins&filter_search=JoomFish">JoomFish specific router plugin</a> in the way you like your website to behave.</li>
+	<li>To translate your information such as menus or articles please use the <a href="<?php echo JURI::root(); ?>administrator/index.php?option=com_joomfish&task=translate.overview">translation overview</a>.<br />After you created the translated (linked) item once you can edit them within the Joomla system directly. Don't forget to publish your translations ;-).</li>
 	<li>Add additional translation maps (content elements) to allow the translation of additional information such as your shop, calendar and many more.</li>
 </ol>
 </div>
@@ -32,11 +32,10 @@
 </div>
 <div class="clr"></div>
 <div>
-   <h3>Joom!Fish development status</h3>
-   <p>This release is a stable release for the Joomla 1.5.x code base. It is backward compatible with all Joom!Fish 2.x releases and provides an upgrade skript for the database changes.</p>
-   <p>The version is not yet compatible with Joomla 1.6.x from the code point of view. We already adapted the database structure and information so that your
-   migration will be easier. One of the next releases will support 1.6 from it's feature version and we will work hard to release it soon after the final release of Joomla.
-   </p>
+   <h3>Joom!Fish extension status</h3>
+   <p>This release is a stable release for the Joomla 2.5.x code base. It is backward compatible with all Joom!Fish 2.x releases in terms of database content.</p>
+   <p>However due to the massive changes between Joomla 1.5 and 2.5 a migration of your site will re required. This migration can only be supported by additional
+   extensions and supporting functions. All of the migration scripts are not included in this core package!</p>
 </div>
 <form action="index.php" method="post" name="adminForm">
 <input type="hidden" name="option" value="com_joomfish" />
