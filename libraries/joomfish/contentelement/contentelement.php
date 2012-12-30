@@ -154,31 +154,45 @@ class ContentElement
 
 	}
 
-	/*
+	/**
 	 * get the translation object class for the table and make sure the source file is loaded
-	 * @TODO Change this function to allow using of different locations for the translatable objects.
+	 * @return string name of the trainslationObjectClass
 	 */
 	public function getTranslationObjectClass(){
 		if (isset($this->_xmlFile))
 		{
+			// Define default implementation
+			$translationObjectFile = 'joomfish.translatable.translationobject';
+			$translationObjectClass = 'TranslationObject';
+			$translationObjectBase = null;
+			
+			// verify if a different implementation is defined
 			$xpath = new DOMXPath($this->_xmlFile);
 			$targetElement = $xpath->query('//reference/treatment/translationObjectModel')->item(0);
-			if (!isset($targetElement))
+			if (isset($targetElement))
 			{
-				jimport('joomfish.translatable.translationobject');
-				return 'TranslationObject';
+				// use the different Object Class
+				$translationObjectClass = trim($targetElement->textContent);
+				
+				// verify if there is a different class path defined
+				if(trim($targetElement->getAttribute( 'file' )) != '') {
+					// use specific file path
+					$translationObjectFile = trim($targetElement->getAttribute( 'file' ));
+				} else {
+					// try to identify the file name based on the class
+					$filename = strtolower(str_ireplace('TranslationObject','',$translationObjectClass));
+					$translationObjectFile = $translationObjectFile.'.'.$filename;
+				}
+				// check if there is a different base path defined for the import
+				if(trim($targetElement->getAttribute('base'))) {
+					// defining the class base relative to the installation root directory
+					$translationObjectBase = JPATH_ROOT .DS. trim($targetElement->getAttribute( 'base' ));
+				}
 			}
-			$translationObjectClass = trim($targetElement->textContent);
-			$addon = JLoader::import( "contentelements.$translationObjectClass",JOOMFISH_ADMINPATH);
-			if (!$addon) {
-				$toname = strtolower(str_ireplace('TranslationObject','',$translationObjectClass));
-				jimport('joomfish.translatable.translationobject.'.$toname);
-			}
-			
-			return $translationObjectClass;
 		}
-		jimport('joomfish.translatable.translationobject');
-		return 'TranslationObject';
+		
+		JLoader::import($translationObjectFile, $translationObjectBase);
+		return $translationObjectClass;
 	}
 	
 	public function getPublishedField(){

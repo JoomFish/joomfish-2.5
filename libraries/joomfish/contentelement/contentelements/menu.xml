@@ -26,7 +26,7 @@
 		<target>native</target>
 		<tableclass>Menu</tableclass>
 		<publishedfield>published</publishedfield>
-		<translationObjectModel>TranslationObjectMenu</translationObjectModel>
+		<translationObjectModel file="joomfish.translatable.translationobject.menu" base="libraries">TranslationObjectMenu</translationObjectModel>
 	</treatment>
   </reference>
   <translationfilters>

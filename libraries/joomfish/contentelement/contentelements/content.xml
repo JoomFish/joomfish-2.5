@@ -33,7 +33,7 @@
 		<target>native</target>
 		<tableclass>Content</tableclass>
 		<publishedfield>state</publishedfield>
-		<translationObjectModel>TranslationObjectContent</translationObjectModel>
+		<translationObjectModel file="joomfish.translatable.translationobject.content">TranslationObjectContent</translationObjectModel>
 		<jformModel>ContentJForm</jformModel>
 	</treatment>	
   </reference>
