@@ -131,7 +131,9 @@ function showConfigEditor(fieldId, lang_id) {
 							<?php if ($language->hasFrontendTranslation()) :?>
 								<?php echo JHTML::_('image','admin/tick.png', JText::_('JF_AVAILABLE'),array('title'=>JText::_('JF_AVAILABLE_FRONTEND_LANGUAGE')),true)?>
 							<?php else :?>
-								<?php echo JHTML::_('image','admin/publish_x.png', JText::_('JF_NOT_AVAILABLE'),array('title'=>JText::_('JF_NOT_AVAILABLE_FRONTEND_LANGUAGE')),true)?>
+								<a href="<?php echo JURI::base();?>/index.php?option=com_installer&view=languages&filter_search=<?php echo $language->title; ?>">
+									<?php echo JHTML::_('image','admin/publish_x.png', JText::_('JF_NOT_AVAILABLE'),array('title'=>JText::_('JF_NOT_AVAILABLE_FRONTEND_LANGUAGE')),true)?>
+								</a>
 							<?php endif;?>
 						</td>
 						<td align="center"><input type="checkbox" name="published[]"<?php echo $language->published==1 ? ' checked="checked"' : ''; ?> value="<?php echo $language->lang_id; ?>" /></td>
