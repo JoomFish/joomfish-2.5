@@ -470,13 +470,21 @@ class TableJFLanguage extends JTable  {
 		if($this->lang_id == -1) {
 			$this->jLanguageTable->set('lang_id', null);
 			$this->jfLanguageExt->set('lang_id', null);
+		} else {
+			// ensure the extended table exists
+			$langExt = JTable::getInstance('JFLanguageExt', 'Table');
+			$langExt->load($this->jLanguageTable->get('lang_id'));
+			if($langExt->get('lang_id') == -1) {
+				// extended row does not exist, create one
+				$this->jfLanguageExt->set('lang_id', null);
+			}
 		}
 
 		$retValue = $this->jLanguageTable->store($updateNulls);
 		$retValue = $retValue & $this->jfLanguageExt->store($updateNulls);
 		
 		// again special treatment to ensure the lang_id match each other!
-		if($this->lang_id == -1 && $this->jLanguageTable->lang_id != $this->jfLanguageExt->lang_id) {
+		if($this->lang_id == -1 || $this->jLanguageTable->lang_id != $this->jfLanguageExt->lang_id) {
 			$retValue = $retValue & $this->jfLanguageExt->updateLanguageID($this->jLanguageTable->lang_id);
 		}
 		$this->lang_id = $this->jLanguageTable->lang_id;
