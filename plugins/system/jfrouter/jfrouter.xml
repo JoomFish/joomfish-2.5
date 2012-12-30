@@ -11,19 +11,19 @@
 	<description>WHEN_ACTIVATED_THIS_PLUGIN_PROVIDES_LANGUAGE_DETERMINATION_AND_BASIC_ROUTING</description>
 	<files>
 		<filename plugin="jfrouter">jfrouter.php</filename>
-		<filename>jfrouter/index.html</filename>
-		<filename>jfrouter/contact.php</filename>
-		<filename>jfrouter/fields/index.html</filename>
-		<filename>jfrouter/fields/sefprefix.php</filename>
-		<filename>jfrouter/fields/sefsubdomain.php</filename>
+		<filename>index.html</filename>
+		<filename>contact.php</filename>
+		<filename>fields/index.html</filename>
+		<filename>fields/sefprefix.php</filename>
+		<filename>fields/sefsubdomain.php</filename>
 	</files>
-	<languages folder="jfrouter/language">
+	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_system_jfrouter.ini</language>
 		<language tag="en-GB">en-GB.plg_system_jfrouter.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
-			<fieldset name="basic" addfieldpath="/plugins/system/jfrouter/jfrouter/fields" >
+			<fieldset name="basic" addfieldpath="/plugins/system/jfrouter/fields" >
 				<field name="determitLanguage" type="radio" default="1" label='ENABLE_LANGUAGE_DETERMINATION'  description="IF_AN_UNKOWN_USER_COMES_TO_YOUR_SITE__TRY_TO_DETERMINATE_THE_LANGUAGE_BASED_ON_THE_BROWSER_SETTINGS">
 					<option value="0">JNo</option>
 					<option value="1">JYes</option>

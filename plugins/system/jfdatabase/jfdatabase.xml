@@ -16,7 +16,7 @@
 		<filename>intercept.jdatabasemysqli.php</filename>
 		<filename>jfdatabase_inherit.php</filename>
 	</files>
-	<languages folder="languages">
+	<languages folder="language">
 		<language tag="en-GB">en-GB.plg_system_jfdatabase.ini</language>
 		<language tag="en-GB">en-GB.plg_system_jfdatabase.sys.ini</language>
 	</languages>	
