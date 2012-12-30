@@ -156,6 +156,7 @@ class ContentElement
 
 	/*
 	 * get the translation object class for the table and make sure the source file is loaded
+	 * @TODO Change this function to allow using of different locations for the translatable objects.
 	 */
 	public function getTranslationObjectClass(){
 		if (isset($this->_xmlFile))
