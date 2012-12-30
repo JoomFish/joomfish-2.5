@@ -1,7 +1,7 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2013, Think Network GmbH, Munich
  *
  * All rights reserved.  The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -36,11 +36,11 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class JoomFishVersion {
 	var $_version	= '2.5.0';
-	var $_versionid	= 'Tarw';
-	var $_date		= '2012-02-10';
-	var $_status	= 'Preview';
+	var $_versionid	= 'Ndoto';
+	var $_date		= '2013-01-01';
+	var $_status	= 'Stable';
 	var $_revision	= '$Rev: 1520 $';
-	var $_copyyears = '2003-2012';
+	var $_copyyears = '2003-2013';
 
 	/**
 	 * This method delivers the full version information in one line

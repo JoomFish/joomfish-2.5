@@ -1,7 +1,7 @@
 <?php
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2013, Think Network GmbH, Munich
  *
  * All rights reserved.  The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -37,6 +37,7 @@ included in this distribution.
 The work is copyrighted by any or all of the following, from 2003 through 2009:
 * Alex Kempkens, Think Network GmbH, Munich
 * Geraint Edwards, GWE Systems Ltd., Ruthin
+* Klas Berlič, Drzno komuniciranje d.o.o.
 * Ivo Apostolov
 * Robin Muilwij
 

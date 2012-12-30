@@ -1,6 +1,6 @@
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2013, Think Network GmbH, Munich
  * Based on some ideas of Copyright (c) 2006 - 2011 JoomlaWorks, a business unit of Nuevvo Webware Ltd. All rights reserved.
 
  *

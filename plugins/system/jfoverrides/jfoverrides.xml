@@ -2,12 +2,12 @@
 <install version="2.5" type="plugin" group="system" method="upgrade">
 	<name>JOOMFISH_OVERRIDES</name>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<author>Klas Berlič</author>
+	<author>Joom!Fish Project</author>
 	<authorEmail>support@joomfish.net</authorEmail>
 	<authorUrl>http://www.joomfish.net</authorUrl>
-	<creationDate>2012-05-20</creationDate>
-	<copyright>2003 - 2012, Think Network GmbH, Munich</copyright>
-	<version>2.5.0 beta 1</version>
+	<creationDate>2013-01-01</creationDate>
+	<copyright>2003 - 2013, Think Network GmbH, Munich</copyright>
+	<version>2.5.0</version>
 	<description>WHEN_ACTIVATED_THIS_PLUGIN_PROVIDES_NECESSARY_JOOMLA_OVERRIDES</description>
 	<files>
 		<filename plugin="jfoverrides">jfoverrides.php</filename>

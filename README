@@ -1,4 +1,59 @@
-Joomfish 2.5. for Joomla 1.6-2.5
+Joom!Fish - Multi Lingual extention and translation manager for Joomla!
+Copyright (C) 2003 - 2013, Think Network GmbH, Munich
+ 
+All rights reserved.  The Joom!Fish project is a set of extentions for
+the content management system Joomla!. It enables Joomla!
+to manage multi lingual sites especially in all dynamic information
+which are stored in the database.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+
+The "GNU General Public License" (GPL) is available at
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+===============================================================================
+
+Welcome to the Joom!Fish multi lingual extention
+
+This extension is tested against the Joomla 2.5.x versions. Based on the changes
+it might work with other newer versions but there is no service / support for them.
+
+
+The Joom!Fish extention is a translation manager that extends the core multi lingual
+features of Joomla with an advanced management of the localization process. It
+includes specific features to simplify the translation of extensions that do not offer
+the core translation capabilities yet.
+
+
+The key features of the fish are:
+ * Possibility for an unlimited amount of languages
+ * Possibility to MANUAL translate all dynamic information of your Joomla!
+   or the additional components/modules within ONE database
+ * Overview of the changed contents in the translation list
+ * Capabilities of front end translation
+ * Module for language selection
+ * SearchBot for searches within translated contents
+ * Relationship to Google Translate API
+ 
+ 
+If you have further questions you are welcome to consult the project website
+http://www.joomfish.net
+
+Please understand that the Joom!Fish development team can not provide you any
+support nor consulting without payment. The extension is provided as it is
+and support is an additional service.
+
 
 Please make sure you read the wiki, especially 
 installation instructions https://github.com/JoomFish/jf-future/wiki/_pages

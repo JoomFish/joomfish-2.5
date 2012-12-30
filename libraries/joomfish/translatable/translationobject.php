@@ -2,7 +2,7 @@
 
 /**
  * Joom!Fish - Multi Lingual extention and translation manager for Joomla!
- * Copyright (C) 2003 - 2012, Think Network GmbH, Munich
+ * Copyright (C) 2003 - 2013, Think Network GmbH, Munich
  *
  * All rights reserved.  The Joom!Fish project is a set of extentions for
  * the content management system Joomla!. It enables Joomla!
@@ -44,7 +44,7 @@ jimport('joomfish.translatable.translatable');
  *
  * @package joomfish
  * @subpackage administrator
- * @copyright 2003 - 2012, Think Network GmbH, Munich
+ * @copyright 2003 - 2013, Think Network GmbH, Munich
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @version $Revision: 1543 $
  * @author Alex Kempkens
