@@ -74,7 +74,8 @@ class CpanelController extends JController  {
 	
 	public function usersplash() {
 		$this->view = $this->getView('cpanel');
-		$viewLayout	= JRequest::getCmd( 'layout', 'usersplash' );
+		$jinput = JFactory::getApplication()->input;
+		$viewLayout	= $jinput->getCmd( 'layout', 'usersplash' );
 		$this->view->setLayout($viewLayout);
 		parent::display();	
 	}
@@ -88,7 +89,8 @@ class CpanelController extends JController  {
 		// Check for request forgeries
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 		
-		$post = JRequest::get('post');
+		$jinput = JFactory::getApplication()->input;
+		$viewLayout	= $jinput->get('post');
 		$msg = '';
 		$config = JComponentHelper::getParams( 'com_joomfish' );
 		if($post != null && array_key_exists('params', $post)) {

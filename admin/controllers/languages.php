@@ -39,9 +39,14 @@ jimport('joomla.application.component.controller');
  *
  */
 class LanguagesController extends JController  {
+	/** var JInput	jinput reference */
+	private $jinput = null;
+		
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+		$this->jinput = JFactory::getApplication()->input;
+		
 		$this->registerTask('show',  'display' );
 	}
 
@@ -218,20 +223,6 @@ class LanguagesController extends JController  {
 		$this->view->setLayout($viewLayout);
 
 		// load the current config parameters from the language
-		/*
-		$model = $this->getModel('languages');
-		$this->view->setModel($model, true);
-		$this->view->language = $model->getTable('JFLanguage');		
-		$this->view->language->load($lang_id);
-
-		if (isset($this->view->language) && isset($this->view->language->params) ){
-			$this->view->translations = new JRegistry( $this->view->language->params);
-		}
-		else {
-			$this->view->translations = new JRegistry();
-		}
-		*/
-		
 		$this->view->translations = new JRegistry();
 		$current = JRequest::getVar('current', '', 'request', 'string');
 		if($current != null) {
@@ -269,6 +260,7 @@ class LanguagesController extends JController  {
 		// Check for request forgeries
 		JRequest::checkToken() or die( 'Invalid Token' );
 
+		$post	= JRequest::get('post');
 		$lang_id 	= JRequest::getInt( 'lang_id',0 );
 		$model = $this->getModel('languages');
 		$language = $model->getTable('JFLanguage');		
@@ -292,8 +284,12 @@ class LanguagesController extends JController  {
 		$registry->loadArray($data);
 		$language->params = $registry->toString();
 
-		$language->store();
-		JFactory::getApplication()->redirect("index.php?option=com_joomfish&task=languages.show",JText::_( 'LANGUAGES_SAVED' ));
+		if ($language->store()) {
+			$msg = JText::_( 'LANGUAGES_SAVED' );
+		} else {
+			$msg = JText::_( 'ERROR_SAVING_LANGUAGES' );
+		}
+		JFactory::getApplication()->redirect("index.php?option=com_joomfish&task=languages.show",$msg);
 	}
 	
 	

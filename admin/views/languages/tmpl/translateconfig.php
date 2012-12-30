@@ -37,9 +37,8 @@ defined('_JEXEC') or die('Restricted access'); ?>
 <input type="hidden" name="lang_id" value="<?php echo $this->lang_id;?>" />
 <fieldset>
 	<div style="float: right;">
-		<button id="saveConfigTranslation" type="button"><?php echo JText::_( 'JSAVE' );?></button>
-		<button onclick="window.parent.parent.SqueezeBox.close();" type="button"><?php echo JText::_( 'JCANCEL' );?></button>
-		</div>
+		<button id="saveConfigTranslation" type="button"><?php echo JText::_( 'JTOOLBAR_CLOSE' );?></button>
+	</div>
 	<div class="configuration"><?php echo JText::_( 'TRANSLATE_SYSTEM_CONFIGURATION' );?></div>
 </fieldset>
 <?php

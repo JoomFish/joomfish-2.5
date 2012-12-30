@@ -50,6 +50,10 @@ class ElementsController extends JController   {
 
 	/** @var string		file code */
 	private $fileCode = null;
+	
+	/** @var JInput		reference to the input 
+	 */
+	private $jinput = null;
 
 	/**
 	 * @var object	reference to the Joom!Fish manager
@@ -64,14 +68,15 @@ class ElementsController extends JController   {
 	 */
 	public function __construct( ){
 		parent::__construct();
+		$this->jinput = JFactory::getApplication()->input;
 		$this->registerDefaultTask( 'show' );
 
-		$this->act =  JRequest::getVar( 'act', '' );
-		$this->cid =  JRequest::getVar( 'cid', array(0) );
+		$this->act =  $this->jinput->get( 'act', '' );
+		$this->cid =  $this->jinput->get( 'cid', array(0) );
 		if (!is_array( $this->cid )) {
 			$this->cid = array(0);
 		}
-		$this->fileCode =  JRequest::getVar( 'fileCode', '' );
+		$this->fileCode =  $this->jinput->get( 'fileCode', '' );
 		$this->_joomfishManager = JoomFishManager::getInstance();
 
 		$this->registerTask( 'show', 'showCElementConfig' );
@@ -84,7 +89,7 @@ class ElementsController extends JController   {
 		// Populate data used by controller
 		$this->_catid = JFactory::getApplication()->getUserStateFromRequest('selected_catid', 'catid', '');
 		$this->_select_language_id = JFactory::getApplication()->getUserStateFromRequest('selected_lang','select_language_id', '-1');
-		$this->_language_id =  JRequest::getVar( 'language_id', $this->_select_language_id );
+		$this->_language_id =  $this->jinput->get( 'language_id', $this->_select_language_id );
 		$this->_select_language_id = ($this->_select_language_id == -1 && $this->_language_id != -1) ? $this->_language_id : $this->_select_language_id;
 		
 		// Populate common data used by view
@@ -135,7 +140,6 @@ class ElementsController extends JController   {
 	 */
 	public function removeContentElement() {
 		// Check for request forgeries
-		//JRequest::checkToken() or die( 'Invalid Token' );
 		
 		if( $this->_deleteContentElement($this->cid[0]) ) {
 			$msg = JText::sprintf('ELEMENTFILE)DELETED', $this->cid[0]);
