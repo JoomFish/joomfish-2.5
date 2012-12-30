@@ -134,7 +134,7 @@ function showConfigEditor(fieldId, lang_id) {
 								<?php echo JHTML::_('image','admin/publish_x.png', JText::_('JF_NOT_AVAILABLE'),array('title'=>JText::_('JF_NOT_AVAILABLE_FRONTEND_LANGUAGE')),true)?>
 							<?php endif;?>
 						</td>
-						<td align="center"><input type="checkbox" name="published[]"<?php echo $language->published==1 ? ' checked' : ''; ?> value="<?php echo $language->lang_id; ?>" /></td>
+						<td align="center"><input type="checkbox" name="published[]"<?php echo $language->published==1 ? ' checked="checked"' : ''; ?> value="<?php echo $language->lang_id; ?>" /></td>
 						<td><input type="text" name="sef[]" value="<?php echo $language->sef; ?>" maxlength="10" /></td>
 						<td><input type="text" name="fallbackCode[]" value="<?php echo $language->fallback_code; ?>" maxlength="20" /></td>
 						<td nowrap="nowrap">

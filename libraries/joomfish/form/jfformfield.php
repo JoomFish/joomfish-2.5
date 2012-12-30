@@ -44,6 +44,7 @@ class JFFormField extends JFormField {
 	public function __construct(JFormField $obj) {
 		$this->obj = &$obj;
 		foreach (get_object_vars($obj) as $key => $val) {
+			if (!isset($this->$key)) $this->$key = true;
 			$this->$key = &$this->obj->$key;
 		}
 	}

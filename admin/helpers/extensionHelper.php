@@ -118,6 +118,6 @@ class  JoomfishExtensionHelper  {
 				self::$imagePath[$path] = $path;
 			}
 		}
-		return self::$imagePath[$path];
+		return ltrim(self::$imagePath[$path],'/');
 	}	
 }
