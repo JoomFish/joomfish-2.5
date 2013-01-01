@@ -215,7 +215,7 @@ class TranslateParams_xml extends TranslateParams
 				echo $sliders->startPanel(JText::_($label), $name . '-options');
 		
 				if (isset($fieldSet->description) && trim($fieldSet->description)) :
-				echo '<p class="tip">' . $this->escape(JText::_($fieldSet->description)) . '</p>';
+				echo '<p class="tip">' . JText::_($fieldSet->description) . '</p>';
 				endif;
 				?>
 						<div class="clr"></div>
