@@ -95,9 +95,10 @@
 	</modules>
 
 	<plugins>
-		<plugin folder="plugins/system" plugin="jfdatabase" name="System - JFDatabase" group="system" />
-		<plugin folder="plugins/system" plugin="jfrouter" name="System - JFRouter" group="system" />
-		<plugin folder="plugins/system" plugin="jfoverrides" name="System - JFOverrides" group="system" />
+		<plugin folder="plugins/system" plugin="jfdatabase" name="System - JF Database" group="system" />
+		<plugin folder="plugins/system" plugin="jfrouter" name="System - JF Router" group="system" />
+		<plugin folder="plugins/system" plugin="jfoverrides" name="System - JF Overrides" group="system" />
+		<plugin folder="plugins/system" plugin="jfinlinemapping" name="System - JF Inline Mapping" group="system" />
 	</plugins>
 	
 	<library folder="libraries/joomfish" library="joomfish" name="Joomfish library" />
@@ -124,6 +125,8 @@
 		<extension name="jfdatabase"  type="plugin" field="ordering" value="1">folder='system'</extension>
 		<extension name="jfoverrides"  type="plugin" field="enabled" value="1">element='jfoverrides'</extension>
 		<extension name="jfoverrides"  type="plugin" field="ordering" value="2">folder='system'</extension>	
+		<extension name="jfinlinemapping"  type="plugin" field="enabled" value="1">element='jfinlinemapping'</extension>
+		<extension name="jfinlinemapping"  type="plugin" field="ordering" value="3">folder='system'</extension>	
 		<module name="mod_jflanguageselection"  type="modules" field="published" value="1">module='mod_jflanguageselection'</module>
 	 	<performance name="mySQL Driver" type="database" check_function="mysqli_connect" check_true="mysqli" check_false="mysql" optimal_value="mysqli" link="index.php?option=com_config" />
 	 	<performance name="PHP Version" type="php" required="5.0.0" optimal_value="5.3.0" link="index.php?option=com_admin&amp;view=sysinfo" />

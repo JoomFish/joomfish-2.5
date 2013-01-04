@@ -157,10 +157,19 @@ class com_JoomfishInstallerScript
             $db->setQuery($query4);
             $db->query();
             
+            // Set plugin ordering: first change all plugins with negative ordering numbers to 0
+            $query = $db->getQuery(true);
+            $query->update($tableExtensions);
+            $query->set($db->nameQuote("ordering").'=0');
+            $query->where($columnType.'='.$db->quote("plugin"));
+            $query->where($db->nameQuote("folder").'='.$db->quote("system") .'AND '.$db->nameQuote("ordering").'<0');
+            $db->setQuery((string)$query);
+            $db->query();
+            
             // Set plugin ordering: first increase all plugins ordering numbers
             $query = $db->getQuery(true);
             $query->update($tableExtensions);
-            $query->set($db->nameQuote("ordering").'='.$db->nameQuote("ordering").'+3');
+            $query->set($db->nameQuote("ordering").'='.$db->nameQuote("ordering").'+4');
             $query->where($columnType.'='.$db->quote("plugin"));
             $query->where($db->nameQuote("folder").'='.$db->quote("system"));
             $db->setQuery((string)$query);
@@ -172,8 +181,9 @@ class com_JoomfishInstallerScript
             WHEN ".$db->quote("jfrouter")." THEN 0
             WHEN ".$db->quote("jfdatabase")." THEN 1
             WHEN ".$db->quote("jfoverrides")." THEN 2
+            WHEN ".$db->quote("jfinlinemapping")." THEN 3
             END
-            WHERE ".$db->nameQuote("element")." IN (".$db->quote("jfrouter").",".$db->quote("jfdatabase").",".$db->quote("jfoverrides").")";
+            WHERE ".$db->nameQuote("element")." IN (".$db->quote("jfrouter").",".$db->quote("jfdatabase").",".$db->quote("jfoverrides").",".$db->quote("jfinlinemapping").")";
             $db->setQuery($query);
             $db->query();
             
