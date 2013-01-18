@@ -2,7 +2,7 @@
 <joomfish type="contentelement">
   <name>Banners - Client</name>
   <author>R. Muilwijk</author>
-  <version>2.5.0</version>
+  <version>2.5.1</version>
   <description>Definition for the core banner component</description>
   <copyright>2003 - 2013, Think Network GmbH, Konstanz</copyright>
  <reference>

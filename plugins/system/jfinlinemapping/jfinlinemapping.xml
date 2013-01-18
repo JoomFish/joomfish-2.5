@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="2.5" type="plugin" group="system" method="upgrade">
 	<name>PLG_SYSTEM_JFINLINEMAPPING</name>
-	<author>Klas Berlič</author>
-	<creationDate>2012-05-20</creationDate>
+	<author>Joom!Fish Project</author>
+	<creationDate>2013-01-31</creationDate>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>support@joomfish.net</authorEmail>
 	<authorUrl>http://www.joomfish.net</authorUrl>
-	<copyright>Copyright (C) 2003 - 2012, Think Network GmbH, Munich. All rights reserved.</copyright>
-	<version>2.5.0</version>
+	<copyright>Copyright (C) 2003 - 2013, Think Network GmbH, Konstanz. All rights reserved.</copyright>
+	<version>2.5.1</version>
 	<description>PLG_SYSTEM_JFINLINEMAPPING_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="jfinlinemapping">jfinlinemapping.php</filename>
