@@ -306,7 +306,7 @@ class TableJFLanguage extends JTable  {
 	 *	@param string $iso iso name of the language
 	 *	@return object new language instance or null
 	 */
-	public function createByJoomla( $code, $active=true ) {
+	public static function createByJoomla( $code, $active=true ) {
 		$db = JFactory::getDBO();
 
 		$lang = new TableJFLanguage($db);
