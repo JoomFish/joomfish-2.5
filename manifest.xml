@@ -5,9 +5,9 @@
 	<author>Joom!Fish Project</author>
 	<authorEmail>support@joomfish.net</authorEmail>
 	<authorUrl>http://www.joomfish.net</authorUrl>
-	<creationDate>2013-01-01</creationDate>
+	<creationDate>2013-01-31</creationDate>
 	<copyright>2003 - 2013, Think Network GmbH, Konstanz</copyright>
-	<version>2.5.0</version>
+	<version>2.5.1</version>
 	<description>COM_JOOMFISH_XML_DESCRIPTION</description>
 
 	<scriptfile>install.php</scriptfile>
