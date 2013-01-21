@@ -21,12 +21,6 @@
 
 	<uninstall>
 	</uninstall>
-	
-	<upgrade>
-		<sql>
-			<file driver="mysql" charset="utf8">install/install.mysql.utf8.sql</file>
-		</sql>
-	</upgrade>
 
     <files folder="site">
 		<folder>helpers</folder>

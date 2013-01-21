@@ -315,13 +315,19 @@ class com_JoomfishInstallerScript
          * method to run before an install/update/uninstall method
          *
          * @return void
-         *
-        function preflight($type, $parent) 
+         **/
+        function preflight($type, $parent)
         {
-                // $parent is the class calling this method
-                // $type is the type of change (install, update or discover_install)
-                echo '<p>' . JText::_('COM_JOOMFISH_PREFLIGHT_' . $type . '_TEXT') . '</p>';
-        }*/
+        	if ($type == 'install' || $type == 'update') {
+        		$app = JFactory::getApplication();
+        		$dbtype = JFactory::getConfig()->getValue('dbtype','mysqli');
+        		if ($dbtype != 'mysqli') {
+        			$app->enqueueMessage($dbtype .' '. JText::_('COM_JOOMFISH_DATABASE_DRIVER_NOT_SUPPORTED'));
+        			return false;
+        		}
+        	}
+        	return true;
+        }
  
         /**
          * method to run after an install/update/uninstall method
