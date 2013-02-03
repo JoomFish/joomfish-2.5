@@ -60,7 +60,7 @@ class CPanelViewCPanel extends JoomfishViewDefault
 		
 		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('JOOMFISH_TITLE') . ' :: ' .JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ));
-		JHTML::script('/administrator/components/com_joomfish/assets/js/joomfish.mootools.js', true);
+		JHTML::script('com_joomfish/joomfish.mootools.js', true, true);
 		
 		// Set toolbar items for the page
 		JToolBarHelper::title( JText::_('JOOMFISH_TITLE') .' :: '. JText::_( 'JOOMFISH_HEADER' ), 'fish' );

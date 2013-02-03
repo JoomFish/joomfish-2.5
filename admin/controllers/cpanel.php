@@ -90,11 +90,11 @@ class CpanelController extends JController  {
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 		
 		$jinput = JFactory::getApplication()->input;
-		$viewLayout	= $jinput->get('post');
+		$viewLayout	= $jinput->getArray(array('params'=>''));
 		$msg = '';
 		$config = JComponentHelper::getParams( 'com_joomfish' );
-		if($post != null && array_key_exists('params', $post)) {
-			$params = $post['params']; 
+		if($viewLayout != null && array_key_exists('params', $viewLayout)) {
+			$params = $viewLayout['params']; 
 			if($params != null && count($params)>0) {
 				
 				foreach ($params as $key => $value) {

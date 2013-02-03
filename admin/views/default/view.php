@@ -66,7 +66,7 @@ class JoomfishViewDefault extends JView {
 		$document = JFactory::getDocument();
 		$livesite = JURI::base();
 		$document->addStyleSheet($livesite.'components/com_joomfish/assets/css/joomfish.css');
-		$document->addScript($livesite.'components/com_joomfish/assets/js/joomfish.mootools.js');
+		JHTML::script('com_joomfish/joomfish.mootools.js', true, true);
 		
 		// Get data from the model
 		$state		= $this->get('State');
