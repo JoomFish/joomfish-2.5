@@ -65,6 +65,7 @@ class CPanelViewCPanel extends JoomfishViewDefault
 		// Set toolbar items for the page
 		JToolBarHelper::title( JText::_('JOOMFISH_TITLE') .' :: '. JText::_( 'JOOMFISH_HEADER' ), 'fish' );
 		JToolBarHelper::preferences('com_joomfish', '580', '750');
+		JToolBarHelper::divider();
 		JToolBarHelper::help( 'screen.cpanel', true);
 
 		JSubMenuHelper::addEntry(JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ), 'index.php?option=com_joomfish', true);

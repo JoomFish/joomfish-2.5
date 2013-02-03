@@ -65,10 +65,11 @@ class ElementsViewElements extends JoomfishViewDefault
 
 	function overview($tpl = null) {
 		// Set toolbar items for the page
-		JToolBarHelper::custom("elements.installer","archive","archive", JText::_( 'INSTALL' ),false);
+		JToolBarHelper::custom("elements.installer","extension","extension", JText::_( 'INSTALL' ),false);
 		JToolBarHelper::custom("elements.detail","preview","preivew", JText::_( 'DETAIL' ),true);
 		JToolBarHelper::deleteList(JText::_( 'ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_CE_FILE' ), "elements.remove");
 		JToolBarHelper::custom( 'cpanel.show', 'joomfish', 'joomfish', 'COM_JOOMFISH_CONTROL_PANEL' , false );
+		JToolBarHelper::divider();
 		JToolBarHelper::help( 'screen.elements', true);
 		
 		JSubMenuHelper::addEntry(JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ), 'index.php?option=com_joomfish');

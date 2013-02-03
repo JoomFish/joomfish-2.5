@@ -55,6 +55,7 @@ class ManageViewManage extends JoomfishViewDefault
 		// Set toolbar items for the page
 		JToolBarHelper::title(JText::_( 'TITLE_Management' ), 'manage' );
 		JToolBarHelper::custom( 'cpanel.show', 'joomfish', 'joomfish', 'COM_JOOMFISH_CONTROL_PANEL' , false );
+		JToolBarHelper::divider();
 		JToolBarHelper::help( 'screen.manage', true);
 
 		JSubMenuHelper::addEntry(JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ), 'index.php?option=com_joomfish');

@@ -35,9 +35,9 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class JoomFishVersion {
-	var $_version	= '2.5.0';
+	var $_version	= '2.5.1';
 	var $_versionid	= 'Ndoto';
-	var $_date		= '2013-01-01';
+	var $_date		= '2013-02-03';
 	var $_status	= 'Stable';
 	var $_revision	= '';
 	var $_copyyears = '2003-2013';

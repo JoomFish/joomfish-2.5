@@ -126,6 +126,7 @@ class TranslateViewTranslate extends JoomfishViewDefault
 		JToolBarHelper::editList("translate.edit");
 		JToolBarHelper::deleteList(JText::_( 'ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_TRANSLATION'), "translate.remove");
 		JToolBarHelper::custom( 'cpanel.show', 'joomfish', 'joomfish', 'COM_JOOMFISH_CONTROL_PANEL', false );
+		JToolBarHelper::divider();
 		JToolBarHelper::help( 'screen.translate.overview', true);
 
 		JSubMenuHelper::addEntry(JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ), 'index.php?option=com_joomfish');

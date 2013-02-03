@@ -60,13 +60,14 @@ class LanguagesViewLanguages extends JoomfishViewDefault
 		$document->setTitle(JText::_('JOOMFISH_TITLE') . ' :: ' .JText::_( 'LANGUAGE_TITLE' ));
 
 		// Set toolbar items for the page
+		JToolBarHelper::apply('languages.apply');
+		JToolBarHelper::save( 'languages.save');
 		JToolBarHelper::title( JText::_( 'LANGUAGE_TITLE' ), 'language' );
-		JToolBarHelper::makeDefault ('languages.setDefault', 'Default', 'Set as frontend default language');
+		JToolBarHelper::makeDefault ('languages.setDefault');
 		JToolBarHelper::deleteList('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THE_SELCTED_ITEMS', 'languages.remove');
-		JToolBarHelper::custom( 'languages.save', 'save', 'save', 'Save',false);
-		JToolBarHelper::custom( 'languages.apply', 'apply', 'apply', 'Apply',false);
 		JToolBarHelper::addNew( 'languages.add' );
-		JToolBarHelper::cancel('languages.cancel');
+		JToolBarHelper::cancel('languages.cancel', 'JTOOLBAR_CLOSE');
+		JToolBarHelper::divider();
 		JToolBarHelper::help( 'screen.languages', true);
 
 		JSubMenuHelper::addEntry(JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ), 'index.php?option=com_joomfish');

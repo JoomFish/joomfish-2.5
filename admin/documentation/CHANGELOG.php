@@ -67,5 +67,6 @@ Legend:
 #123 - fixing order issue as existing languages will no longer be overwritten by frontend language information
 + special indication for new frontend languages that are not stored as content languages yet
 + additional language tags for not stored content languages
+#124 - corrected usage of toolbar within language manager and other basic changes within all toolbars
 
  === Stable release JoomFish 2.5                              ===

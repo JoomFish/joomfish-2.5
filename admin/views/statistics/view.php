@@ -55,6 +55,7 @@ class StatisticsViewStatistics extends JoomfishViewDefault
 		// Set toolbar items for the page
 		JToolBarHelper::title(JText::_( 'TITLE_Statistics' ), 'statistics' );
 		JToolBarHelper::custom( 'cpanel.show', 'joomfish', 'joomfish', 'COM_JOOMFISH_CONTROL_PANEL' , false );
+		JToolBarHelper::divider();
 		JToolBarHelper::help( 'screen.statistics', true);
 
 		JSubMenuHelper::addEntry(JText::_( 'COM_JOOMFISH_CONTROL_PANEL' ), 'index.php?option=com_joomfish');
