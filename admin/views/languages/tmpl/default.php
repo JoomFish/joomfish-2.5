@@ -82,7 +82,7 @@ function showConfigEditor(fieldId, lang_id) {
 							<?php echo $this->fetchTooltip('JF_JOOMLA_FRONTEND_TRANSLATION', JText::_('JF_JOOMLA_FRONTEND_TRANSLATION_HELP')); ?>
 						</th>
 						<th class="title" nowrap="nowrap">
-							<?php echo $this->fetchTooltip('TITLE_ACTIVE', JText::_('ACTIVE_HELP')); ?>
+							<?php echo $this->fetchTooltip('TITLE_STATUS', JText::_('STATUS_HELP')); ?>
 						</th>
 						<th class="title" nowrap="nowrap">
 							<?php echo $this->fetchTooltip('TITLE_SHORTCODE', JText::_('SHORTCODE_HELP')); ?>
@@ -94,7 +94,7 @@ function showConfigEditor(fieldId, lang_id) {
 							<?php echo $this->fetchTooltip('TITLE_IMAGE', JText::_('IMAGES_DIR_HELP')); ?>
 						</th>
 						<th class="title" nowrap="nowrap" width="10">
-							<?php echo JHTML::_('grid.sort',  'Order', 'lext.ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
+							<?php echo JHTML::_('grid.sort',  'Order', 'l.ordering', $this->lists['order_Dir'], $this->lists['order'] ); ?>
 						</th>
 						<th class="title">
 							<?php echo $this->fetchTooltip('TITLE_CONFIG', JText::_('CONFIG_HELP')); ?>
@@ -136,7 +136,13 @@ function showConfigEditor(fieldId, lang_id) {
 								</a>
 							<?php endif;?>
 						</td>
-						<td align="center"><input type="checkbox" name="published[]"<?php echo $language->published==1 ? ' checked="checked"' : ''; ?> value="<?php echo $language->lang_id; ?>" /></td>
+						<td align="center">
+							<?php if($language->lang_id == -1) :?>
+								<?php echo JHTML::_('image','admin/publish_y.png', JText::_('JF_NOT_SAVED'),array('title'=>JText::_('JF_NOT_SAVED_LANGUAGE')),true); ?>
+							<?php else: ?>
+								<input type="checkbox" name="published[]"<?php echo $language->published==1 ? ' checked="checked"' : ''; ?> value="<?php echo $language->lang_id; ?>" />
+							<?php endif;?>
+						</td>
 						<td><input type="text" name="sef[]" value="<?php echo $language->sef; ?>" maxlength="10" /></td>
 						<td><input type="text" name="fallbackCode[]" value="<?php echo $language->fallback_code; ?>" maxlength="20" /></td>
 						<td nowrap="nowrap">
@@ -167,7 +173,7 @@ function showConfigEditor(fieldId, lang_id) {
 			<?php echo JHTML::_( 'form.token' ); ?>
 			</div>
 		</td>
-		<td id="adminJFSidebar">
+		<td id="adminJFSidebar" style="display: none;">
 			
 			<table class="jfSidebarInformation">
 				<thead><th colspan="2"><?php echo JText::_('JF_CONFIG_INFORMATION')?></th>

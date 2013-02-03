@@ -213,16 +213,15 @@ class LanguagesModelLanguages extends JFModel
 		global  $option;
 		$db = JFactory::getDBO();
 
-		$filter_order		= JFactory::getApplication()->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'lext.ordering',	'cmd' );
+		$filter_order		= JFactory::getApplication()->getUserStateFromRequest( $option.'filter_order',		'filter_order',		'l.ordering',	'cmd' );
 		$filter_order_Dir	= JFactory::getApplication()->getUserStateFromRequest( $option.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );
 
 		// 1. read all known languages from the database
 		//$sql = "SELECT l.*"
 		//. "\nFROM #__jf_languages AS l";
 			$sql = 'select l.lang_id AS lang_id,l.lang_code AS lang_code,l.title AS title,l.title_native AS title_native,
-				l.sef AS sef,l.description AS description,l.published AS published,l.image AS image,
-				lext.image_ext AS image_ext,lext.fallback_code AS fallback_code,lext.params AS params,
-				lext.ordering AS ordering 
+				l.sef AS sef,l.description AS description,l.published AS published,l.image AS image, l.ordering AS ordering,
+				lext.image_ext AS image_ext,lext.fallback_code AS fallback_code,lext.params AS params
 				from #__languages as l 
 				left join #__jf_languages_ext as lext on l.lang_id = lext.lang_id'; 
 
@@ -243,6 +242,10 @@ class LanguagesModelLanguages extends JFModel
 		$frontlanguages = $db->loadObjectList('lang_code');
 		
 		foreach ($frontlanguages AS &$frontlang) {
+			if( array_key_exists( $frontlang->lang_code, $contentlanguages )) {
+				unset($frontlanguages[$frontlang->lang_code]);
+				continue;
+			}
 			$langarr 					= explode ('-', $frontlang->lang_code);
 			$frontlang->lang_id   		= null;
 			$frontlang->title_native 	= $frontlang->title;
@@ -251,7 +254,7 @@ class LanguagesModelLanguages extends JFModel
 			$frontlang->image_ext 		= 'media/com_joomfish/default/flags/' .$langarr[0]. '.gif';
 		}
 		
-		$languages = array_merge($frontlanguages, $contentlanguages);
+		$languages = array_merge($contentlanguages, $frontlanguages);
 		
 		if($languages === null) {
 			JError::raiseWarning( 400, $db->getErrorMsg());

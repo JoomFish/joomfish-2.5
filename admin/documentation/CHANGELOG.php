@@ -62,4 +62,10 @@ Legend:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+2013-02-03 A.Kempkens
+#132 - fixing array issue with having a working array management integrated. Now the error occurs and the data is not lost
+#123 - fixing order issue as existing languages will no longer be overwritten by frontend language information
++ special indication for new frontend languages that are not stored as content languages yet
++ additional language tags for not stored content languages
+
  === Stable release JoomFish 2.5                              ===
