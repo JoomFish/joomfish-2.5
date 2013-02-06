@@ -36,6 +36,7 @@
 
 	<media folder="media" destination="com_joomfish">
 		<folder>default</folder>
+		<folder>js</folder>
 	</media>
 
 	<administration>
