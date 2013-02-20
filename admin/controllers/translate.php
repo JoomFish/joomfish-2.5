@@ -493,14 +493,17 @@ class TranslateController extends JController
 		{
 			$contentElement = $this->_joomfishManager->getContentElement($catid);
 
+			if(is_null($contentElement)){
+				echo '<p style="color:red;">'.JText::_('Can\'t fetch the Content Element = ').$catid.'</p>';
+			} else {
 			$db->setQuery($contentElement->createOrphanSQL($language_id, null, $limitstart, $limit, $tranFilters));
 			$rows = $db->loadObjectList();
-			if ($db->getErrorNum())
-			{
-				JError::raiseError(200, JTEXT::_('No valid database connection: ') . $db->stderr());
-				return false;
+				if ($db->getErrorNum())
+				{
+					JError::raiseError(200, JTEXT::_('No valid database connection: ') . $db->stderr());
+					return false;
+				}
 			}
-
 			$total = count($rows);
 
 			for ($i = 0; $i < count($rows); $i++)

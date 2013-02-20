@@ -91,68 +91,70 @@ if (isset($this->filterlist) && count($this->filterlist)>0){
 		<?php
 	}
 	else {
-		?>
-	<tbody>
-    <?php
-    $k=0;
-    $i=0;
-    foreach ($this->rows as $row ) {
-				?>
-    <tr class="<?php echo "row$k"; ?>">
-      <td width="20">
-        <?php		if ($row->checked_out && $row->checked_out != $user->id) { ?>
-        &nbsp;
-        <?php		} else { ?>
-        <input type="checkbox" id="cb<?php echo $i;?>" name="cid[]" value="<?php echo $row->jfc_id."|".$row->jfc_refid."|".$row->language_id; ?>" onclick="isChecked(this.checked);" />
-        <?php		} ?>
-      </td>
-      <td>
-      	<a href="#detail" onclick="return listItemTask('cb<?php echo $i;?>','translate.orphandetail')"><?php echo $row->title; ?></a>
-			</td>
-      <td nowrap><?php echo $row->language ? $row->language :  JText::_( 'NOTRANSLATIONYET' ); ?></td>
-      <td><?php echo $row->titleTranslation ? $row->titleTranslation : '&nbsp;'; ?></td>
-	  <td><?php echo $row->lastchanged ? JHTML::_('date', $row->lastchanged, JText::_('DATE_FORMAT_LC2')):"" ;?></td>
-				<?php
-				switch( $row->state ) {
-					case 1:
-						$img = 'status_g.png';
-						break;
-					case 0:
-						$img = 'status_y.png';
-						break;
-					case -1:
-					default:
-						$img = 'status_r.png';
-						break;
-				}
-				?>
-      <td align="center"><img src="components/com_joomfish/images/<?php echo $img;?>" width="12" height="12" border="0" alt="" /></td>
-				<?php
-				if (isset($row->published) && $row->published) {
-					$img = 'publish_g.png';
-				} else {
-					$img = 'publish_x.png';
-				}
-
-				$href='';
-				if( $row->state>=0 ) {
-					$href = '<a href="javascript: void(0);" ';
-					$href .= 'onclick="return listItemTask(\'cb' .$i. '\',\'' .($row->published ? 'unpublish' : 'publish'). '\')">';
-					$href .= '<img src="images/' .$img. '" width="12" height="12" border="0" alt="" />';
-					$href .= '</a>';
-				}
-				else {
-					$href = '<img src="images/' .$img. '" width="12" height="12" border="0" alt="" />';
-				}
-				?>
-      <td align="center"><?php echo $href;?></td>
-				<?php
-				$k = 1 - $k;
-				$i++;
-				?>
-	</tr>
+		if(!empty($this->rows)) {
+			?>
+		<tbody>
+	    <?php
+	    $k=0;
+	    $i=0;
+	    foreach ($this->rows as $row ) {
+					?>
+	    <tr class="<?php echo "row$k"; ?>">
+	      <td width="20">
+	        <?php		if ($row->checked_out && $row->checked_out != $user->id) { ?>
+	        &nbsp;
+	        <?php		} else { ?>
+	        <input type="checkbox" id="cb<?php echo $i;?>" name="cid[]" value="<?php echo $row->jfc_id."|".$row->jfc_refid."|".$row->language_id; ?>" onclick="isChecked(this.checked);" />
+	        <?php		} ?>
+	      </td>
+	      <td>
+	      	<a href="#detail" onclick="return listItemTask('cb<?php echo $i;?>','translate.orphandetail')"><?php echo $row->title; ?></a>
+				</td>
+	      <td nowrap><?php echo $row->language ? $row->language :  JText::_( 'NOTRANSLATIONYET' ); ?></td>
+	      <td><?php echo $row->titleTranslation ? $row->titleTranslation : '&nbsp;'; ?></td>
+		  <td><?php echo $row->lastchanged ? JHTML::_('date', $row->lastchanged, JText::_('DATE_FORMAT_LC2')):"" ;?></td>
+					<?php
+					switch( $row->state ) {
+						case 1:
+							$img = 'status_g.png';
+							break;
+						case 0:
+							$img = 'status_y.png';
+							break;
+						case -1:
+						default:
+							$img = 'status_r.png';
+							break;
+					}
+					?>
+	      <td align="center"><img src="components/com_joomfish/images/<?php echo $img;?>" width="12" height="12" border="0" alt="" /></td>
+					<?php
+					if (isset($row->published) && $row->published) {
+						$img = 'publish_g.png';
+					} else {
+						$img = 'publish_x.png';
+					}
+	
+					$href='';
+					if( $row->state>=0 ) {
+						$href = '<a href="javascript: void(0);" ';
+						$href .= 'onclick="return listItemTask(\'cb' .$i. '\',\'' .($row->published ? 'unpublish' : 'publish'). '\')">';
+						$href .= '<img src="images/' .$img. '" width="12" height="12" border="0" alt="" />';
+						$href .= '</a>';
+					}
+					else {
+						$href = '<img src="images/' .$img. '" width="12" height="12" border="0" alt="" />';
+					}
+					?>
+	      <td align="center"><?php echo $href;?></td>
+					<?php
+					$k = 1 - $k;
+					$i++;
+					?>
+		</tr>
+	    <?php }?>
+	    </tbody>
     <?php }?>
-    </tbody>
 	</table>
 <br />
 <table cellspacing="0" cellpadding="4" border="0" align="center">
