@@ -191,7 +191,7 @@ class TranslateModelTranslate extends JFModel
 		$query	= $db->getQuery(true);
 		
 		$query->select($db->quoteName($primarykey).' AS id,'. $titlecolumn);
-		$query->from($db->quoteName('#__'.$tableclass).' AS c');
+		$query->from($db->quoteName('#__'.$table->Name).' AS c');
 
 		if ($table->Filter != '')
 		{
