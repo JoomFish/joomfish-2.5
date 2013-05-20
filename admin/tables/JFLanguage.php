@@ -514,7 +514,11 @@ class TableJFLanguage extends JTable  {
 		// search for the corresponding Joomla language 
 		// Read the languages dir to find new installed languages
 		// This method returns a list of JLanguage objects with the related inforamtion
-		$systemLanguages = JLanguage::getKnownLanguages(JPATH_SITE);
+		static $systemLanguages = null;
+		
+		if($systemLanguages == null) {
+			$systemLanguages = JLanguage::getKnownLanguages(JPATH_SITE);
+		}
 		if(array_key_exists($this->lang_code, $systemLanguages)) {
 			$this->jLanguage = JLanguage::getInstance($this->lang_code);
 			if($this->jLanguage != null) {
